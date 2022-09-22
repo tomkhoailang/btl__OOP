@@ -82,6 +82,7 @@ class Goods {
 		void output(int series);
 		friend void outputTitle();
 		~Goods();
+		int Replace();
 };
 //Node hang hoa
 class Node {
@@ -107,6 +108,9 @@ class ListGoods {
 		void insertLast();
 		void insertLast(Goods data);
 		~ListGoods();
+		void Find_2();
+		Node* Find_1();
+		void Change();
 };
 
 //class menu
@@ -137,8 +141,8 @@ int main() {
 	vector<string> menuContent{
 							   "Nhap hang hoa",
 							   "Xuat hang hoa",
-							   "Xuat du lieu tu file",
-							   "Doc du lieu tu file",
+							   "Tim kiem",
+							   "Cap nhat hang hoa",
 							   "Cap nhat hang hoa",
 							   "Xuat thong tin vao file",
 							   "Thoat"};
@@ -644,6 +648,270 @@ void ListGoods::insertLast(Goods data) {
 	}
 }
 
+// Chuc nang tim kiem
+void ListGoods::Find_2(){
+	int select,dem=0;
+	char temp_1[100],temp_2[100];
+	do{
+	cout<<"Lua chon thong tin tim kiem\n";
+	cout<<"1.Ten san pham\n";
+	cout<<"2.Danh muc\n";
+	cout<<"3.Tinh trang\n";
+	cout<<"0.Thoat\n";
+	cout<<"Nhap lua chon:";
+	cin>>select;
+	switch(select){
+		case 1:
+			{
+				cout<<"Nhap ten:";
+				fflush(stdin);
+				gets(temp_1);
+				outputTitle();
+				for(Node* i=head;i!=NULL;i=i->next){	
+                    if( strstr( strupr(strcpy(temp_2, i->data.name.c_str())),strupr(temp_1) ) ){
+				        dem++;
+				        i->data.output(dem);
+				    }
+				    }
+				break;
+			}       
+			case 2:
+				{
+					cout<<"Nhap danh muc:";
+				fflush(stdin);
+				gets(temp_1);
+				outputTitle();
+				for(Node* i=head;i!=NULL;i=i->next){
+				    if( strstr( strupr(strcpy(temp_2, i->data.category.c_str())),strupr(temp_1) ) ){
+				        dem++;
+				        i->data.output(dem);
+				    }
+				    }
+				break;
+				}
+				case 3:
+					{
+						cout<<"Nhap tinh trang:";
+				        fflush(stdin);
+				        gets(temp_1);
+				        outputTitle();
+				        for(Node* i=head;i!=NULL;i=i->next){
+				            if( strstr( strupr(strcpy(temp_2, i->data.status.c_str())),strupr(temp_1) ) ){
+				                dem++;
+				                i->data.output(dem);
+				            }
+				    }
+				    break;
+					}
+			
+	}
+}while(select!=0);
+	
+}
+//Chuc nang sua
+Node* ListGoods:: Find_1(){
+	Node* p=new Node;
+	char temp_1[100],temp_2[100];
+	int dem_1 =0,dem_2=0;
+    cout<<"Nhap ma san pham:";
+    fflush(stdin);
+    gets(temp_1);
+		for(Node* i=head;i!=NULL;i=i->next){
+			dem_1++;
+			if( strstr( strupr(strcpy(temp_2, i->data.code.c_str())),strupr(temp_1) ) ){
+			dem_2++;
+			outputTitle();
+			i->data.output(dem_1);
+			return i;
+					}	
+				}
+				    if(dem_2==0)
+				        cout<<"Ma san pham khong co trong danh sach\n";
+				    return p;
+			}
+void ListGoods:: Change(){
+	int option,check,dem_1=0,dem_2=0;
+	do{
+	cout<<"\n\nVui long chon phuong thuc ma ban muon thay doi\n";
+	cout<<"1.Sua lai thong tin san pham\n";
+	cout<<"2.Xoa san pham\n";
+	cout<<"0.Thoat\n";
+	cout<<"Vui long nhap lua chon:";
+	do{
+		cin>>option;
+		if(option<0||option>2)
+		    cout<<"Nhap lai!\n";
+	}while(option<0||option>2);
+	switch(option){
+		case 0:
+			break;
+		case 1:
+			{
+        for(Node* i=head;i!=NULL;i=i->next){
+        	dem_2++;
+        	if(i==Find_1()){
+        		check=i->data.Replace();
+        		dem_1++;
+        		if(check==1){
+        		cout<<"Ket qua sau khi sua la:\n";
+        		outputTitle();
+        		i->data.output(dem_2);
+        		break;
+        	}
+        	else	break;
+			}
+		}
+		if(dem_1==0)
+		    cout<<"Khong tim thay du lieu tu thong tin ma ban nhap vao\n";
+		break;
+	}
+    case 2: {
+		for(Node* i=head;i!=NULL;i=i->next){
+			dem_2++;
+			if(i=Find_1()){
+				cout<<"Chon 1 de tiep tuc\n";
+				cout<<"Chon 0 de thoat\n";
+				do{
+					cout<<"Nhap lua chon:";
+					cin>>check;
+				}while(check<0||check>1);
+				if(check==0)
+				    break;
+				else{
+				if(i=head){
+	        	head=head->next;
+	        	delete i;
+	        	dem_1++;
+            	}
+            	else if(i=tail){
+	        	Node* q=head;
+		        while(q->next->next!=NULL){
+			        q=q->next;
+		        }
+	        	tail=q;
+		        q->next=NULL;
+		        delete i;
+		        dem_1++;
+             	}
+	            else{ 
+//	            	for(Node* p=head;p->next==i;p=p->next){
+//	            	    p->next=p->next->next;
+//						dem_1++;	
+//					}
+                    Node* p=head;
+                    while(p->next==i){
+                    	p->next=p->next->next;
+                    	delete i;
+                    	dem_1++;
+					}	
+	            }	
+		        cout<<"Danh sach sau khi xoa la:\n";
+		     	output ();
+        	    
+		if(dem_1==0)
+		    cout<<"Phan tu can xoa khong co trong danh sach\n";
+		break;
+	        }   
+		    }
+	    }
+	    break;
+   }   
+   }
+}while(option!=0);
+}
+int Goods::Replace(){
+	int option;
+	cout<<"\nVui long lua chon phan thong tin can sua\n";
+	cout<<"1.Ten san pham\n";
+	cout<<"2.Ma san pham\n";
+	cout<<"3.Danh muc \n";
+	cout<<"4.Gia chiet khau\n";
+	cout<<"5.Gia goc \n";
+	cout<<"6.So luong san pham\n";
+	cout<<"7.Ngay san xuat \n";
+	cout<<"8.Han su dung \n";
+	cout<<"0.Thoat\n";
+	cout<<"Vui long nhap lua chon:";
+	cin>>option;
+		switch(option){
+			case 0:
+				return 0;
+			case 1:
+				{
+				string temp;
+				cout<<"Vui long nhap ten moi:";
+				fflush(stdin);
+				getline(cin,temp);
+				name=temp;
+				return 1;
+			}
+			case 2:
+				{
+				string temp;
+				cout<<"Vui long nhap ma moi:";
+				fflush(stdin);
+				getline(cin,temp);
+				code=temp;
+				return 1;
+			}
+			case 3:
+				{
+				string temp;
+				cout<<"Vui long nhap danh muc moi\n";
+				fflush(stdin);
+				getline(cin,temp);
+				category=temp;
+				return 1;
+			}
+			case 4:
+				{
+				float temp;
+				cout<<"Vui long nhap lai gia chiet khau\n";
+				cin>>temp;
+				discount=temp;
+				priceAfter=price*(100-discount)/100;
+				return 1;
+			}
+			case 5:
+				{
+				float temp;
+				cout<<"Vui long nhap lai gia goc\n";
+				cin>>temp;
+				price=temp;
+				priceAfter=price*(100-discount)/100;
+				return 1;
+			}
+			case 6:
+				{
+				int temp;
+				cout<<"Vui long nhap lai so luong san pham\n";
+				cin>>temp;
+				number=temp;
+				return 1;
+			}
+			case 7:
+				{
+				Date temp;
+				cout<<"Vui long nhap lai ngay san xuat\n";
+				temp.inputDate();
+				date=temp;
+				expiryDate.setDate(updateExpiryDate());
+				return 1;
+			}
+			case 8:
+				{
+				int temp;
+				cout<<"Nhap lai han su dung\n";
+				cin>>temp;
+				valid=temp;
+				expiryDate.setDate(updateExpiryDate());
+				return 1;
+			}
+			default: return 0;
+		}
+}
+
+//
 //Menu methods
 
 Menu::Menu(int x, int y, vector<string> _menuContent, string title){
@@ -826,7 +1094,7 @@ void Menu::start(ListGoods list) {
 						if(list.isEmpty()){
 							cout << "\nDanh sach trong..." << endl;
 						}else{
-							cout << "Chuc nang 3" << endl;
+							list.Find_2();
 
 						}
 						this->clearMenuScreen();
@@ -836,7 +1104,7 @@ void Menu::start(ListGoods list) {
 						if(list.isEmpty()){
 							cout << "\nDanh sach trong..." << endl;
 						}else{
-
+                        list.Change();
 						}
 						this->clearMenuScreen();
 						goto startPoint;
@@ -870,3 +1138,4 @@ void Menu::start(ListGoods list) {
 		}
 	};
 }
+
