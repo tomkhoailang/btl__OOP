@@ -45,7 +45,7 @@ class Goods {
 		string status;		//tinh trang
 		float discount;		//chiet khau
 		float price;		//gia goc
-		float total;	//gia sau khi tru chiet khau
+		float priceAfter;	//gia sau khi tru chiet khau
 		int number;			//so luong
 		Date date;			//ngay san xuat
 		int valid;			//han su dung
@@ -68,8 +68,8 @@ class Goods {
 		void setDiscount(float discount);
 		float getPrice();
 		void setPrice(float price);
-		float getTotal();
-		void setTotal(float total);
+		float getPriceAfter();
+		void setPriceAfter(float priceAfter);
 		int getNumber();
 		void setNumber(int number);
 		int getvalid();
@@ -196,7 +196,7 @@ void ListGoods::outputAsTable(int x, int y, int w, int columns, int rows, int co
 			xStep+=w;
 			drawBox(xStep, _y, w, 2, color, 250, to_string(round(content[i].discount)), contentAlign);
 			xStep+=w;
-			drawBox(xStep, _y, w, 2, color, 250, to_string(round(content[i].total)), contentAlign);
+			drawBox(xStep, _y, w, 2, color, 250, to_string(round(content[i].priceAfter)), contentAlign);
 			xStep+=w;
 			drawBox(xStep, _y, w, 2, color, 250, to_string(content[i].date.getDay()) + "/" + to_string(content[i].date.getMonth()) + "/" + to_string(content[i].date.getYear()), contentAlign);
 			xStep+=w;
@@ -366,25 +366,25 @@ bool Date::checkExpiryDate(){
 	int dayNow = tm.tm_mday;
 	int monNow = tm.tm_mon + 1;
 	int yearNow = tm.tm_year + 1900;
-		if (yyyy > yearNow)
+	if (yyyy < yearNow)
 	{
-		return true;
+		return false;
 	}
 	else if (yyyy == yearNow)
 	{
-		if (mm > monNow)
+		if (mm < monNow)
 		{
-			return true;
+			return false;
 		}
 		else if (mm == monNow)
 		{
-			if (dd > dayNow)
+			if (dd < dayNow)
 			{
-				return true;
+				return false;
 			}
 		}
 	}
-	return false;
+	return true;
 }
 
 //getter and setter
@@ -424,11 +424,11 @@ float Goods::getPrice(){
 void Goods::setPrice(float price){
 	this->price = price;
 }
-float Goods::getTotal(){
-	return total;
+float Goods::getPriceAfter(){
+	return priceAfter;
 }
-void Goods::setTotal(float total){
-	this->total = total;
+void Goods::setPriceAfter(float priceAfter){
+	this->priceAfter = priceAfter;
 }
 int Goods::getvalid() {
 	return valid;
@@ -440,8 +440,9 @@ string Goods::getStatus(){
 	return status;
 }
 void Goods::setStatus(){
-	if(expiryDate.checkExpiryDate())
-	this->status = "Con han";
+	if(expiryDate.checkExpiryDate()){
+		this->status = "Con han";
+	}
 	else this->status = "Het han";
 }
 //khoi tao
@@ -508,7 +509,7 @@ void Goods::input(){
 	string nameTemp, codeTemp, categoryTemp;
 	int numberTemp;
 	float priceTemp, discountTemp;
-	cout<<"\nNhap thong tin san pham"<<endl;
+	cout<<"Nhap thong tin san pham"<<endl;
 	cout<<"Nhap ID: ";
 	fflush(stdin);
 	getline(cin, codeTemp);
@@ -530,7 +531,7 @@ void Goods::input(){
 	cout<<"Nhap chiet khau: ";
 	cin>>discountTemp;
 	setDiscount(discountTemp);
-	setTotal(getPrice()*(100-getDiscount())/100);
+	setPriceAfter(getPrice()*(100-getDiscount())/100);
 	date.inputDate();
 	cout<<"Nhap han su dung(tu 1 thang tro len): ";
 	do {
@@ -551,7 +552,7 @@ void Goods::output(int series){
 	cout << 		setw(6) << right << getNumber() 	<< "|";
 	cout << 		setw(7) << right << getPrice() 		<< "|";
 	cout << 		setw(8) << right << getDiscount() 	<< "|";
-	cout << 		setw(7) << right << getTotal() 		<< "|";
+	cout << 		setw(7) << right << getPriceAfter() 		<< "|";
 	date.outputDate();
 	cout<<"|";
 	expiryDate.outputDate();
@@ -601,15 +602,16 @@ Node *ListGoods::makeNode(Goods data) {
 	temp->data.setNumber(data.getNumber());
 	temp->data.setPrice(data.getPrice());
 	temp->data.setDiscount(data.getDiscount());
-	temp->data.setTotal(data.getTotal());
+	temp->data.setPriceAfter(data.getPriceAfter());
 	Date tempDate(data.date.getDay(),data.date.getMonth(),data.date.getYear());
 	temp->data.date = tempDate;
 	temp->data.setvalid(data.getvalid());
-	temp->data.setStatus();
 	temp->data.expiryDate.setDate(data.updateExpiryDate());
+	temp->data.setStatus();
 	temp->next = NULL;
 	return temp;
 }
+
 //Kiem tra danh sach rong
 bool ListGoods::isEmpty() {
 	if(head == NULL) {
@@ -653,7 +655,7 @@ void ListGoods::insertLast(Goods data) {
 		this->size++;
 	}
 }
-//Kiem tra trung id
+//kiem tra trung id
 bool ListGoods::checkCode(string code){
 	for(Node *i = head; i != NULL; i = i->next){
 		if(i->data.getCode() == code)
@@ -882,7 +884,7 @@ int Goods::Replace(){
 				cout<<"Vui long nhap lai gia chiet khau\n";
 				cin>>temp;
 				discount=temp;
-				total=price*(100-discount)/100;
+				priceAfter=price*(100-discount)/100;
 				return 1;
 			}
 			case 5:
@@ -891,7 +893,7 @@ int Goods::Replace(){
 				cout<<"Vui long nhap lai gia goc\n";
 				cin>>temp;
 				price=temp;
-				total=price*(100-discount)/100;
+				priceAfter=price*(100-discount)/100;
 				return 1;
 			}
 			case 6:
@@ -1157,4 +1159,3 @@ void Menu::start(ListGoods list) {
 		}
 	};
 }
-
