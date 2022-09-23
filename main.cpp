@@ -107,6 +107,7 @@ class ListGoods {
 		void outputAsTable(int x, int y, int w, int columns, int rows, int color, int titleColor, string contentAlign);
 		void insertLast();
 		void insertLast(Goods data);
+		bool checkCode(string code);
 		~ListGoods();
 		void Find_2();
 		Node* Find_1();
@@ -365,25 +366,25 @@ bool Date::checkExpiryDate(){
 	int dayNow = tm.tm_mday;
 	int monNow = tm.tm_mon + 1;
 	int yearNow = tm.tm_year + 1900;
-		if (yyyy > yearNow)
+	if (yyyy < yearNow)
 	{
-		return true;
+		return false;
 	}
 	else if (yyyy == yearNow)
 	{
-		if (mm > monNow)
+		if (mm < monNow)
 		{
-			return true;
+			return false;
 		}
 		else if (mm == monNow)
 		{
-			if (dd > dayNow)
+			if (dd < dayNow)
 			{
-				return true;
+				return false;
 			}
 		}
 	}
-	return false;
+	return true;
 }
 
 //getter and setter
@@ -439,8 +440,9 @@ string Goods::getStatus(){
 	return status;
 }
 void Goods::setStatus(){
-	if(expiryDate.checkExpiryDate())
-	this->status = "Con han";
+	if(expiryDate.checkExpiryDate()){
+		this->status = "Con han";
+	}
 	else this->status = "Het han";
 }
 //khoi tao
@@ -596,14 +598,20 @@ Node *ListGoods::makeNode(Goods data) {
 	Node *temp = new Node();
 	temp->data.setName(data.getName());
 	temp->data.setCode(data.getCode());
+	temp->data.setCategory(data.getCategory());
 	temp->data.setNumber(data.getNumber());
+	temp->data.setPrice(data.getPrice());
+	temp->data.setDiscount(data.getDiscount());
+	temp->data.setPriceAfter(data.getPriceAfter());
 	Date tempDate(data.date.getDay(),data.date.getMonth(),data.date.getYear());
 	temp->data.date = tempDate;
 	temp->data.setvalid(data.getvalid());
+	temp->data.expiryDate.setDate(data.updateExpiryDate());
 	temp->data.setStatus();
 	temp->next = NULL;
 	return temp;
 }
+
 //Kiem tra danh sach rong
 bool ListGoods::isEmpty() {
 	if(head == NULL) {
@@ -647,7 +655,14 @@ void ListGoods::insertLast(Goods data) {
 		this->size++;
 	}
 }
-
+//kiem tra trung id
+bool ListGoods::checkCode(string code){
+	for(Node *i = head; i != NULL; i = i->next){
+		if(i->data.getCode() == code)
+		return false;
+	}
+	return true;
+}
 // Chuc nang tim kiem
 void ListGoods::Find_2(){
 	int select,dem=0;
@@ -1076,7 +1091,13 @@ void Menu::start(ListGoods list) {
 							}
 							}while(soLuong <= 0);
 							for(int i = 0; i<soLuong; i++) {
-								list.insertLast();
+								Goods a;
+								do{
+									a.input();
+									if(!list.checkCode(a.getCode()))
+									cout<<"\nMA ID "<<a.getCode()<<" DA TON TAI! VUI LONG NHAP LAI."<<endl;
+								}while(!list.checkCode(a.getCode()));
+								list.insertLast(a);
 							}
 						this->clearMenuScreen();
 						goto startPoint;
@@ -1138,4 +1159,3 @@ void Menu::start(ListGoods list) {
 		}
 	};
 }
-
