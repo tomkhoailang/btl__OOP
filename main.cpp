@@ -8,8 +8,10 @@
 #include<conio.h>
 #include<cmath>
 #include<fstream>
+#include<vector>
 
 using namespace std;
+vector<string> id_List;
 
 #define DEFAULT_TEXT_COLOR 91
 #define FILE_PATH "D://fileTest//QuanLiCuaHang.txt"
@@ -82,7 +84,7 @@ class Goods {
 		void output(int series);
 		friend void outputTitle();
 		~Goods();
-		int Replace();
+		int Replace(vector<string> &id_List);
 };
 //Node hang hoa
 class Node {
@@ -111,7 +113,7 @@ class ListGoods {
 		~ListGoods();
 		void Find_2();
 		Node* Find_1();
-		void Change();
+		void Change(vector<string> id_List);
 };
 
 //class menu
@@ -660,7 +662,7 @@ bool ListGoods::checkCode(string code){
 	for(Node *i = head; i != NULL; i = i->next){
 		if(i->data.getCode() == code)
 		return false;
-	}
+	} 
 	return true;
 }
 // Chuc nang tim kiem
@@ -744,7 +746,7 @@ Node* ListGoods:: Find_1(){
 				        cout<<"Ma san pham khong co trong danh sach\n";
 				    return p;
 			}
-void ListGoods:: Change(){
+void ListGoods:: Change(vector<string> id_List){
 	int option,check,dem_1=0,dem_2=0;
 	do{
 	cout<<"\n\nVui long chon phuong thuc ma ban muon thay doi\n";
@@ -765,7 +767,7 @@ void ListGoods:: Change(){
         for(Node* i=head;i!=NULL;i=i->next){
         	dem_2++;
         	if(i==Find_1()){
-        		check=i->data.Replace();
+        		check=i->data.Replace(id_List);
         		dem_1++;
         		if(check==1){
         		cout<<"Ket qua sau khi sua la:\n";
@@ -834,7 +836,7 @@ void ListGoods:: Change(){
    }
 }while(option!=0);
 }
-int Goods::Replace(){
+int Goods::Replace(vector<string> &id_List){
 	int option;
 	cout<<"\nVui long lua chon phan thong tin can sua\n";
 	cout<<"1.Ten san pham\n";
@@ -863,9 +865,29 @@ int Goods::Replace(){
 			case 2:
 				{
 				string temp;
+				int dem;
+				do{
+				dem=0;
 				cout<<"Vui long nhap ma moi:";
 				fflush(stdin);
 				getline(cin,temp);
+				int n=temp.size();
+				char temp_1[n+1];
+				strcpy(temp_1,temp.c_str());
+				for(int i=0;i<id_List.size();i++){
+					if(strcmp(temp_1,id_List[i].c_str())==0){
+					    cout<<"Nhap lai:\n";
+						dem++;	
+					}
+				}
+			}while(dem!=0);
+//			     Sua lai gia tri cua vector
+			    for(int j=0;j<id_List.size();j++){
+			    	if(strcmp(code.c_str(),id_List[j].c_str())==0)
+                        dem=j;      
+				}
+				id_List.erase(id_List.begin()+dem);
+				id_List.push_back(temp);
 				code=temp;
 				return 1;
 			}
@@ -1094,6 +1116,7 @@ void Menu::start(ListGoods list) {
 								Goods a;
 								do{
 									a.input();
+									id_List.push_back(a.getCode());
 									if(!list.checkCode(a.getCode()))
 									cout<<"\nMA ID "<<a.getCode()<<" DA TON TAI! VUI LONG NHAP LAI."<<endl;
 								}while(!list.checkCode(a.getCode()));
@@ -1125,7 +1148,7 @@ void Menu::start(ListGoods list) {
 						if(list.isEmpty()){
 							cout << "\nDanh sach trong..." << endl;
 						}else{
-                        list.Change();
+                        list.Change(id_List);
 						}
 						this->clearMenuScreen();
 						goto startPoint;
