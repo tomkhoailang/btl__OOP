@@ -16,12 +16,12 @@ vector<string> id_List;
 #define DEFAULT_TEXT_COLOR 91
 #define FILE_PATH "D://fileTest//QuanLiCuaHang.txt"
 // ngay thang nam
-class Date {
-	private:
+typedef struct Date {
+//	private:
 		int dd;
 		int mm;
 		int yyyy;
-	public:
+//	public:
 		Date();
 		Date(int dd, int mm, int yyyy);
 		void setDate(const Date &a);
@@ -37,7 +37,7 @@ class Date {
 		void outputDate();
 		bool checkExpiryDate();
 		friend class Goods;
-};
+} Date;
 //Lop hang hoa
 class Goods {
 	private:
@@ -78,6 +78,11 @@ class Goods {
 		void setvalid(int valid);
 		string getStatus();
 		void setStatus();
+		void setStatusWithData(string status);
+		Date getDate();
+		void setDate(Date _data);
+		Date getExpiryDate();
+		void setExpiryDate(Date _data);
 		//phuong thuc
 		Date updateExpiryDate();
 		void input();
@@ -113,6 +118,8 @@ class ListGoods {
 		~ListGoods();
 		void Find_2();
 		Node* Find_1();
+		friend void writeDataToFile(ListGoods list);
+		friend void readDataFromFile(ListGoods &list);
 		void Change(vector<string> id_List);
 };
 
@@ -146,12 +153,12 @@ int main() {
 							   "Xuat hang hoa",
 							   "Tim kiem",
 							   "Cap nhat hang hoa",
-							   "Cap nhat hang hoa",
 							   "Xuat thong tin vao file",
+							   "Chuc Nang Trong",
 							   "Thoat"};
 							   
 	Menu menu(40, 2, menuContent, "QUAN LY CUA HANG");
-
+	readDataFromFile(list);
 	menu.start(list);
 	_getch();
 	return 0;
@@ -284,6 +291,19 @@ void Date::setDate(const Date &a){
 Date::~Date() {
 }
 // Getter va setter cho Date
+Date Goods::getDate(){
+	return this->date;
+}
+void Goods::setDate(Date _data){
+	this->date.setDate(_data);
+}
+Date Goods::getExpiryDate(){
+	return this->expiryDate;
+}
+void Goods::setExpiryDate(Date _data){
+	this->expiryDate.setDate(_data);
+}
+
 void Date::setDay(int dd) {
 	this->dd = dd;
 }
@@ -505,6 +525,9 @@ void Goods::setStatus(){
 		this->status = "Con han";
 	}
 	else this->status = "Het han";
+}
+void Goods::setStatusWithData(string status){
+	this->status = status;
 }
 //khoi tao
 Goods::Goods() {
@@ -1182,6 +1205,93 @@ int Goods::Replace(vector<string> &id_List){
 		}
 }
 
+//Read and Write data to file
+// Write and read file
+void readDataFromFile(ListGoods &list){
+	ifstream inputFile(FILE_PATH);
+	string code, name, category, status;
+	float discount, price, priceAfter;
+	int number, valid;
+	Date date, expiryDate;
+	Goods temp;
+		
+	if(!inputFile.is_open()){
+		cerr << "Khong the mo File - '" << FILE_PATH << "'" << endl;
+		cout << "Nhan phim bat ki de tiep tuc" << endl;
+		_getch();
+		goto endPoint;
+	}
+
+	while(inputFile >> code){
+		temp.setCode(code);
+		inputFile.ignore();
+		getline(inputFile, name);
+		temp.setName(name);	
+		getline(inputFile, category);
+		temp.setCategory(category);		
+		inputFile.ignore();
+		getline(inputFile, status);
+		temp.setStatusWithData(status);	
+		inputFile >> discount;
+		temp.setDiscount(discount);	
+		inputFile >> price;
+		temp.setPrice(price);	
+		inputFile >> priceAfter;
+		temp.setPriceAfter(priceAfter);		
+		inputFile >> number;
+		temp.setNumber(number);		
+		inputFile >> valid;
+		temp.setvalid(valid);		
+		inputFile >> date.dd;
+		inputFile >> date.mm;
+		inputFile >> date.yyyy;
+		temp.setDate(date);		
+		inputFile >> expiryDate.dd;
+		inputFile >> expiryDate.mm;
+		inputFile >> expiryDate.yyyy;
+		temp.setExpiryDate(expiryDate);
+				
+		list.insertLast(temp);
+	}
+	loadingAnimation(20, 2, "Dang doc file...");
+	cout << "\nDoc file thanh cong" << endl;
+	endPoint:
+	inputFile.close();
+	system("cls");
+}
+
+void writeDataToFile(ListGoods list){
+	ofstream outputFile(FILE_PATH);
+		
+	if(!outputFile.is_open()){
+		cerr << "Khong the mo file- '" << FILE_PATH << "'" << endl;
+		cout << "Nhan phim bat ki de tiep tuc" << endl;
+		_getch();
+		goto endPoint;
+	}
+		
+	for(Node *i = list.head; i != NULL;i=i->next){
+		outputFile << i->data.getCode() << "\n";
+		outputFile << i->data.getName() << "\n";
+		outputFile << i->data.getCategory() << "\n";
+		outputFile << i->data.getStatus() << "\n";
+		outputFile << i->data.getDiscount() << "\n";
+		outputFile << i->data.getPrice() << "\n";
+		outputFile << i->data.getPriceAfter() << "\n";
+		outputFile << i->data.getNumber() << "\n";
+		outputFile << i->data.getvalid() << "\n";		
+		outputFile << i->data.getDate().getDay()<< "\n";
+		outputFile << i->data.getDate().getMonth()<< "\n";
+		outputFile << i->data.getDate().getYear()<< "\n";		
+		outputFile << i->data.getExpiryDate().getDay()<< "\n";
+		outputFile << i->data.getExpiryDate().getMonth()<< "\n";
+		outputFile << i->data.getExpiryDate().getYear()<< "\n";
+	}
+	
+	endPoint:
+	outputFile.close();
+}
+
 //Menu methods
 
 Menu::Menu(int x, int y, vector<string> _menuContent, string title){
@@ -1373,7 +1483,7 @@ void Menu::start(ListGoods list) {
 						if(list.isEmpty()){
 							cout << "\nDanh sach trong..." << endl;
 						}else{
-							list.outputAsTable(0, pointerY, 20, 10, list.getSize(), 196, 1, "center");
+							list.outputAsTable(0, pointerY, 20, 10, list.getSize(), 196, 1, "left");
 						}
 						this->clearMenuScreen();
 						goto startPoint;
@@ -1383,7 +1493,6 @@ void Menu::start(ListGoods list) {
 							cout << "\nDanh sach trong..." << endl;
 						}else{
 							list.Find_2();
-
 						}
 						this->clearMenuScreen();
 						goto startPoint;
@@ -1401,7 +1510,9 @@ void Menu::start(ListGoods list) {
 						if(list.isEmpty()){
 							cout << "\nDanh sach trong..." << endl;
 						}else{
-							cout << "Chuc nang 5" << endl;
+							writeDataToFile(list);
+							loadingAnimation(pointerX, pointerY+2, "Dang xuat du lieu ra file...");
+							cout << "->Xuat thanh cong" << endl;
 						}
 						this->clearMenuScreen();
 						goto startPoint;
@@ -1409,7 +1520,7 @@ void Menu::start(ListGoods list) {
 						if(list.isEmpty()){
 							cout << "\nDanh sach trong..." << endl;
 						}else{
-							cout << "Chuac nang 6" << endl;
+							cout << "Chuc nang 6" << endl;
 						}
 						this->clearMenuScreen();
 						goto startPoint;
