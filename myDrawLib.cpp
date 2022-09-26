@@ -4,6 +4,7 @@
 #include<cmath>
 #include<vector>
 #include<string>
+#include<unistd.h>
 
 using namespace std;
 
@@ -135,6 +136,27 @@ void currentTarget(int x, int y, int w, int h, int b_color, int t_color, string 
 //	textColor(0);
 }
 
+void loadingAnimation(int x, int y, string loadContent){
+	int loadingBarLength = 80;
+	SetColor(223);
+	gotoXY(x + round(loadingBarLength*1.0/2) - round(loadContent.length() / 2),y);
+	cout << loadContent << endl;
+	cout << "\n";
+	cout << "\t\t\t";
+	
+	gotoXY(x, y+2);
+	for(short i = 0;i < loadingBarLength;i++){
+		cout << char(177);
+	}
+	cout << "\r";
+	gotoXY(x, y+2);
+	for(short i = 0;i < loadingBarLength; i++){
+		cout << char(219);
+		usleep(1200);
+	}
+	
+	cout << "\n";
+}
 
 
 

@@ -8,6 +8,7 @@ void gotoXY(int x, int y);
 void textColor(int x);
 void SetWindowSize(SHORT width, SHORT height);
 void SetScreenBufferSize(SHORT width, SHORT height);
+void loadingAnimation(int x, int y, string loadContent);
 void drawBox(
 			 int x, 
 			 int y, 
