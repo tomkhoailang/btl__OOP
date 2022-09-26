@@ -141,8 +141,6 @@ void loadingAnimation(int x, int y, string loadContent){
 	SetColor(223);
 	gotoXY(x + round(loadingBarLength*1.0/2) - round(loadContent.length() / 2),y);
 	cout << loadContent << endl;
-	cout << "\n";
-	cout << "\t\t\t";
 	
 	gotoXY(x, y+2);
 	for(short i = 0;i < loadingBarLength;i++){
