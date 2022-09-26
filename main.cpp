@@ -608,6 +608,7 @@ void Goods::input(){
 			cout<<"Nhap sai dinh dang"<<endl;
 		}
 	}while(tempCheck == false);
+	ss.clear();
 	ss<<numberTemp;
 	ss>>numberTemp2;
 	setNumber(numberTemp2);
@@ -1100,6 +1101,7 @@ int Goods::Replace(vector<string> &id_List){
 						cout<<"Nhap sai dinh dang"<<endl;
 					}
 				}while(tempCheck == false);
+				ss.clear();
 				ss<<checkNumber;
 				ss>>num;
 				discount=num;
@@ -1119,6 +1121,7 @@ int Goods::Replace(vector<string> &id_List){
 						cout<<"Nhap sai dinh dang"<<endl;
 					}
 				}while(tempCheck == false);
+				ss.clear();
 				ss<<checkNumber;
 				ss>>num;
 				price=num;
@@ -1138,6 +1141,7 @@ int Goods::Replace(vector<string> &id_List){
 						cout<<"Nhap sai dinh dang"<<endl;
 					}
 				}while(tempCheck == false);
+				ss.clear();
 				ss<<checkNumber;
 				ss>>num;
 				number=num;
@@ -1165,6 +1169,7 @@ int Goods::Replace(vector<string> &id_List){
 						cout<<"Nhap sai dinh dang"<<endl;
 					}
 				}while(tempCheck == false);
+				ss.clear();
 				ss<<checkNumber;
 				ss>>num;
 				valid=num;
