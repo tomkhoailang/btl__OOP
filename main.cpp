@@ -9,7 +9,7 @@
 #include<cmath>
 #include<fstream>
 #include<vector>
-
+#include <sstream>
 using namespace std;
 vector<string> id_List;
 
@@ -155,6 +155,36 @@ int main() {
 	menu.start(list);
 	_getch();
 	return 0;
+}
+bool validateNumber(string &toCheck) {
+	bool correct = false;
+	fflush(stdin);
+	getline(cin, toCheck);
+	for (int i = 0; i<toCheck.length(); i++) {
+		if ((toCheck[i] >= 65 && toCheck[i] <= 90) || (toCheck[i] >= 97 && toCheck[i] <= 122) || toCheck[i] == 32 ) {
+			return false;
+		}else if (toCheck[i] >=48 && toCheck[i]<= 57) {
+			correct = true;
+		}else {
+			return false;
+		}
+	}
+	return correct;
+}
+bool validateString(string toCheck) {
+
+	bool correct = false;
+		
+	for (int i = 0; i<toCheck.length(); i++) {
+		
+		if ((toCheck[i] >= 65 && toCheck[i] <= 90) || (toCheck[i] >= 97 && toCheck[i] <= 122) || toCheck[i] == 32 || toCheck[i] >=48 && toCheck[i]<= 57) {
+		    correct = true;
+		}
+		else {
+		    return false;
+		}
+	}
+	return correct;
 }
 
 int ListGoods::getSize(){
@@ -318,21 +348,50 @@ bool Date::checkDate() {
 // Nhap ngay
 void Date::inputDate() {
 	bool temp;
+	bool tempCheck;
+	string ddTemp,mmTemp,yyyyTemp;
+	stringstream ss;
 	do {
 		cout<<"Nhap ngay san xuat: "<<endl;
 		cout<<"Ngay ";
-		cin>>dd;
-		cout<<"Thang ";
-		cin>>mm;
+		do {
+			tempCheck = validateNumber(ddTemp);
+			if(tempCheck == false) {
+				cout<<"Nhap sai dinh dang"<<endl;
+			}
+		}while(tempCheck == false);
+		ss.clear();
+		ss<<ddTemp;
+		ss>>dd;
+		do {
+			cout<<"Thang ";
+			tempCheck = validateNumber(mmTemp);
+			if(tempCheck == false) {
+				cout<<"Nhap sai dinh dang"<<endl;
+			}
+		}while(tempCheck == false);
+		ss.clear();
+		ss<<mmTemp;
+		ss>>mm;
 		cout<<"Nam ";
-		cin>>yyyy;
-		temp = checkDate();
-		if(temp == true) {
-			if(yyyy <= 2000) {
-				cout<<"Ngay san xuat phai dung dinh dang va lon hon 2000!"<<endl;
+		do {
+			tempCheck = validateNumber(yyyyTemp);
+			if(tempCheck == false) {
+				cout<<"Nhap sai dinh dang!"<<endl;
+			}
+		}while(tempCheck == false );
+		ss.clear();
+		ss<<yyyyTemp;
+		int yyyyTemp2;
+		ss>>yyyyTemp2;
+		if(yyyyTemp2 > 2000) {
+			yyyy = yyyyTemp2;
+			temp = checkDate();
+			if(temp != true) {
+				cout<<"Ngay san xuat phai dung dinh dang"<<endl;
 			}
 		}else {
-			cout<<"Ngay san xuat phai dung dinh dang va lon hon 2000!"<<endl;
+			cout<<"Nam san xuat phai lon hon 2000"<<endl;
 		}
 	}while(yyyy <= 2000 ||  temp == false);
 }
@@ -508,40 +567,86 @@ Date Goods::updateExpiryDate(){
 }
 //Nhap thong tin hang hoa
 void Goods::input(){
+	bool tempCheck;
 	string nameTemp, codeTemp, categoryTemp;
-	int numberTemp;
-	float priceTemp, discountTemp;
+	stringstream ss;
+	string priceTemp, discountTemp, numberTemp, validTemp;
+	int numberTemp2,validTemp2;
+	float priceTemp2, discountTemp2;
 	cout<<"Nhap thong tin san pham"<<endl;
 	cout<<"Nhap ID: ";
-	fflush(stdin);
-	getline(cin, codeTemp);
+	do {
+		fflush(stdin);
+		getline(cin, codeTemp);
+		if(validateString(codeTemp) == false) {
+			cout<<"Vui long nhap dung dinh dang!"<<endl;
+		}
+	}while(validateString(codeTemp) == false);
 	setCode(codeTemp);
 	cout<<"Nhap ten: ";
-	fflush(stdin);
-	getline(cin, nameTemp);
+	do {
+		fflush(stdin);
+		getline(cin, nameTemp);
+		if(validateString(nameTemp) == false) {
+			cout<<"Vui long nhap dung dinh dang!"<<endl;
+		}
+	}while(validateString(nameTemp) == false);
 	setName(nameTemp);
-	cout<<"Nhap danh muc: ";
-	fflush(stdin);
-	getline(cin, categoryTemp);
+	do {
+		cout<<"Nhap danh muc: ";
+		fflush(stdin);
+		getline(cin, categoryTemp);
+		if(validateString(categoryTemp) == false) {
+			cout<<"Vui long nhap dung dinh dang!"<<endl;
+		}
+	}while(validateString(categoryTemp) == false);
 	setCategory(categoryTemp);
-	cout<<"Nhap so luong: ";
-	cin>>numberTemp;
-	setNumber(numberTemp);
-	cout<<"Nhap gia thanh: ";
-	cin>>priceTemp;
-	setPrice(priceTemp);
-	cout<<"Nhap chiet khau: ";
-	cin>>discountTemp;
-	setDiscount(discountTemp);
+	do {
+		cout<<"Nhap so luong: ";
+		tempCheck = validateNumber(numberTemp);
+		if(tempCheck == false) {
+			cout<<"Nhap sai dinh dang"<<endl;
+		}
+	}while(tempCheck == false);
+	ss<<numberTemp;
+	ss>>numberTemp2;
+	setNumber(numberTemp2);
+	do {
+		cout<<"Nhap gia: ";
+		tempCheck = validateNumber(priceTemp);
+		if(tempCheck == false) {
+			cout<<"Nhap sai dinh dang"<<endl;
+		}
+	}while(tempCheck == false);
+	ss.clear();
+	ss<<priceTemp;
+	ss>>priceTemp2;
+	setPrice(priceTemp2);
+	
+	do {
+		cout<<"Nhap chiet khau: ";
+		tempCheck = validateNumber(discountTemp);
+		if(tempCheck == false) {
+			cout<<"Nhap sai dinh dang"<<endl;
+		}
+	}while(tempCheck == false);
+	ss.clear();
+	ss<<discountTemp;
+	ss>>discountTemp2;
+	setDiscount(discountTemp2);
 	setPriceAfter(getPrice()*(100-getDiscount())/100);
 	date.inputDate();
-	cout<<"Nhap han su dung(tu 1 thang tro len): ";
 	do {
-		cin>>valid;
-		if(valid < 1) {
-			cout<<"Nhap sai dinh dang thang "<<endl;
+		cout<<"Nhap han su dung(tu 1 thang tro len): ";
+		tempCheck = validateNumber(validTemp);
+		if(tempCheck == false) {
+			cout<<"Nhap sai dinh dang"<<endl;
 		}
-	}while(valid< 1);
+	}while(tempCheck == false);
+	ss.clear();
+	ss<<validTemp;
+	ss>>validTemp2;
+	valid = validTemp2;
 	expiryDate.setDate(updateExpiryDate());
 	setStatus();
 }
@@ -664,39 +769,64 @@ bool ListGoods::checkCode(string code){
 		return false;
 	} 
 	return true;
-}
+}	
 // Chuc nang tim kiem
 void ListGoods::Find_2(){
 	int select,dem=0;
+	string selectTemp;
 	char temp_1[100],temp_2[100];
+	stringstream ss;
+	bool tempCheck;
 	do{
 	cout<<"Lua chon thong tin tim kiem\n";
 	cout<<"1.Ten san pham\n";
 	cout<<"2.Danh muc\n";
 	cout<<"3.Tinh trang\n";
 	cout<<"0.Thoat\n";
-	cout<<"Nhap lua chon:";
-	cin>>select;
-	switch(select){
+		do {
+			cout<<"Nhap lua chon: ";
+			tempCheck = validateNumber(selectTemp);
+			if(tempCheck == false) {
+				cout<<"Nhap sai dinh dang"<<endl;
+			}
+		}while(tempCheck == false);
+		ss.clear();
+		ss<<selectTemp;
+		ss>>select;
+		switch(select){
+		case 0: {
+			break;
+		}
 		case 1:
 			{
-				cout<<"Nhap ten:";
-				fflush(stdin);
-				gets(temp_1);
+				do {
+					cout<<"Nhap ten: ";
+					fflush(stdin);
+					gets(temp_1);
+					if(validateString(temp_1) == false) {
+						cout<<"Vui long nhap dung dinh dang!"<<endl;
+					}
+				}while(validateString(temp_1) == false);
 				outputTitle();
 				for(Node* i=head;i!=NULL;i=i->next){	
                     if( strstr( strupr(strcpy(temp_2, i->data.name.c_str())),strupr(temp_1) ) ){
 				        dem++;
 				        i->data.output(dem);
 				    }
-				    }
+				}
 				break;
 			}       
-			case 2:
+		case 2:
 				{
-					cout<<"Nhap danh muc:";
-				fflush(stdin);
-				gets(temp_1);
+				do {
+					cout<<"Nhap danh muc: ";
+					fflush(stdin);
+					gets(temp_1);
+					if(validateString(temp_1) == false) {
+						cout<<"Vui long nhap dung dinh dang!"<<endl;
+					}
+				}while(validateString(temp_1) == false);
+				
 				outputTitle();
 				for(Node* i=head;i!=NULL;i=i->next){
 				    if( strstr( strupr(strcpy(temp_2, i->data.category.c_str())),strupr(temp_1) ) ){
@@ -706,9 +836,9 @@ void ListGoods::Find_2(){
 				    }
 				break;
 				}
-				case 3:
+		case 3:
 					{
-						cout<<"Nhap tinh trang:";
+						cout<<"Nhap tinh trang: ";
 				        fflush(stdin);
 				        gets(temp_1);
 				        outputTitle();
@@ -720,6 +850,8 @@ void ListGoods::Find_2(){
 				    }
 				    break;
 					}
+		default: 
+			cout<<"Lua chon khong ton tai!"<<endl;
 			
 	}
 }while(select!=0);
@@ -730,9 +862,14 @@ Node* ListGoods:: Find_1(){
 	Node* p=new Node;
 	char temp_1[100],temp_2[100];
 	int dem_1 =0,dem_2=0;
-    cout<<"Nhap ma san pham:";
-    fflush(stdin);
-    gets(temp_1);
+    do {
+		cout<<"Nhap ma san pham: ";
+		fflush(stdin);
+		gets(temp_1);
+		if(validateString(temp_1) == false) {
+			cout<<"Vui long nhap dung dinh dang!"<<endl;
+		}
+	}while(validateString(temp_1) == false);
 		for(Node* i=head;i!=NULL;i=i->next){
 			dem_1++;
 			if( strstr( strupr(strcpy(temp_2, i->data.code.c_str())),strupr(temp_1) ) ){
@@ -748,14 +885,25 @@ Node* ListGoods:: Find_1(){
 			}
 void ListGoods:: Change(vector<string> id_List){
 	int option,check,dem_1=0,dem_2=0;
+	string checkNumber;
+	stringstream ss;
 	do{
 	cout<<"\n\nVui long chon phuong thuc ma ban muon thay doi\n";
 	cout<<"1.Sua lai thong tin san pham\n";
 	cout<<"2.Xoa san pham\n";
 	cout<<"0.Thoat\n";
-	cout<<"Vui long nhap lua chon:";
 	do{
-		cin>>option;
+		bool tempCheck;
+		do {
+			cout<<"Vui long nhap lua chon: ";
+			tempCheck = validateNumber(checkNumber);
+			if(tempCheck == false) {
+				cout<<"Nhap sai dinh dang"<<endl;
+			}
+		}while(tempCheck == false);
+		ss.clear();
+		ss<<checkNumber;
+		ss>>option;
 		if(option<0||option>2)
 		    cout<<"Nhap lai!\n";
 	}while(option<0||option>2);
@@ -775,7 +923,8 @@ void ListGoods:: Change(vector<string> id_List){
         		i->data.output(dem_2);
         		break;
         	}
-        	else	break;
+        	else	
+				break;
 			}
 		}
 		if(dem_1==0)
@@ -789,8 +938,18 @@ void ListGoods:: Change(vector<string> id_List){
 				cout<<"Chon 1 de tiep tuc\n";
 				cout<<"Chon 0 de thoat\n";
 				do{
-					cout<<"Nhap lua chon:";
-					cin>>check;
+					bool tempCheck;
+					do {
+						cout<<"Vui long nhap lua chon:";
+						tempCheck = validateNumber(checkNumber);
+						if(tempCheck == false) {
+							cout<<"Nhap sai dinh dang"<<endl;
+						}
+					}while(tempCheck == false);
+					ss.clear();
+					ss<<checkNumber;
+					ss>>check;
+					
 				}while(check<0||check>1);
 				if(check==0)
 				    break;
@@ -832,7 +991,9 @@ void ListGoods:: Change(vector<string> id_List){
 		    }
 	    }
 	    break;
-   }   
+   	}
+	default:
+		cout<<"Lua chon khong ton tai!"<<endl;  
    }
 }while(option!=0);
 }
@@ -848,29 +1009,50 @@ int Goods::Replace(vector<string> &id_List){
 	cout<<"7.Ngay san xuat \n";
 	cout<<"8.Han su dung \n";
 	cout<<"0.Thoat\n";
-	cout<<"Vui long nhap lua chon:";
-	cin>>option;
+	string checkOption;
+	stringstream ss;
+	bool tempCheck;
+	do {
+		cout<<"Vui long nhap lua chon: ";
+		tempCheck = validateNumber(checkOption);
+		if(tempCheck == false) {
+			cout<<"Nhap sai dinh dang"<<endl;
+		}
+	}while(tempCheck == false);
+	ss.clear();
+	ss<<checkOption;
+	ss>>option;
 		switch(option){
 			case 0:
 				return 0;
 			case 1:
 				{
 				string temp;
-				cout<<"Vui long nhap ten moi:";
-				fflush(stdin);
-				getline(cin,temp);
+				do {
+					cout<<"Ten moi:";
+					fflush(stdin);
+					getline(cin, temp);
+					if(validateString(temp) == false) {
+						cout<<"Vui long nhap dung dinh dang!"<<endl;
+					}
+				}while(validateString(temp) == false);
 				name=temp;
 				return 1;
 			}
 			case 2:
 				{
-				string temp;
 				int dem;
+				string temp;
 				do{
 				dem=0;
-				cout<<"Vui long nhap ma moi:";
-				fflush(stdin);
-				getline(cin,temp);
+					do {
+						cout<<"Ma moi:";
+						fflush(stdin);
+						getline(cin, temp);
+						if(validateString(temp) == false) {
+							cout<<"Vui long nhap dung dinh dang!"<<endl;
+						}
+					}while(validateString(temp) == false);
 				int n=temp.size();
 				char temp_1[n+1];
 				strcpy(temp_1,temp.c_str());
@@ -894,42 +1076,77 @@ int Goods::Replace(vector<string> &id_List){
 			case 3:
 				{
 				string temp;
-				cout<<"Vui long nhap danh muc moi\n";
-				fflush(stdin);
-				getline(cin,temp);
+				do {
+					cout<<"Danh muc moi: ";
+					fflush(stdin);
+					getline(cin, temp);
+					if(validateString(temp) == false) {
+						cout<<"Vui long nhap dung dinh dang!"<<endl;
+					}
+				}while(validateString(temp) == false);
 				category=temp;
 				return 1;
 			}
 			case 4:
 				{
-				float temp;
-				cout<<"Vui long nhap lai gia chiet khau\n";
-				cin>>temp;
-				discount=temp;
+				float num;
+				string checkNumber;
+				stringstream ss;
+				bool tempCheck;
+				do {
+					cout<<"Chiet khau moi: ";
+					tempCheck = validateNumber(checkNumber);
+					if(tempCheck == false) {
+						cout<<"Nhap sai dinh dang"<<endl;
+					}
+				}while(tempCheck == false);
+				ss<<checkNumber;
+				ss>>num;
+				discount=num;
 				priceAfter=price*(100-discount)/100;
 				return 1;
 			}
 			case 5:
 				{
-				float temp;
-				cout<<"Vui long nhap lai gia goc\n";
-				cin>>temp;
-				price=temp;
+				float num;
+				string checkNumber;
+				stringstream ss;
+				bool tempCheck;
+				do {
+					cout<<"Gia goc moi: ";
+					tempCheck = validateNumber(checkNumber);
+					if(tempCheck == false) {
+						cout<<"Nhap sai dinh dang"<<endl;
+					}
+				}while(tempCheck == false);
+				ss<<checkNumber;
+				ss>>num;
+				price=num;
 				priceAfter=price*(100-discount)/100;
 				return 1;
 			}
 			case 6:
 				{
-				int temp;
-				cout<<"Vui long nhap lai so luong san pham\n";
-				cin>>temp;
-				number=temp;
+				int num;
+				string checkNumber;
+				stringstream ss;
+				bool tempCheck;
+				do {
+					cout<<"So luong san pham moi: ";
+					tempCheck = validateNumber(checkNumber);
+					if(tempCheck == false) {
+						cout<<"Nhap sai dinh dang"<<endl;
+					}
+				}while(tempCheck == false);
+				ss<<checkNumber;
+				ss>>num;
+				number=num;
 				return 1;
 			}
 			case 7:
 				{
 				Date temp;
-				cout<<"Vui long nhap lai ngay san xuat\n";
+				cout<<"Vui long nhap lai ngay san xuat:"<<endl;
 				temp.inputDate();
 				date=temp;
 				expiryDate.setDate(updateExpiryDate());
@@ -937,18 +1154,29 @@ int Goods::Replace(vector<string> &id_List){
 			}
 			case 8:
 				{
-				int temp;
-				cout<<"Nhap lai han su dung\n";
-				cin>>temp;
-				valid=temp;
+				int num;
+				string checkNumber;
+				stringstream ss;
+				bool tempCheck;
+				do {
+					cout<<"Han su dung moi: ";
+					tempCheck = validateNumber(checkNumber);
+					if(tempCheck == false) {
+						cout<<"Nhap sai dinh dang"<<endl;
+					}
+				}while(tempCheck == false);
+				ss<<checkNumber;
+				ss>>num;
+				valid=num;
 				expiryDate.setDate(updateExpiryDate());
 				return 1;
 			}
-			default: return 0;
+			default: 
+				cout<<"Lua chon khong ton tai";
+				return 0;
 		}
 }
 
-//
 //Menu methods
 
 Menu::Menu(int x, int y, vector<string> _menuContent, string title){
@@ -1106,8 +1334,19 @@ void Menu::start(ListGoods list) {
 				switch(currentIndex){
 					case 0:
 						do {
-							cout<<"Nhap so luong mat hang: ";
-							cin>>soLuong;
+							string checkNumber;
+							stringstream ss;
+							bool tempCheck;
+							do {
+								cout<<"Nhap so luong mat hang: ";
+								tempCheck = validateNumber(checkNumber);
+								if(tempCheck == false) {
+									cout<<"Nhap sai dinh dang"<<endl;
+								}
+							}while(tempCheck == false);
+							ss.clear();
+							ss<<checkNumber;
+							ss>>soLuong;
 							if(soLuong <= 0) {
 								cout<<"Nhap sai so luong. Vui long nhap lai!"<<endl;
 							}
@@ -1171,7 +1410,7 @@ void Menu::start(ListGoods list) {
 						goto startPoint;
 						break;
 					case 6:
-						cout << "Ban da chon thoat chuong tring!!" << endl;
+						cout << "Ban da chon thoat chuong trinh!!" << endl;
 						exit(0);
 						break;
 					default:
