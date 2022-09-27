@@ -88,6 +88,8 @@ class Goods {
 		void input();
 		void output(int series);
 		friend void outputTitle();
+		friend string upperCase(string a);
+		friend void changeString(char a[], string b);
 		~Goods();
 		int Replace(vector<string> &id_List);
 };
@@ -412,10 +414,13 @@ void Date::inputDate() {
 			if(temp != true) {
 				cout<<"Ngay san xuat phai dung dinh dang"<<endl;
 			}
+			else if(checkExpiryDate()){
+			cout<<"Ngay san xuat khong duoc lon hon ngay hien tai!"<<endl;
+			}
 		}else {
 			cout<<"Nam san xuat phai lon hon 2000"<<endl;
 		}
-	}while(yyyy <= 2000 ||  temp == false);
+	}while(yyyy <= 2000 ||  temp == false || checkExpiryDate());
 }
 //Xuat ngay
 void Date::outputDate() {
@@ -524,9 +529,9 @@ string Goods::getStatus(){
 }
 void Goods::setStatus(){
 	if(expiryDate.checkExpiryDate()){
-		this->status = "Con han";
+		this->status = "CON HAN";
 	}
-	else this->status = "Het han";
+	else this->status = "HET HAN";
 }
 void Goods::setStatusWithData(string status){
 	this->status = status;
@@ -590,6 +595,19 @@ Date Goods::updateExpiryDate(){
 	}
 	return update;
 }
+//in hoa chuoi
+string upperCase(string a){
+	for(int i=0; i<a.length(); ++i){
+		if(a[i]>='a'&&a[i]<='z')
+		a[i]-=32;
+	}
+	return a;
+}
+void changeString(char a[], string b){
+			for(int i=0;i<b.length();++i){
+				a[i] = b[i];
+			}
+		}
 //Nhap thong tin hang hoa
 void Goods::input(){
 	bool tempCheck;
@@ -603,28 +621,35 @@ void Goods::input(){
 	do {
 		fflush(stdin);
 		getline(cin, codeTemp);
+		
 		if(validateString(codeTemp) == false) {
 			cout<<"Vui long nhap dung dinh dang!"<<endl;
 		}
 	}while(validateString(codeTemp) == false);
+	codeTemp = upperCase(codeTemp);
+	cout<<codeTemp<<endl;
 	setCode(codeTemp);
 	cout<<"Nhap ten: ";
 	do {
 		fflush(stdin);
 		getline(cin, nameTemp);
+		
 		if(validateString(nameTemp) == false) {
 			cout<<"Vui long nhap dung dinh dang!"<<endl;
 		}
 	}while(validateString(nameTemp) == false);
+	nameTemp = upperCase(nameTemp);
 	setName(nameTemp);
 	do {
 		cout<<"Nhap danh muc: ";
 		fflush(stdin);
 		getline(cin, categoryTemp);
+		
 		if(validateString(categoryTemp) == false) {
 			cout<<"Vui long nhap dung dinh dang!"<<endl;
 		}
 	}while(validateString(categoryTemp) == false);
+	categoryTemp = upperCase(categoryTemp);
 	setCategory(categoryTemp);
 	do {
 		cout<<"Nhap so luong: ";
@@ -801,6 +826,7 @@ void ListGoods::Find_2(){
 	int select,dem=0;
 	string selectTemp;
 	char temp_1[100],temp_2[100];
+	string _temp_1, _temp_2;
 	stringstream ss;
 	bool tempCheck;
 	do{
@@ -828,7 +854,8 @@ void ListGoods::Find_2(){
 				do {
 					cout<<"Nhap ten: ";
 					fflush(stdin);
-					gets(temp_1);
+					getline(cin,_temp_1);
+					changeString(temp_1,upperCase(_temp_1));
 					if(validateString(temp_1) == false) {
 						cout<<"Vui long nhap dung dinh dang!"<<endl;
 					}
@@ -847,7 +874,8 @@ void ListGoods::Find_2(){
 				do {
 					cout<<"Nhap danh muc: ";
 					fflush(stdin);
-					gets(temp_1);
+					getline(cin,_temp_1);
+					changeString(temp_1,upperCase(_temp_1));
 					if(validateString(temp_1) == false) {
 						cout<<"Vui long nhap dung dinh dang!"<<endl;
 					}
@@ -866,7 +894,8 @@ void ListGoods::Find_2(){
 					{
 						cout<<"Nhap tinh trang: ";
 				        fflush(stdin);
-				        gets(temp_1);
+				        getline(cin,_temp_1);
+					changeString(temp_1,upperCase(_temp_1));
 				        outputTitle();
 				        for(Node* i=head;i!=NULL;i=i->next){
 				            if( strstr( strupr(strcpy(temp_2, i->data.status.c_str())),strupr(temp_1) ) ){
@@ -887,11 +916,13 @@ void ListGoods::Find_2(){
 Node* ListGoods:: Find_1(){
 	Node* p=new Node;
 	char temp_1[100],temp_2[100];
+	string _temp_1;
 	int dem_1 =0,dem_2=0;
     do {
 		cout<<"Nhap ma san pham: ";
 		fflush(stdin);
-		gets(temp_1);
+		getline(cin,_temp_1);
+		changeString(temp_1,upperCase(_temp_1));
 		if(validateString(temp_1) == false) {
 			cout<<"Vui long nhap dung dinh dang!"<<endl;
 		}
@@ -1058,6 +1089,7 @@ int Goods::Replace(vector<string> &id_List){
 					cout<<"Ten moi:";
 					fflush(stdin);
 					getline(cin, temp);
+					temp = upperCase(temp);
 					if(validateString(temp) == false) {
 						cout<<"Vui long nhap dung dinh dang!"<<endl;
 					}
@@ -1075,6 +1107,7 @@ int Goods::Replace(vector<string> &id_List){
 						cout<<"Ma moi:";
 						fflush(stdin);
 						getline(cin, temp);
+						temp = upperCase(temp);
 						if(validateString(temp) == false) {
 							cout<<"Vui long nhap dung dinh dang!"<<endl;
 						}
@@ -1106,6 +1139,7 @@ int Goods::Replace(vector<string> &id_List){
 					cout<<"Danh muc moi: ";
 					fflush(stdin);
 					getline(cin, temp);
+					temp = upperCase(temp);
 					if(validateString(temp) == false) {
 						cout<<"Vui long nhap dung dinh dang!"<<endl;
 					}
