@@ -5,7 +5,7 @@
 #include<vector>
 #include<string>
 #include<unistd.h>
-
+#include<conio.h>
 using namespace std;
 
 void gotoXY(int x, int y)
@@ -136,9 +136,10 @@ void currentTarget(int x, int y, int w, int h, int b_color, int t_color, string 
 //	textColor(0);
 }
 
-void loadingAnimation(int x, int y, string loadContent){
+void loadingAnimation(int x, int y, string loadContent, string loadContentDone){
 	int loadingBarLength = 80;
-	SetColor(223);
+	ShowCur(0);
+	SetColor(127);
 	gotoXY(x + round(loadingBarLength*1.0/2) - round(loadContent.length() / 2),y);
 	cout << loadContent << endl;
 	
@@ -153,7 +154,9 @@ void loadingAnimation(int x, int y, string loadContent){
 		usleep(1200);
 	}
 	
-	cout << "\n";
+	gotoXY(x + round(loadingBarLength*1.0/2) - round(loadContentDone.length() / 2),y+4);
+	cout << loadContentDone << endl;
+	sleep(1);
 }
 
 

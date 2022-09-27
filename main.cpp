@@ -1,7 +1,6 @@
 #include<iostream>
 #include<ctime>
 #include<iomanip>
-#include<stdio.h> 
 #include<string>
 #include<vector>
 #include"myDrawLib.h"
@@ -214,8 +213,6 @@ void ListGoods::outputAsTable(int x, int y, int w, int columns, int rows, int co
 		content.push_back(i->data);
 	}// copy the linked list into vector list
 	
-
-	
 	for(short k = 0; k < title.size(); k++){
 		drawBox(_x + (k*w), y, w, 2, titleColor, 11, title[k] ,"center");
 		if(k > 0){
@@ -245,7 +242,7 @@ void ListGoods::outputAsTable(int x, int y, int w, int columns, int rows, int co
 			xStep+=w;
 			drawBox(xStep, _y, w, 2, color, 250, to_string(content[i].date.getDay()) + "/" + to_string(content[i].date.getMonth()) + "/" + to_string(content[i].date.getYear()), contentAlign);
 			xStep+=w;
-			drawBox(xStep, _y, w, 2, color, 250, to_string(content[i].valid) + " thang", contentAlign);
+			drawBox(xStep, _y, w, 2, color, 250, to_string(content[i].expiryDate.getDay()) + "/" + to_string(content[i].expiryDate.getMonth()) + "/" + to_string(content[i].expiryDate.getYear()), contentAlign);
 			xStep+=w;
 			drawBox(xStep, _y, w, 2, color, 250, content[i].status, contentAlign);
 		for(short j = 0; j < title.size(); j++){
@@ -267,8 +264,7 @@ void ListGoods::outputAsTable(int x, int y, int w, int columns, int rows, int co
 				cout << char(194);
 			}
 			_x+=w;
-		}
-				
+		}	
 		_y+=2;
 		_x = x;
 		xStep = x;
@@ -276,7 +272,6 @@ void ListGoods::outputAsTable(int x, int y, int w, int columns, int rows, int co
 	gotoXY(0, (y+3) + 2 * rows + 2);
 	SetColor(DEFAULT_TEXT_COLOR);
 	ShowCur(0);
-//		cout << round(content.at(0).number) << endl;
 }
 
 //Constructor va huy cua Date
@@ -1260,8 +1255,7 @@ void readDataFromFile(ListGoods &list){
 				
 		list.insertLast(temp);
 	}
-	loadingAnimation(68, 2, "Dang doc file...");
-	cout << "\nDoc file thanh cong" << endl;
+	loadingAnimation(68, 2, "Dang doc file...", "Doc file thanh cong!!");
 	endPoint:
 	inputFile.close();
 	system("cls");
@@ -1349,7 +1343,7 @@ void Menu::printMenu(const string& title, const string& textAlign, int padding) 
 				yPos+=3, 
 				contentMaxLength + padding,
 				2, 
-				124, 
+				260, 
 				15, 
 				_menuContent[i], 
 				textAlign);
@@ -1490,7 +1484,7 @@ void Menu::start(ListGoods list) {
 						if(list.isEmpty()){
 							cout << "\nDanh sach trong..." << endl;
 						}else{
-							list.outputAsTable(0, pointerY, 22, 10, list.getSize(), 196, 1, "left");
+							list.outputAsTable(0, pointerY, 21, 10, list.getSize(), 196, 1, "left");
 						}
 						this->clearMenuScreen();
 						goto startPoint;
@@ -1518,8 +1512,7 @@ void Menu::start(ListGoods list) {
 							cout << "\nDanh sach trong..." << endl;
 						}else{
 							writeDataToFile(list);
-							loadingAnimation(68, pointerY+2, "Dang xuat du lieu ra file...");
-							cout << "->Xuat thanh cong" << endl;
+							loadingAnimation(68, pointerY+2, "Dang xuat du lieu ra file...", "->Xuat thanh cong");
 						}
 						this->clearMenuScreen();
 						goto startPoint;
