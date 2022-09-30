@@ -449,6 +449,7 @@ void Date::outputDate() {
 		}
 	}
 }
+//mh7
 //so sanh ngay vua nhap voi ngay hien tai
 bool Date::checkExpiryDate(){
 	time_t t = time(NULL);
@@ -531,9 +532,9 @@ string Goods::getStatus(){
 }
 void Goods::setStatus(){
 	if(expiryDate.checkExpiryDate()){
-		this->status = "Con han";
+		this->status = "CON HAN";
 	}
-	else this->status = "Het han";
+	else this->status = "HET HAN";
 }
 void Goods::setStatusWithData(string status){
 	this->status = status;
@@ -629,7 +630,6 @@ void Goods::input(){
 		}
 	}while(validateString(codeTemp) == false);
 	codeTemp = upperCase(codeTemp);
-	cout<<codeTemp<<endl;
 	setCode(codeTemp);
 	cout<<"Nhap ten: ";
 	do {
@@ -861,7 +861,7 @@ void ListGoods::Find_2(){
 					if(validateString(temp_1) == false) {
 						cout<<"Vui long nhap dung dinh dang!"<<endl;
 					}
-				}while(validateString(temp_1) == false);
+				}while(validateString(_temp_1) == false);
 				check=0;
 				dem=0;
 				for(Node* i=head;i!=NULL;i=i->next){
@@ -890,10 +890,10 @@ void ListGoods::Find_2(){
 					fflush(stdin);
 					getline(cin,_temp_1);
 					changeString(temp_1,upperCase(_temp_1));
-					if(validateString(temp_1) == false) {
+					if(validateString(_temp_1) == false) {
 						cout<<"Vui long nhap dung dinh dang!"<<endl;
 					}
-				}while(validateString(temp_1) == false);
+				}while(validateString(_temp_1) == false);
 				check=0;
 				dem=0;
 				for(Node* i=head;i!=NULL;i=i->next){
@@ -993,7 +993,8 @@ Node* ListGoods:: Find_1(){
 		cout<<"Nhap ma san pham: ";
 		fflush(stdin);
 		getline(cin,temp_1);
-//		changeString(temp_1,tupperCase(_emp_1));
+		temp_1 = upperCase(temp_1);
+//		changeString(temp_1,upperCase(temp_1));
 		if(validateString(temp_1) == false) {
 			cout<<"Vui long nhap dung dinh dang!"<<endl;
 		}
