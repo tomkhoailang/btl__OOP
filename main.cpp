@@ -9,7 +9,7 @@
 #include<fstream>
 #include<vector>
 #include <sstream>
-#define _WIN32_WINNT  0x0500
+//#define _WIN32_WINNT  0x0500
 using namespace std;
 vector<string> id_List;
 
@@ -825,7 +825,7 @@ bool ListGoods::checkCode(string code){
 }	
 // Chuc nang tim kiem
 void ListGoods::Find_2(){
-	int select,dem=0;
+	int select,dem=0,check=0;
 	string selectTemp;
 	char temp_1[100],temp_2[100];
 	string _temp_1, _temp_2;
@@ -905,6 +905,12 @@ void ListGoods::Find_2(){
                     }while(choice<1||choice>2);
                     switch(choice){
                     	case 1:
+                    		for(Node* i=head;i!=NULL;i=i->next){
+                    			if(strcmp(temp_1,i->data.status.c_str())==0){
+                    				check++;
+                    			}
+							}
+							if(check!=0){
                     		outputTitle();
                     		for(Node* i=head;i!=NULL;i=i->next){
                     			dem++;
@@ -912,28 +918,35 @@ void ListGoods::Find_2(){
                     				dem_1++;
                     				i->data.output(dem);
 								}
+						    }
 							}
-							if(dem_1==0){
-								cout<<"Khong co phan tu trong danh sach\n";
-							}
+							else{
+							cout<<"Phan tu can thay doi khong co trong danh sach\n";
+						}
 							break;
 						case 2:
+							for(Node* i=head;i!=NULL;i=i->next){
+								if(strcmp(temp_2,i->data.status.c_str())==0){
+									check++;
+								}
+							}
+							if(check!=0){
 							outputTitle();
 							for(Node* i=head;i!=NULL;i=i->next){
                     			dem++;
                     			if(strcmp(temp_2,i->data.status.c_str())==0){
                     				dem_1++;
-                    				outputTitle();
                     				i->data.output(dem);
 								}
 							}
-							if(dem_1==0){
-								cout<<"Khong co phan tu trong danh sach\n";
-							}
+						}
+						else{
+							cout<<"Phan tu can thay doi khong co trong danh sach\n";
+						}
 							break;
-							default:
-								cout<<"Khong co lua chon nay\n";
-							    break;
+				default:
+					cout<<"Khong co lua chon nay\n";
+					break;
 					}
                     
 				    break;
@@ -977,7 +990,7 @@ void ListGoods:: Change(vector<string> id_List){
 	Node* i=new Node;
 	string checkNumber;
 	stringstream ss;
-	do{
+//	do{
 	cout<<"\n\nVui long chon phuong thuc ma ban muon thay doi\n";
 	cout<<"1.Sua lai thong tin san pham\n";
 	cout<<"2.Xoa san pham\n";
@@ -1079,7 +1092,7 @@ void ListGoods:: Change(vector<string> id_List){
 	default:
 		cout<<"Lua chon khong ton tai!"<<endl;  
    }
-}while(option!=0);
+//}while(option!=0);
 }
 void ListGoods::addCode(vector<string> &id_List){
 	for(Node* i=head;i!=NULL;i=i->next){
@@ -1097,7 +1110,6 @@ int Goods::Replace(vector<string> &id_List){
 	cout<<"6.So luong san pham\n";
 	cout<<"7.Ngay san xuat \n";
 	cout<<"8.Han su dung \n";
-	cout<<"0.Thoat\n";
 	string checkOption;
 	stringstream ss;
 	bool tempCheck;
@@ -1112,8 +1124,8 @@ int Goods::Replace(vector<string> &id_List){
 	ss<<checkOption;
 	ss>>option;
 		switch(option){
-			case 0:
-				return 0;
+//			case 0:
+//				return 0;
 			case 1:
 				{
 				string temp;
@@ -1245,6 +1257,7 @@ int Goods::Replace(vector<string> &id_List){
 				temp.inputDate();
 				date=temp;
 				expiryDate.setDate(updateExpiryDate());
+				setStatus();
 				return 1;
 			}
 			case 8:
@@ -1265,6 +1278,7 @@ int Goods::Replace(vector<string> &id_List){
 				ss>>num;
 				valid=num;
 				expiryDate.setDate(updateExpiryDate());
+				setStatus();
 				return 1;
 			}
 			default: 
