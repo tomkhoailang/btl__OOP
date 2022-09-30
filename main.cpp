@@ -825,7 +825,7 @@ bool ListGoods::checkCode(string code){
 }	
 // Chuc nang tim kiem
 void ListGoods::Find_2(){
-	int select,dem=0,check=0;
+	int select,dem,check;
 	string selectTemp;
 	char temp_1[100],temp_2[100];
 	string _temp_1, _temp_2;
@@ -862,6 +862,8 @@ void ListGoods::Find_2(){
 						cout<<"Vui long nhap dung dinh dang!"<<endl;
 					}
 				}while(validateString(temp_1) == false);
+				check=0;
+				dem=0;
 				for(Node* i=head;i!=NULL;i=i->next){
 					if( strstr( strupr(strcpy(temp_2, i->data.name.c_str())),strupr(temp_1) ) ){
 						check++;
@@ -892,6 +894,8 @@ void ListGoods::Find_2(){
 						cout<<"Vui long nhap dung dinh dang!"<<endl;
 					}
 				}while(validateString(temp_1) == false);
+				check=0;
+				dem=0;
 				for(Node* i=head;i!=NULL;i=i->next){
 					if( strstr( strupr(strcpy(temp_2, i->data.category.c_str())),strupr(temp_1) ) ){
 						check++;
@@ -924,6 +928,8 @@ void ListGoods::Find_2(){
                     }while(choice<1||choice>2);
                     switch(choice){
                     	case 1:
+                    		check=0;
+                    		dem=0;
                     		for(Node* i=head;i!=NULL;i=i->next){
                     			if(strcmp(temp_1,i->data.status.c_str())==0){
                     				check++;
@@ -944,6 +950,8 @@ void ListGoods::Find_2(){
 						}
 							break;
 						case 2:
+							check=0;
+							dem=0;
 							for(Node* i=head;i!=NULL;i=i->next){
 								if(strcmp(temp_2,i->data.status.c_str())==0){
 									check++;
@@ -1005,7 +1013,7 @@ Node* ListGoods:: Find_1(){
 	}
 }
 void ListGoods:: Change(vector<string> id_List){
-	int option,check,dem=0;
+	int option,check,dem;
 	Node* i=new Node;
 	string checkNumber;
 	stringstream ss;
@@ -1034,6 +1042,7 @@ void ListGoods:: Change(vector<string> id_List){
 			break;
 		case 1:
 			{
+				dem=0;
         		i=Find_1();
         		if(i!=NULL){
         		check=i->data.Replace(id_List);
@@ -1049,6 +1058,7 @@ void ListGoods:: Change(vector<string> id_List){
 		}
 	}
     case 2: {
+    	dem=0;
 		i=Find_1();
 		if(i!=NULL){
 		cout<<"Chon 1 de tiep tuc\n";
