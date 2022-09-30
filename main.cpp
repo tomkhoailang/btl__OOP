@@ -918,8 +918,8 @@ void ListGoods::Find_2(){
 		case 3:
 					{
                     int choice,dem_1=0;
-                    char temp_1[100]="Con han";
-                    char temp_2[100]="Het han";
+                    char temp_1[100]="CON HAN";
+                    char temp_2[100]="HET HAN";
                     do{
                     cout<<"1.Con han su dung\n";
                     cout<<"2.Het han su dung\n";
