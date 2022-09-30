@@ -1044,8 +1044,10 @@ void ListGoods:: Change(vector<string> id_List){
 		case 1:
 			{
 				dem=0;
+				id_List.clear();
         		i=Find_1();
         		if(i!=NULL){
+        		addCode(id_List);
         		check=i->data.Replace(id_List);
         		dem++;
         		if(check==1){
@@ -1196,13 +1198,7 @@ int Goods::Replace(vector<string> &id_List){
 					}
 				}
 			}while(dem!=0);
-//			     Sua lai gia tri cua vector
-			    for(int j=0;j<id_List.size();j++){
-			    	if(strcmp(code.c_str(),id_List[j].c_str())==0)
-                        dem=j;      
-				}
-				id_List.erase(id_List.begin()+dem);
-				id_List.push_back(temp);
+                id_List.clear();
 				code=temp;
 				return 1;
 			}
