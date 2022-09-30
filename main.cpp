@@ -862,12 +862,22 @@ void ListGoods::Find_2(){
 						cout<<"Vui long nhap dung dinh dang!"<<endl;
 					}
 				}while(validateString(temp_1) == false);
+				for(Node* i=head;i!=NULL;i=i->next){
+					if( strstr( strupr(strcpy(temp_2, i->data.name.c_str())),strupr(temp_1) ) ){
+						check++;
+					}
+				}
+				if(check!=0){
 				outputTitle();
 				for(Node* i=head;i!=NULL;i=i->next){	
                     if( strstr( strupr(strcpy(temp_2, i->data.name.c_str())),strupr(temp_1) ) ){
 				        dem++;
 				        i->data.output(dem);
 				    }
+				}
+			    }
+			    else{
+			    	cout<<"Phan tu can tim ko co trong danh sach\n";
 				}
 				break;
 			}       
@@ -882,7 +892,12 @@ void ListGoods::Find_2(){
 						cout<<"Vui long nhap dung dinh dang!"<<endl;
 					}
 				}while(validateString(temp_1) == false);
-				
+				for(Node* i=head;i!=NULL;i=i->next){
+					if( strstr( strupr(strcpy(temp_2, i->data.category.c_str())),strupr(temp_1) ) ){
+						check++;
+					}
+				}
+				if(check!=0){
 				outputTitle();
 				for(Node* i=head;i!=NULL;i=i->next){
 				    if( strstr( strupr(strcpy(temp_2, i->data.category.c_str())),strupr(temp_1) ) ){
@@ -890,6 +905,10 @@ void ListGoods::Find_2(){
 				        i->data.output(dem);
 				    }
 				    }
+				}
+				else{
+			    	cout<<"Phan tu can tim ko co trong danh sach\n";
+				}
 				break;
 				}
 		case 3:
@@ -921,7 +940,7 @@ void ListGoods::Find_2(){
 						    }
 							}
 							else{
-							cout<<"Phan tu can thay doi khong co trong danh sach\n";
+							cout<<"Phan tu can tim khong co trong danh sach\n";
 						}
 							break;
 						case 2:
@@ -941,7 +960,7 @@ void ListGoods::Find_2(){
 							}
 						}
 						else{
-							cout<<"Phan tu can thay doi khong co trong danh sach\n";
+							cout<<"Phan tu can tim khong co trong danh sach\n";
 						}
 							break;
 				default:
