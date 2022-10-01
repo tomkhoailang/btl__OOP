@@ -4,8 +4,8 @@
 CPP      = g++.exe
 CC       = gcc.exe
 WINDRES  = windres.exe
-OBJ      = main.o myDrawLib.o
-LINKOBJ  = main.o myDrawLib.o
+OBJ      = main.o myDrawLib.o other.o dategoods.o listgoods.o
+LINKOBJ  = main.o myDrawLib.o other.o dategoods.o listgoods.o
 LIBS     = -L"D:/Dev-Cpp/MinGW64/lib" -L"D:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc
 INCS     = -I"D:/Dev-Cpp/MinGW64/include" -I"D:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"D:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
 CXXINCS  = -I"D:/Dev-Cpp/MinGW64/include" -I"D:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"D:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"D:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
@@ -29,3 +29,12 @@ main.o: main.cpp
 
 myDrawLib.o: myDrawLib.cpp
 	$(CPP) -c myDrawLib.cpp -o myDrawLib.o $(CXXFLAGS)
+
+other.o: other.cpp
+	$(CPP) -c other.cpp -o other.o $(CXXFLAGS)
+
+dategoods.o: dategoods.cpp
+	$(CPP) -c dategoods.cpp -o dategoods.o $(CXXFLAGS)
+
+listgoods.o: listgoods.cpp
+	$(CPP) -c listgoods.cpp -o listgoods.o $(CXXFLAGS)
