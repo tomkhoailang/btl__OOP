@@ -1,10 +1,5 @@
-#include<windows.h>
+#include<Windows.h>
 #include<string>
-#include<vector>
-#include<conio.h>
-#include<cmath>
-#include<iostream>
-#define DEFAULT_TEXT_COLOR 91
 using namespace std;
 
 void ShowCur(bool CursorVisibility);

@@ -1,6 +1,11 @@
 #include "myDrawLib.h"
+#include<windows.h>
+#include<iostream>
+#include<cmath>
+#include<vector>
+#include<string>
 #include<unistd.h>
-
+#include<conio.h>
 using namespace std;
 
 void gotoXY(int x, int y)
