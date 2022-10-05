@@ -149,10 +149,174 @@ class Person {
 	protected:
 		string username;
 		string password;
-		string accountName;
 	public:
+		Person();
+		~Person();
+		string getUserName();
+		string getPassWord();
+		void setUserName(string username);
+		void setPassword(string password);
 		void calculation(ListGoods list);
+		
 };
+//class tempemployee
+class TempEmployee {
+	protected:
+		string name;
+		string gender;
+		Date date;
+		int month;
+	public:
+		TempEmployee();
+		~TempEmployee();
+		string getName();
+		string getGender();
+		Date getDate();
+		int getMonth();
+		void setName(string name);
+		void setGender(string gender);
+		void setDate(Date date);
+		void setMonth(int month);
+		void salary();
+		void input();
+		void output();
+};
+//clas employee
+class Employee: public Person, public TempEmployee {
+	private:
+		string name;
+		string gender;
+		Date date;
+		float wage;
+	public:
+		Employee();
+		~Employee();
+		float getWage();
+		void setWage(float wage);
+		void input();
+		void output();
+		void salary();
+};
+//Node nhan vien
+struct Node_1{
+	TempEmployee data_1;
+	Node_1 *next;
+};
+struct Node_2 {
+	Employee data_2;
+	Node_2 *next;
+};
+//class manager
+class Manager: public Person {
+	private:
+		int size_1;
+		int size_2;
+		//TempEmployee
+		Node_1 *head_1;
+		Node_1 *tail_1;
+		//Employee
+		Node_2 *head_2;
+		Node_2 *tail_2;
+	public:
+		Manager();
+		~Manager();
+		Node_1 *makeNode_1();
+		Node_2 *makeNode_2();
+		bool isEmpty_1();
+		bool isEmpty_2();
+		void insertLast_1();
+		void insertLast_2();
+		void output_1();
+		void output_2();
+		void userList();
+
+};
+void login (bool &isLogin);
+int main() {
+	bool isLogin = false;
+	login(isLogin);
+	if(isLogin == false) {
+	}else {
+		ListGoods list;
+		HWND hWnd = GetConsoleWindow();
+	  	ShowWindow(hWnd,SW_SHOWMAXIMIZED);  // mo man hinh console dang fullscreen
+		
+		vector<string> menuContent{
+								   "Nhap hang hoa",
+								   "Xuat hang hoa",
+								   "Tim kiem",
+								   "Cap nhat hang hoa",
+								   "Xuat thong tin vao file",
+								   "Chuc Nang Trong",
+								   "Thoat"};
+								   
+		Menu menu(90, 2, menuContent, "QUAN LY CUA HANG");
+	  	
+		readDataFromFile(list);
+		list.addCode(id_List);
+		menu.start(list);
+		_getch();
+	}
+	return 0;
+}
+void login (bool &isLogin) {
+	char fileName[] = "D://fileTest//admin.txt";
+	fstream data;
+	string u,p;
+	int z = 3;
+	bool check = false;
+	int length = 0;
+	vector<string> mainUser;
+	vector<string> mainPass;
+	string username;
+	string password;
+	data.open(fileName, ios::in);
+	data>>username>>password;
+	mainUser.push_back(username);
+	mainPass.push_back(password);
+	data.close();
+	do {
+		cout<<"\t\tDang nhap"<<endl;
+		cout<<"\tTen tai khoan: ";
+		getline(cin,u);
+		cout<<"\tMat khau: ";
+		getline(cin,p);
+		if(u == mainUser[0] && p == mainPass[0]) {
+			check = true;
+			isLogin = true;
+		}
+		if(check == true) {
+			cout<<"\tDang nhap thanh cong"<<endl;
+			isLogin = true;
+			break;
+		}else {
+			if(z == 0) {
+				cout<<"\tBan da nhap sai qua nhieu. Chuong trinh se tu dong thoat"<<endl;
+				break;
+			}else {
+				cout<<"\tDang nhap that bai. Con "<<z<<" lan thu"<<endl;
+				z--;
+			}
+		}
+	}while(z>=0);
+}
+//getter setter
+Person::Person() {
+}
+Person::~Person() {
+}
+string Person::getUserName() {
+	return this->username;
+}
+string Person::getPassWord() {
+	return this->password;
+}
+void Person::setUserName(string username) {
+	this->username = username;
+}
+void Person::setPassword(string password) {
+	this->password = password;
+}
 void Person::calculation(ListGoods list) {
 	Node *a = new Node;
 	int totalPrice = 0;
@@ -203,30 +367,168 @@ void Person::calculation(ListGoods list) {
 				cout<<"Tong hoa don: "<<endOfPrice<<endl;
 		}
 	}while(select != 4);
-		
 }
-int main() {
-	ListGoods list;
-	HWND hWnd = GetConsoleWindow();
-  	ShowWindow(hWnd,SW_SHOWMAXIMIZED);  // mo man hinh console dang fullscreen
-	
-	vector<string> menuContent{
-							   "Nhap hang hoa",
-							   "Xuat hang hoa",
-							   "Tim kiem",
-							   "Cap nhat hang hoa",
-							   "Xuat thong tin vao file",
-							   "Chuc Nang Trong",
-							   "Thoat"};
-							   
-	Menu menu(90, 2, menuContent, "QUAN LY CUA HANG");
-  	
-	readDataFromFile(list);
-	list.addCode(id_List);
-	menu.start(list);
-	_getch();
-	return 0;
+//tempemployee
+TempEmployee::TempEmployee() {
 }
+TempEmployee::~TempEmployee() {
+}
+string TempEmployee::getName() {
+	return this->name;
+}
+string TempEmployee::getGender() {
+	return this->gender;
+}
+Date TempEmployee::getDate() {
+	return this->date;
+}
+void TempEmployee::setName(string name) {
+	this->name = name;
+}
+void TempEmployee::setGender(string gender) {
+	this->gender = gender;
+}
+void TempEmployee::setDate(Date date) {
+	this->date = date;
+}
+void TempEmployee::setMonth(int month) {
+	this->month = month;
+}
+void TempEmployee::salary() {
+	if(month == 0) {
+		cout<<"Nhan vien nay chua co luong"<<endl;
+	}else {
+		cout<<"Luong "<<month<<" thang: "<<3000000*month;
+	}
+}
+void TempEmployee::input() {
+	cout<<"Ten nhan vien: ";
+	fflush(stdin);
+	getline(cin, name);
+	cout<<"Gioi tinh: ";
+	fflush(stdin);
+	getline(cin, gender);
+	date.inputDate();
+	cout<<"Thang hoat dong: ";
+	cin>>month;
+}
+void TempEmployee::output() {
+	cout<<"Ten nhan vien: "<<name<<endl;
+	cout<<"Gioi tinh: "<<gender<<endl;
+	cout<<"Ngay sinh: ";
+	date.outputDate();
+	cout<<"\nThang hoat dong: "<<month<<endl;
+}
+//class employee
+Employee::Employee() {
+}
+Employee::~Employee() {
+}
+void Employee::salary() {
+	cout<<"Luong thang: 9000000VND"<<endl;
+	if(month == 0) {
+		cout<<"Hien tai chua co luong!"<<endl;
+	}else {
+		float temp = month*9000000*wage;
+		cout<<"Luong "<<month<<" thang: "<<(int)temp<<"VND"<<endl;
+	}
+}
+void Employee::input() {
+	//chinh thanh viet lien khong cho phep cach ra
+	cout<<"Nhap ten tai khoan: ";
+	getline(cin, username);
+	// nhap binh thuong
+	cout<<"Nhap mat khau: ";
+	getline(cin, password);
+	TempEmployee::input();
+	cout<<"Nhap he so luong: ";
+	cin>>wage;
+}
+void Employee::output() {
+	TempEmployee::output();
+	salary();
+}
+// class manager
+Manager::Manager() {
+	this->head_1 = NULL;
+	this->tail_1 = NULL;
+	this->size_1 = 0;
+	this->head_2 = NULL;
+	this->tail_2 = NULL;
+	this->size_2 = 0;
+}
+Manager::~Manager() {
+}
+// nhap xuat tempemployee
+bool Manager::isEmpty_1() {
+	if(head_1 == NULL) {
+		return true;
+	}else {
+		return false;
+	}
+}
+Node_1 *Manager::makeNode_1() {
+	Node_1 *temp = new Node_1();
+	temp->data_1.input();
+	temp->next = NULL;
+	return temp;
+}
+void Manager::insertLast_1() {
+	Node_1 *temp = makeNode_1();
+	if (isEmpty_1() == true) {
+		head_1 = tail_1 = temp;
+		this->size_1++;
+	}else {
+		tail_1->next = temp;
+		tail_1 = temp;
+		this->size_1++;
+	}
+
+}
+//nhap xuat employee
+bool Manager::isEmpty_2() {
+	if(head_2 == NULL) {
+		return true;
+	}else {
+		return false;
+	}
+}
+Node_2 *Manager::makeNode_2() {
+	Node_2 *temp = new Node_2();
+	temp->data_2.input();
+	temp->next = NULL;
+	return temp;
+}
+void Manager::insertLast_2() {
+	Node_2 *temp = makeNode_2();
+	if (isEmpty_2() == true) {
+		head_2 = tail_2 = temp;
+		this->size_2++;
+	}else {
+		tail_2->next = temp;
+		tail_2 = temp;
+		this->size_1++;
+	}
+
+}
+void Manager::output_2() {
+	for(Node_2 *i = head_2; i != NULL; i = i->next) {
+		i->data_2.output();
+	}
+}
+//chuc nang manager 
+void Manager::userList() {
+	if(isEmpty_2()) {
+		cout<<"Danh sach dang trong "<<endl;
+	}else {
+		cout<<"Danh sach tai khoan dang nhap: "<<endl;
+		for(Node_2 *i = head_2; i != NULL; i =i->next) {
+			cout<<"Ten tai khoan: "<<i->data_2.getUserName()<<endl;
+			cout<<"Mat khau: "<<i->data_2.getPassWord()<<endl;
+		}
+	}
+}
+//hamcheck
 bool validateNumber(string &toCheck) {
 	bool correct = false;
 	fflush(stdin);
@@ -242,6 +544,7 @@ bool validateNumber(string &toCheck) {
 	}
 	return correct;
 }
+
 bool validateString(string toCheck) {
 
 	bool correct = false;
@@ -437,7 +740,6 @@ void Date::inputDate() {
 	string ddTemp,mmTemp,yyyyTemp;
 	stringstream ss;
 	do {
-		cout<<"Nhap ngay san xuat: "<<endl;
 		cout<<"Ngay ";
 		do {
 			tempCheck = validateNumber(ddTemp);
@@ -1629,10 +1931,12 @@ void Menu::start(ListGoods list) {
 							ss.clear();
 							ss<<checkNumber;
 							ss>>soLuong;
-							if(soLuong <= 0) {
+							if(soLuong < 0) {
 								cout<<"Nhap sai so luong. Vui long nhap lai!"<<endl;
+							}else if(soLuong == 0) {
+								cout<<"Da thoat khoi chuc nang!"<<endl;
 							}
-							}while(soLuong <= 0);
+							}while(soLuong < 0);
 							for(int i = 0; i<soLuong; i++) {
 								Goods a;
 								do{
@@ -1686,8 +1990,10 @@ void Menu::start(ListGoods list) {
 						if(list.isEmpty()){
 							cout << "\nDanh sach trong..." << endl;
 						}else{
-							Person person;
-							person.calculation(list);
+							Manager manager;
+							manager.insertLast_2();
+							manager.userList();
+						
 							
 						}
 						this->clearMenuScreen();
