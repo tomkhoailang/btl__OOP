@@ -34,10 +34,12 @@ typedef struct Date {
 		int getYear();
 		bool checkDate();
 		void inputDate();
+		void inputPerson();
 		void outputDate();
 		bool checkExpiryDate();
 		friend class Goods;
 } Date;
+
 //Lop hang hoa
 class Goods {
 	private:
@@ -88,7 +90,7 @@ class Goods {
 		void input();
 		void output(int series);
 		friend void outputTitle();
-		friend string upperCase(string a);
+		
 		friend void changeString(char a[], string b);
 		~Goods();
 		int Replace(vector<string> &id_List);
@@ -164,19 +166,28 @@ class TempEmployee {
 	protected:
 		string name;
 		string gender;
-		Date date;
+		int age;
+		Date birth;
+		Date startWork;
+		string phoneNumber;
 		int month;
 	public:
 		TempEmployee();
 		~TempEmployee();
 		string getName();
 		string getGender();
-		Date getDate();
+		string getPhoneNumber();
+		int getAge();
+		Date getBirth();
+		Date getStartWork();
 		int getMonth();
 		void setName(string name);
 		void setGender(string gender);
-		void setDate(Date date);
-		void setMonth(int month);
+		void setAge();
+		void setPhoneNumber(string phoneNumber);
+		void setBirth(Date birth);
+		void setStartWork(Date startWork);
+		void setMonth();
 		void salary();
 		void input();
 		void output();
@@ -184,19 +195,62 @@ class TempEmployee {
 //clas employee
 class Employee: public Person, public TempEmployee {
 	private:
-		string name;
-		string gender;
-		Date date;
 		float wage;
 	public:
 		Employee();
 		~Employee();
 		float getWage();
+		void setWage();
 		void setWage(float wage);
 		void input();
 		void output();
 		void salary();
 };
+//hamcheck
+bool validateNumber(string &toCheck) {
+	bool correct = false;
+	fflush(stdin);
+	getline(cin, toCheck);
+	for (int i = 0; i<toCheck.length(); i++) {
+		if ((toCheck[i] >= 65 && toCheck[i] <= 90) || (toCheck[i] >= 97 && toCheck[i] <= 122) || toCheck[i] == 32 ) {
+			return false;
+		}else if (toCheck[i] >=48 && toCheck[i]<= 57) {
+			correct = true;
+		}else {
+			return false;
+		}
+	}
+	return correct;
+}
+
+bool validateString(string toCheck) {
+
+	bool correct = false;
+		
+	for (int i = 0; i<toCheck.length(); i++) {
+		
+		if ((toCheck[i] >= 65 && toCheck[i] <= 90) || (toCheck[i] >= 97 && toCheck[i] <= 122) || toCheck[i] == 32 || toCheck[i] >=48 && toCheck[i]<= 57) {
+		    correct = true;
+		}
+		else {
+		    return false;
+		}
+	}
+	return correct;
+}
+//in hoa chuoi
+string upperCase(string a){
+	for(int i=0; i<a.length(); ++i){
+		if(a[i]>='a'&&a[i]<='z')
+		a[i]-=32;
+	}
+	return a;
+}
+void changeString(char a[], string b){
+			for(int i=0;i<b.length();++i){
+				a[i] = b[i];
+			}
+		}
 //Node nhan vien
 struct Node_1{
 	TempEmployee data_1;
@@ -324,7 +378,7 @@ void Person::calculation(ListGoods list) {
 	vector<int> quantity;
 	vector<float> endPrice;
 	int select;
-	float endOfPrice;
+	
 	do {
 		cout<<"1.Them san pham"<<endl;
 		cout<<"2.Xuat hoa don"<<endl;
@@ -335,11 +389,23 @@ void Person::calculation(ListGoods list) {
 		switch(select) {
 			case 1: {
 				a = list.Find_1();
+				bool check = true;
 				if(a != NULL) {
+					for(int i = 0; i < invoice.size(); ++i){
+					if(a->data.getCode() == invoice[i].getCode()){
+						cout<<"San pham nay da co trong danh sach thanh toan."<<endl;
+						check = false;
+						break;
+					}
+				}
+				if(check){
+					if(a->data.getStatus() == "HET HAN"){
+					cout<<"San pham hien tai da het han! Khong the thuc hien thanh toan."<<endl;
+				}else{
 					cout<<"Nhap so luong san pham: ";
 					int number;
 					cin>>number;
-					if(number == 0) {
+					if(number < 1 || number > a->data.getNumber()) {
 						cout<<"Them san pham that bai!"<<endl;
 					}else {
 						a->data.setNumber(a->data.getNumber() - number);
@@ -348,23 +414,65 @@ void Person::calculation(ListGoods list) {
 						endPrice.push_back(number * a->data.getPriceAfter());
 						cout<<"San pham da duoc them vao gio hang"<<endl;
 					}
+				}
+			}
+	
 				}else {
 					cout<<"Vui long nhap chinh xac ma san pham!"<<endl;
 				}
 				break;
 			}
 				
-			case 2:
+			case 2:{
+				float endOfPrice = 0;
+				cout <<endl<<setw(30)<<"Ten san pham"
+					 <<setw(4)<<right<<"SL"
+					 <<setw(9)<<right<<"Gia ban"
+					 <<setw(6)<<right<<"CK"
+					 <<setw(11)<<right<<"Thanh tien"<<endl;
+				for(int i = 0; i < 60; ++i)
+					cout<<"_";
+				cout<<endl;	
 				for(int i = 0; i < invoice.size(); i++) {
-					cout<<"Ten san pham: "<<invoice[i].getName()<<endl;
-					cout<<"So luong: "<<quantity[i]<<endl;
-					cout<<"Tong gia cua san pham "<<endPrice[i]<<endl;
+					cout 	<<setw(30)<<left<<invoice[i].getName()
+					 		<<setw(4)<<right<<quantity[i]
+							<<setw(9)<<right<<invoice[i].getPrice()
+							<<setw(5)<<right<<invoice[i].getDiscount()<<"%"
+							<<setw(11)<<right<<endPrice[i]<<endl;
 				}
-			
+				for(int i = 0; i < 60; ++i)
+					cout<<"_";
+				cout<<endl;				
 				for(int i = 0; i < endPrice.size(); i++) {
 					endOfPrice += endPrice[i];
 				}
-				cout<<"Tong hoa don: "<<endOfPrice<<endl;
+				cout<<setw(48)<<left<<"\nTong hoa don: "<<setw(13)<<right<<endOfPrice<<endl<<endl;
+				break;
+			}
+			case 3:
+				int num;
+				bool check = false;
+				a = list.Find_1();
+				for(int i = 0; i < invoice.size(); ++i){
+					if(a->data.getCode() == invoice[i].getCode()){
+						cout<<"So luong moi: ";
+						cin>>num;
+						if(a->data.getNumber() + quantity[i] - num < 0){
+							cout<<"So luong can thay doi qua lon! Khong the sua"<<endl;
+						}
+						else{
+							endPrice[i] = num * a->data.getPriceAfter();
+							a->data.setNumber(a->data.getNumber() + quantity[i] - num);
+							quantity[i] = num;
+							cout<<"Da cap nhat hoa don."<<endl;
+						}
+						check = true;
+						break;
+					}
+				}
+				if(!check)
+				cout<<"San pham nay hien khong co trong danh sach thanh toan."<<endl;
+				
 		}
 	}while(select != 4);
 }
@@ -379,8 +487,14 @@ string TempEmployee::getName() {
 string TempEmployee::getGender() {
 	return this->gender;
 }
-Date TempEmployee::getDate() {
-	return this->date;
+string TempEmployee::getPhoneNumber(){
+	return this->phoneNumber;
+}
+int TempEmployee::getAge(){
+	return this->age;
+}
+Date TempEmployee::getBirth() {
+	return this->birth;
 }
 void TempEmployee::setName(string name) {
 	this->name = name;
@@ -388,11 +502,30 @@ void TempEmployee::setName(string name) {
 void TempEmployee::setGender(string gender) {
 	this->gender = gender;
 }
-void TempEmployee::setDate(Date date) {
-	this->date = date;
+void TempEmployee::setBirth(Date birth) {
+	this->birth = birth;
 }
-void TempEmployee::setMonth(int month) {
-	this->month = month;
+void TempEmployee::setAge(){
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+	int yearNow = tm.tm_year + 1900;
+	this->age = yearNow - this->birth.getYear();
+}
+void TempEmployee::setPhoneNumber(string phoneNumber){
+	this->phoneNumber = phoneNumber;
+}
+void TempEmployee::setMonth() {
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+	int dayNow = tm.tm_mday;
+	int monNow = tm.tm_mon + 1;
+	int yearNow = tm.tm_year + 1900;
+	int month = 0;
+	month = (yearNow - startWork.getYear()) * 12;
+	month += monNow - startWork.getMonth();
+	if(dayNow < startWork.getDay())
+		month -= 1;
+	this->month = month;	
 }
 void TempEmployee::salary() {
 	if(month == 0) {
@@ -402,50 +535,119 @@ void TempEmployee::salary() {
 	}
 }
 void TempEmployee::input() {
-	cout<<"Ten nhan vien: ";
-	fflush(stdin);
-	getline(cin, name);
-	cout<<"Gioi tinh: ";
-	fflush(stdin);
-	getline(cin, gender);
-	date.inputDate();
-	cout<<"Thang hoat dong: ";
-	cin>>month;
+	bool checkPhone;
+	string choiceGender;
+	do{
+		cout<<"Ten nhan vien: ";
+		fflush(stdin);
+		getline(cin, name);
+		name = upperCase(name);
+		if(!validateString(name))
+			cout<<"Ten sai dinh dang! Vui long nhap lai."<<endl;
+	}while(!validateString(name));
+	
+	cout<<"Gioi tinh: "<<endl;
+	cout<<"1.Nam"<<endl<<"2.Nu"<<endl;
+
+	do{
+		cout<<"Chon gioi tinh: ";
+		fflush(stdin);
+		getline(cin, choiceGender);
+		if(choiceGender=="1")
+			gender = "NAM";
+		else if(choiceGender=="2")
+			gender = "NU";
+		else cout<<"sai"<<endl;
+	}while(choiceGender!="1"&&choiceGender!="2");
+	
+	
+	do {
+		cout<<"So dien thoai: ";
+		checkPhone = validateNumber(phoneNumber);
+		if(!checkPhone)cout<<"So dien thoai khong hop le! Vui long nhap lai."<<endl;
+		else{
+			if(phoneNumber.length()!=10){
+				cout<<"So dien thoai phai du 10 chu so! Vui long nhap lai."<<endl;
+				checkPhone = false;
+			}
+			else if(phoneNumber[0] != '0'){
+				cout<<"So dien thoai can bat dau bang so 0 (+84)! Vui long nhap lai."<<endl;
+				checkPhone = false;
+			}
+		} 
+	}while(!checkPhone);
+	
+	do{
+		cout<<"Nhap ngay sinh: "<<endl;
+		birth.inputPerson();
+		setAge();
+		if(age<18)
+			cout<<"Nhan vien chua du tuoi lam viec! Vui long nhap lai."<<endl;
+	}while(age<18);
+	
+	do{
+		cout<<"Nhap ngay bat dau lam viec: "<<endl;
+		startWork.inputPerson();
+		if(startWork.getYear() - birth.getYear() < 18)
+			cout<<"Nhan vien chua du tuoi lam viec! Vui long nhap lai."<<endl;
+	}while(startWork.getYear() - birth.getYear() < 18);
+	setMonth();
 }
 void TempEmployee::output() {
 	cout<<"Ten nhan vien: "<<name<<endl;
 	cout<<"Gioi tinh: "<<gender<<endl;
+	cout<<"So dien thoai: "<<phoneNumber<<endl;
 	cout<<"Ngay sinh: ";
-	date.outputDate();
-	cout<<"\nThang hoat dong: "<<month<<endl;
+	birth.outputDate();
+	cout<<"\nNgay bat dau lam viec: ";
+	startWork.outputDate();
+	cout<<"\nSo thang lam viec: "<<month<<endl;
 }
 //class employee
 Employee::Employee() {
 }
 Employee::~Employee() {
 }
+float Employee::getWage(){
+	return this->wage;
+}
+void Employee::setWage(){
+	int _month = this->month;
+	float _wage = 1;
+	while(_month > 5){
+		_month -=6;
+		_wage +=0.1;
+	}
+	this->wage = _wage;
+}
+void Employee::setWage(float wage){
+	this->wage = wage;
+}
 void Employee::salary() {
-	cout<<"Luong thang: 9000000VND"<<endl;
+	cout<<"Luong co ban: 9000000VND"<<endl;
 	if(month == 0) {
 		cout<<"Hien tai chua co luong!"<<endl;
 	}else {
-		float temp = month*9000000*wage;
-		cout<<"Luong "<<month<<" thang: "<<(int)temp<<"VND"<<endl;
+		float temp = 9000000*wage;
+		cout<<"Luong thang: "<<(int)temp<<"VND"<<endl;
 	}
 }
 void Employee::input() {
 	//chinh thanh viet lien khong cho phep cach ra
 	cout<<"Nhap ten tai khoan: ";
+	fflush(stdin);
 	getline(cin, username);
 	// nhap binh thuong
 	cout<<"Nhap mat khau: ";
+	fflush(stdin);
 	getline(cin, password);
 	TempEmployee::input();
-	cout<<"Nhap he so luong: ";
-	cin>>wage;
+	setWage();
+	output();
 }
 void Employee::output() {
 	TempEmployee::output();
+	cout<<"he so luong: "<<wage<<endl;
 	salary();
 }
 // class manager
@@ -527,38 +729,6 @@ void Manager::userList() {
 			cout<<"Mat khau: "<<i->data_2.getPassWord()<<endl;
 		}
 	}
-}
-//hamcheck
-bool validateNumber(string &toCheck) {
-	bool correct = false;
-	fflush(stdin);
-	getline(cin, toCheck);
-	for (int i = 0; i<toCheck.length(); i++) {
-		if ((toCheck[i] >= 65 && toCheck[i] <= 90) || (toCheck[i] >= 97 && toCheck[i] <= 122) || toCheck[i] == 32 ) {
-			return false;
-		}else if (toCheck[i] >=48 && toCheck[i]<= 57) {
-			correct = true;
-		}else {
-			return false;
-		}
-	}
-	return correct;
-}
-
-bool validateString(string toCheck) {
-
-	bool correct = false;
-		
-	for (int i = 0; i<toCheck.length(); i++) {
-		
-		if ((toCheck[i] >= 65 && toCheck[i] <= 90) || (toCheck[i] >= 97 && toCheck[i] <= 122) || toCheck[i] == 32 || toCheck[i] >=48 && toCheck[i]<= 57) {
-		    correct = true;
-		}
-		else {
-		    return false;
-		}
-	}
-	return correct;
 }
 
 int ListGoods::getSize(){
@@ -778,17 +948,65 @@ void Date::inputDate() {
 				cout<<"Ngay san xuat phai dung dinh dang"<<endl;
 			}
 			else if(checkExpiryDate()){
-			cout<<"Ngay san xuat khong duoc lon hon ngay hien tai!"<<endl;
+			cout<<"Ngay  san xuat khong duoc lon hon ngay hien tai!"<<endl;
 			}
 		}else {
 			cout<<"Nam san xuat phai lon hon 2000"<<endl;
 		}
 	}while(yyyy <= 2000 ||  temp == false || checkExpiryDate());
 }
+//Nhap ngay sinh cua nhan vien
+void Date::inputPerson() {
+	bool temp;
+	bool tempCheck;
+	string ddTemp,mmTemp,yyyyTemp;
+	stringstream ss;
+	do {
+		cout<<"Ngay ";
+		do {
+			tempCheck = validateNumber(ddTemp);
+			if(tempCheck == false) {
+				cout<<"Nhap sai dinh dang"<<endl;
+			}
+		}while(tempCheck == false);
+		ss.clear();
+		ss<<ddTemp;
+		ss>>dd;
+		do {
+			cout<<"Thang ";
+			tempCheck = validateNumber(mmTemp);
+			if(tempCheck == false) {
+				cout<<"Nhap sai dinh dang"<<endl;
+			}
+		}while(tempCheck == false);
+		ss.clear();
+		ss<<mmTemp;
+		ss>>mm;
+		cout<<"Nam ";
+		do {
+			tempCheck = validateNumber(yyyyTemp);
+			if(tempCheck == false) {
+				cout<<"Nhap sai dinh dang!"<<endl;
+			}
+		}while(tempCheck == false );
+		ss.clear();
+		ss<<yyyyTemp;
+		int yyyyTemp2;
+		ss>>yyyyTemp2;
+			yyyy = yyyyTemp2;
+			temp = checkDate();
+			if(temp != true) {
+				cout<<"Ngay sinh phai dung dinh dang"<<endl;
+			}
+			else if(checkExpiryDate()){
+				cout<<"Ngay sinh khong duoc lon hon ngay hien tai!"<<endl;
+			}
+	}while(temp == false || checkExpiryDate());
+}
 //Xuat ngay
 void Date::outputDate() {
 	bool temp = checkDate();
-	if(temp == false || yyyy <= 2000) {
+	if(temp == false) {
 		cout<<"Sai dinh dang, se thiet lap thanh ngay mac dinh!"<<endl;
 		this->dd = 1;
 		this->mm = 1;
@@ -959,19 +1177,7 @@ Date Goods::updateExpiryDate(){
 	}
 	return update;
 }
-//in hoa chuoi
-string upperCase(string a){
-	for(int i=0; i<a.length(); ++i){
-		if(a[i]>='a'&&a[i]<='z')
-		a[i]-=32;
-	}
-	return a;
-}
-void changeString(char a[], string b){
-			for(int i=0;i<b.length();++i){
-				a[i] = b[i];
-			}
-		}
+
 //Nhap thong tin hang hoa
 void Goods::input(){
 	bool tempCheck;
@@ -1993,7 +2199,7 @@ void Menu::start(ListGoods list) {
 							Manager manager;
 							manager.insertLast_2();
 							manager.userList();
-						
+//							manager.calculation(list);
 							
 						}
 						this->clearMenuScreen();
