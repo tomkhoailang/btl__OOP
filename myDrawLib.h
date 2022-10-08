@@ -9,6 +9,7 @@ void textColor(int x);
 void SetWindowSize(SHORT width, SHORT height);
 void SetScreenBufferSize(SHORT width, SHORT height);
 void loadingAnimation(int x, int y, string loadContent, string loadContentDone);
+void sleepFunc(short s);
 void drawBox(
 			 int x, 
 			 int y, 

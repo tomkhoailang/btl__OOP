@@ -13,6 +13,14 @@
 using namespace std;
 vector<string> id_List;
 
+/***
+	tempeployee
+	
+***/
+#define MANAGER_FILE_PATH "D://fileTest//Manager.txt"
+#define EMPLOYEE_ACCOUNTS_FILE_PATH "D://fileTest//EmployeeAcounts.txt"
+#define EMPLOYEE_INFO_FILE_PATH "D://fileTest//EmployeeInfo.txt"
+#define TEMP_EMPLOYEE_INFO_FILE_PATH "D://fileTest//TempEmployeeInfo.txt"
 #define DEFAULT_TEXT_COLOR 91
 #define FILE_PATH "D://fileTest//QuanLiCuaHang.txt"
 // ngay thang nam
@@ -128,25 +136,6 @@ class ListGoods {
 		void addCode(vector<string> &id_List);
 };
 
-//class menu
-class Menu{
-	private:
-		int x, y;
-		string title;
-		vector<string> menuContent;
-		int numberOfMenuItem;
-		int padding;
-		int targetLength;
-	public:
-		Menu(int x, int y, vector<string> _menuContent, string title);
-		~Menu(){};
-		void printMenu(const string& title, const string& textAlign, int padding);
-		void setPadding(int padding);
-		void setTargetLength(int length);
-		int GetItemAmount();
-		void clearMenuScreen();
-		void start(ListGoods list);
-};
 class Person {
 	protected:
 		string username;
@@ -159,7 +148,6 @@ class Person {
 		void setUserName(string username);
 		void setPassword(string password);
 		void calculation(ListGoods list);
-		
 };
 //class tempemployee
 class TempEmployee {
@@ -173,6 +161,7 @@ class TempEmployee {
 		int month;
 	public:
 		TempEmployee();
+		TempEmployee(const TempEmployee& data);
 		~TempEmployee();
 		string getName();
 		string getGender();
@@ -192,13 +181,16 @@ class TempEmployee {
 		void input();
 		void output();
 };
+
 //clas employee
 class Employee: public Person, public TempEmployee {
 	private:
+		static int id;
 		float wage;
 	public:
 		Employee();
 		~Employee();
+		Employee(const Employee& data);
 		float getWage();
 		void setWage();
 		void setWage(float wage);
@@ -206,6 +198,7 @@ class Employee: public Person, public TempEmployee {
 		void output();
 		void salary();
 };
+int Employee::id = 0;
 //hamcheck
 bool validateNumber(string &toCheck) {
 	bool correct = false;
@@ -283,77 +276,545 @@ class Manager: public Person {
 		void output_1();
 		void output_2();
 		void userList();
-
+		Node_1 *makeNode_1(const TempEmployee& data);
+		Node_2 *makeNode_2(const Employee& data);
+		void insertLast_1(const TempEmployee& data);
+		void insertLast_2(const Employee& data);
+		Employee getEmployeeByUserName(string username);
+		friend void writeManagerDataToFile(Manager list);
+		friend void readManagerDataFromFile(Manager &list);
 };
-void login (bool &isLogin);
+
+//class menu
+class Menu {
+	protected:
+		int x, y;
+		string title;
+	public:
+		Menu(int x, int y, string title);
+		~Menu();
+};
+
+class ListMenu: public Menu{
+	private:
+		vector<string> menuContent;
+		int numberOfMenuItem;
+		int padding;
+		int targetLength;
+	public:
+		ListMenu(int x, int y, vector<string> _menuContent, string title);
+		~ListMenu(){};
+		void printMenu(const string& title, const string& textAlign, int padding);
+		void setPadding(int padding);
+		void setTargetLength(int length);
+		int GetItemAmount();
+		void clearMenuScreen();
+		void start(ListGoods &list, string role, Manager &managerList, string info);
+};
+
+class LoginMenu: public Menu{
+	private:
+		string username;
+		string role;
+	public:
+		LoginMenu(int x, int y, string title);
+		~LoginMenu();
+		string getRole();
+		void setRole(string role);
+		string getUsername();
+		void printLoginMenu();
+		bool startLoginMenu();
+};
+
 int main() {
-	bool isLogin = false;
-	login(isLogin);
-	if(isLogin == false) {
-	}else {
-		ListGoods list;
-		HWND hWnd = GetConsoleWindow();
-	  	ShowWindow(hWnd,SW_SHOWMAXIMIZED);  // mo man hinh console dang fullscreen
-		
-		vector<string> menuContent{
-								   "Nhap hang hoa",
-								   "Xuat hang hoa",
-								   "Tim kiem",
-								   "Cap nhat hang hoa",
-								   "Xuat thong tin vao file",
-								   "Chuc Nang Trong",
-								   "Thoat"};
-								   
-		Menu menu(90, 2, menuContent, "QUAN LY CUA HANG");
+	ListGoods list;
+	Manager managerList;
+	HWND hWnd = GetConsoleWindow();
+	ShowWindow(hWnd,SW_SHOWMAXIMIZED);  // mo man hinh console dang fullscreen
+	LoginMenu loginMenu(90, 2, "DANG NHAP");
 	  	
+	if(loginMenu.startLoginMenu()){
+		system("cls");
 		readDataFromFile(list);
+		readManagerDataFromFile(managerList);
 		list.addCode(id_List);
-		menu.start(list);
-		_getch();
+		
+		if(loginMenu.getRole() == "manager"){
+			vector<string> menuContent{
+								"Nhap hang hoa",
+								"Xuat hang hoa",
+								"Tim kiem",
+								"Cap nhat hang hoa",
+								"Xuat thong tin vao file",
+								"Cap nhap nhan vien",
+								"Thoat"
+								};
+			ListMenu ListMenu(90, 2, menuContent, "MENU QUAN LY");
+			ListMenu.start(list, loginMenu.getRole(), managerList, loginMenu.getUsername());
+		}else if(loginMenu.getRole() == "employee"){
+			
+			vector<string> menuContent{
+							"Nhap hang hoa",
+							"Xuat hang hoa",
+							"Tim kiem",
+							"Cap nhat hang hoa",
+							"Xuat thong tin vao file",
+							"Chuc nang nhan vien",
+							"Thoat"
+							};
+							
+			ListMenu ListMenu(90, 2, menuContent, "MENU NHAN VIEN");
+			ListMenu.start(list, loginMenu.getRole(), managerList, loginMenu.getUsername());
+		}
 	}
+
 	return 0;
 }
-void login (bool &isLogin) {
-	char fileName[] = "D://fileTest//admin.txt";
-	fstream data;
-	string u,p;
-	int z = 3;
-	bool check = false;
-	int length = 0;
-	vector<string> mainUser;
-	vector<string> mainPass;
-	string username;
-	string password;
-	data.open(fileName, ios::in);
-	data>>username>>password;
-	mainUser.push_back(username);
-	mainPass.push_back(password);
-	data.close();
-	do {
-		cout<<"\t\tDang nhap"<<endl;
-		cout<<"\tTen tai khoan: ";
-		getline(cin,u);
-		cout<<"\tMat khau: ";
-		getline(cin,p);
-		if(u == mainUser[0] && p == mainPass[0]) {
-			check = true;
-			isLogin = true;
-		}
-		if(check == true) {
-			cout<<"\tDang nhap thanh cong"<<endl;
-			isLogin = true;
-			break;
-		}else {
-			if(z == 0) {
-				cout<<"\tBan da nhap sai qua nhieu. Chuong trinh se tu dong thoat"<<endl;
+
+//menu
+Menu::Menu(int x, int y, string title){
+	this->x = x;
+	this->y = y;
+	this->title = title;
+}
+
+Menu::~Menu(){
+}
+
+LoginMenu::LoginMenu(int x, int y, string title): Menu(x, y, title){
+	this->role = "employee";
+}
+
+LoginMenu::~LoginMenu(){
+}
+
+string LoginMenu::getRole(){
+	return this->role;
+}
+
+void LoginMenu::setRole(string role){
+	this->role = role;
+}
+
+string LoginMenu::getUsername(){
+	return this->username;
+}
+
+void LoginMenu::printLoginMenu() {
+	short xPos = this->Menu::x;
+	short yPos = this->Menu::y;
+	string title = this->Menu::title;
+	
+	drawBox(xPos, yPos, 34, 2, 9, 15, title, "center");
+	drawBox(xPos, yPos + 3, 34, 9, 260, 15, "", "left");
+}
+
+bool LoginMenu::startLoginMenu(){
+	short xPos = this->Menu::x;
+	short yPos = this->Menu::y;
+	string enteredUsername, enteredPassword;
+	string Mpassword, Musername, Epassword, Eusername;
+	short labelCol = 190;
+	short textCol = 15;
+	bool isCorrect = false;
+	bool isManager = false;
+	
+	do{
+		this->printLoginMenu();
+
+		gotoXY(xPos+2, yPos+ 4);
+		SetColor(labelCol);
+		cout << "Nhap ten dang nhap:";
+		SetColor(260);
+		cout << "-------------" << endl;
+		gotoXY(xPos+1, yPos+ 6);
+		cout << "---------------------------------" << endl;
+		
+		gotoXY(xPos+2, yPos+ 8);
+		SetColor(labelCol);
+		fflush(stdin);
+		cout << "Nhap mat khau:";
+		SetColor(260);
+		cout << "------------------" << endl;
+		gotoXY(xPos+1, yPos+ 10);
+		cout << "---------------------------------" << endl;
+		
+		gotoXY(xPos+2, yPos+ 5);
+		SetColor(textCol);
+		fflush(stdin);
+		getline(cin, enteredUsername);
+		
+		gotoXY(xPos+2, yPos+ 9);
+		SetColor(textCol);
+		getline(cin, enteredPassword);
+		
+		ifstream accInput(MANAGER_FILE_PATH);
+		while(accInput >> Musername){
+			accInput.ignore();
+			accInput >> Mpassword;
+			if(enteredUsername.compare(Musername) == 0 && enteredPassword.compare(Mpassword) == 0){
+				isCorrect = true;
+				gotoXY(xPos - 4, yPos+ 13);
+				SetColor(290);
+				cout << "Dang nhap thanh cong voi tu cach la manager!!" << endl;
+				this->role = "manager";
+				sleepFunc(1);
+				accInput.close();
 				break;
-			}else {
-				cout<<"\tDang nhap that bai. Con "<<z<<" lan thu"<<endl;
-				z--;
 			}
 		}
-	}while(z>=0);
+		
+		ifstream emAccInput(EMPLOYEE_ACCOUNTS_FILE_PATH);
+		while(emAccInput >> Eusername){
+			emAccInput.ignore();
+			emAccInput >> Epassword;
+			
+			if(enteredUsername.compare(Eusername) == 0 && enteredPassword.compare(Epassword) == 0){
+				isCorrect = true;
+				gotoXY(xPos - 4, yPos+ 13);
+				SetColor(290);
+				cout << "Dang nhap thanh cong voi tu cach la nhan vien!!" << endl;
+				this->role = "employee";
+				this->username = Eusername;
+				sleepFunc(1);
+				emAccInput.close();
+				break;
+			}
+		}
+		
+		if(!isCorrect){
+			gotoXY(xPos - 8, yPos+ 13);
+			SetColor(260);
+			cout << "Sai ten dang nhap hoac mat khau!! (Nhan Enter de tiep tuc)" << endl;
+			_getch();
+			accInput.close();
+			emAccInput.close();
+			system("cls");
+		}
+	}while(!isCorrect);
+	
+	ShowCur(0);
+	return isCorrect;
 }
+
+ListMenu::ListMenu(int x, int y, vector<string> _menuContent, string title): Menu(x, y, title){
+	this->menuContent = _menuContent;
+	this->numberOfMenuItem = _menuContent.size();
+}
+
+int ListMenu::GetItemAmount(){
+	return this->numberOfMenuItem;
+}
+
+void ListMenu::setPadding(int padding) {
+	this->padding = padding;
+}
+
+void ListMenu::setTargetLength(int length) {
+	this->targetLength = length;
+}
+
+void ListMenu::printMenu(const string& title, const string& textAlign, int padding) {
+	int yPos = this->y;
+	int xPos = this->x;
+	vector<string> _menuContent = this->menuContent;
+	this->setPadding(padding);
+	int size = this->GetItemAmount();
+	short titleLength = title.length() + 10;
+	short contentMaxLength;
+	
+	//find the longest ListMenu content string
+	contentMaxLength = _menuContent[0].length();
+	
+	for(short i = 0; i < size; i++){
+		if(_menuContent[i].length() > contentMaxLength){
+			contentMaxLength = _menuContent[i].length();
+		}
+	}
+	short contentXPos = (xPos + round(titleLength / 2)) - round(contentMaxLength / 2) - (padding * 1.0 / 2);
+	this->setTargetLength(contentMaxLength);
+	//draw the title of ListMenu
+	drawBox(xPos, yPos, titleLength, 2, 9, 15, title, "center");
+	
+	//draw the ListMenu item
+	for(short i = 0; i < size; i++){
+		drawBox(contentXPos, 
+				yPos+=3, 
+				contentMaxLength + padding,
+				2, 
+				260, 
+				15, 
+				_menuContent[i], 
+				textAlign);
+	}
+}
+
+void ListMenu::clearMenuScreen() {
+		cout << "\n\nNhan phim bat ki de tiep tuc..." << endl;
+		_getch();
+		system("cls");
+		ShowCur(0);
+}
+
+void ListMenu::start(ListGoods &list, string role, Manager &managerList, string info) {
+	ShowCur(0);
+	int soLuong;
+	string title = this->title;
+	int contentYPos = this->y + 3;
+	int lastPosY = this->y + 3;
+	int currentIndex = 0;
+	bool isUp = false;
+
+	startPoint: ;
+	
+	this->printMenu(title, "center", 5);
+	bool isPressed = true;
+	while(true){
+		if(isPressed){
+			if(currentIndex > 0 && !isUp){
+				// Set the target element position x
+				currentTarget((this->x + round((title.length() + 10) / 2))
+								 - round(this->targetLength / 2) 
+								 - round(this->padding * 1.0 / 2), // set the target X postion to fit with the content box
+							  lastPosY, 
+						  	  this->targetLength + this->padding, 
+						  	  2, 
+						  	  0, 
+						  	  15, 
+						  	  this->menuContent[currentIndex - 1], 
+						  	  "center");
+			}else if(isUp){
+				currentTarget((this->x + round((title.length() + 10) / 2))
+							    - round(this->targetLength / 2) 
+								- round(this->padding * 1.0 / 2), // set the target X postion to fit with the content box
+							  lastPosY, 
+						  	  this->targetLength + this->padding, 
+						  	  2, 
+						  	  0, 
+						  	  15, 
+						  	  this->menuContent[currentIndex + 1], 
+						  	  "center");
+			}
+	
+			lastPosY = contentYPos;
+			currentTarget((this->x + round((title.length() + 10) / 2))
+							 - round(this->targetLength / 2) 
+							 - round(this->padding * 1.0 / 2) // set the target X postion to fit with the content box
+							 , 
+						  contentYPos, 
+						  this->targetLength + this->padding, 
+						  2, 
+						  200, 
+						  15, 
+						  this->menuContent[currentIndex], 
+						  "center");
+			isPressed = false;
+			textColor(0);
+			ShowCur(0);
+		}
+		
+		if(_kbhit()){
+			char c = _getch();
+			if(c == -32){ // check if arrow key is pressed
+				c = _getch();
+				if(c == 72){
+					if(contentYPos != this->y + 3){
+						lastPosY = contentYPos;
+						isUp = true;
+						currentIndex--;
+						contentYPos-=3;	
+					}
+					isPressed = true;
+				}else if(c == 80){
+					if(contentYPos != this->y + 3 + (3 * (this->GetItemAmount() - 1))){
+						lastPosY = contentYPos;
+						isUp = false;
+						currentIndex++;
+						contentYPos+=3;		
+					}
+					isPressed = true;
+				}
+			}
+			if(c == 13){
+				ShowCur(1);
+				int pointerX = 0;
+				int pointerY = this->y + 3 + 3 * this->GetItemAmount() + 2;
+				gotoXY(pointerX, pointerY);
+				textColor(0);
+				SetColor(DEFAULT_TEXT_COLOR);
+
+				switch(currentIndex){
+					case 0:
+						do {
+							string checkNumber;
+							stringstream ss;
+							bool tempCheck;
+							do {
+								cout<<"Nhap so luong mat hang: ";
+								tempCheck = validateNumber(checkNumber);
+								if(tempCheck == false) {
+									cout<<"Nhap sai dinh dang"<<endl;
+								}
+							}while(tempCheck == false);
+							ss.clear();
+							ss<<checkNumber;
+							ss>>soLuong;
+							if(soLuong < 0) {
+								cout<<"Nhap sai so luong. Vui long nhap lai!"<<endl;
+							}else if(soLuong == 0) {
+								cout<<"Da thoat khoi chuc nang!"<<endl;
+							}
+							}while(soLuong < 0);
+							for(int i = 0; i<soLuong; i++) {
+								Goods a;
+								do{
+									a.input();
+									id_List.push_back(a.getCode());
+									if(!list.checkCode(a.getCode()))
+									cout<<"\nMA ID "<<a.getCode()<<" DA TON TAI! VUI LONG NHAP LAI."<<endl;
+								}while(!list.checkCode(a.getCode()));
+								list.insertLast(a);
+							}
+						this->clearMenuScreen();
+						goto startPoint;
+						break;
+					case 1:
+						if(list.isEmpty()){
+							cout << "\nDanh sach trong..." << endl;
+						}else{
+							list.outputAsTable(0, pointerY, 21, 10, list.getSize(), 196, 1, "left");
+						}
+						this->clearMenuScreen();
+						goto startPoint;
+						break;
+					case 2:
+						if(list.isEmpty()){
+							cout << "\nDanh sach trong..." << endl;
+						}else{
+							list.Find_2();
+						}
+						this->clearMenuScreen();
+						goto startPoint;
+						break;
+					case 3:
+						if(list.isEmpty()){
+							cout << "\nDanh sach trong..." << endl;
+						}else{
+                        	list.Change(id_List);
+						}
+						this->clearMenuScreen();
+						goto startPoint;
+						break;
+					case 4:
+						if(list.isEmpty()){
+							cout << "\nDanh sach trong..." << endl;
+						}else{
+							writeDataToFile(list);
+							loadingAnimation(68, pointerY+2, "Dang xuat du lieu ra file...", "->Xuat thanh cong");
+						}
+						this->clearMenuScreen();
+						goto startPoint;
+					case 5:
+						if(role.compare("manager") == 0){
+							short choice;
+							cout << "1) Them nhan vien" << endl;
+							cout << "2) Xuat nhan vien" << endl;
+							cout << "3) Cap nhat thong tin nhan vien" << endl;
+							cout << "4) Tim kiem" << endl;
+							cout << "0) Thoat" << endl;
+							cout << "Nhap lua chon: ";
+							cin >> choice;
+							switch(choice){
+								case 1:
+									short amount, type;
+									cout << "\nNhap so luong nhan vien muon them: ";
+									cin >> amount;
+									startChossing: ;
+									cout << "Chon loai nhan vien: " << endl;
+									cout << "1) Nhan vien chinh thuc" << endl;
+									cout << "2) Thu viec" << endl;
+									cout << "Nhap lua chon: ";
+									cin >> type;
+									if(type == 1){
+										for(short i = 0;i < amount;i++){
+											managerList.insertLast_2();
+										}
+									}else if(type == 2){
+										for(short i = 0;i < amount;i++){
+											managerList.insertLast_1();
+										}
+									}else{
+										cout << "Khong co lua chon nay!" << endl;
+										goto startChossing;
+									}
+									writeManagerDataToFile(managerList);
+									cout << "Da them thanh cong" << endl;
+									break;
+								case 2:
+									short outType;
+									startOutChossing: ;
+									cout << "Chon loai nhan vien: " << endl;
+									cout << "1) Nhan vien chinh thuc" << endl;
+									cout << "2) Thu viec" << endl;
+									cout << "Nhap lua chon: ";
+									cin >> outType;
+									if(outType == 1){
+										managerList.output_2();
+									}else if(outType == 2){
+										managerList.output_1();
+									}else{
+										cout << "Khong co lua chon nay!" << endl;
+										goto startOutChossing;
+									}
+									break;
+								case 3:
+									////*******************************************
+									break;
+								case 4:
+									/////*********************************************
+									break;
+								case 0:
+									break;
+								default:
+									cout << "Lua chon khong hop le" << endl;
+							}
+						}else{
+							Employee a = managerList.getEmployeeByUserName(info);
+							short choice;
+							cout << "1) Thong tin nhan vien" << endl;
+							cout << "2) Xuat hoa don" << endl;
+							cout << "0) Thoat" << endl;
+							cout << "Nhap lua chon: ";
+							cin >> choice;
+							switch(choice){
+								case 1:
+									a.output();
+									break;
+								case 2:
+									a.calculation(list);
+									break;
+								case 0:
+									break;
+								default:
+									cout << "Lua chon khong hop le!" << endl;
+							}
+						}
+						this->clearMenuScreen();
+						goto startPoint;
+						break;
+					case 6:
+						cout << "Ban da chon thoat chuong trinh!!" << endl;
+						exit(0);
+						break;
+					default:
+						cout << "Khong co chuc nang nay, vui long them chuc nang vao case!!!" << endl;
+						break;
+				}
+			}
+		}
+	};
+}
+
 //getter setter
 Person::Person() {
 }
@@ -371,7 +832,7 @@ void Person::setUserName(string username) {
 void Person::setPassword(string password) {
 	this->password = password;
 }
-void Person::calculation(ListGoods list) {
+void Person::calculation(ListGoods list) { 
 	Node *a = new Node;
 	int totalPrice = 0;
 	vector<Goods> invoice;
@@ -481,6 +942,76 @@ TempEmployee::TempEmployee() {
 }
 TempEmployee::~TempEmployee() {
 }
+
+TempEmployee::TempEmployee(const TempEmployee& data){
+	this->name = data.name;
+	this->age = data.age;
+	this->gender = data.gender;
+	this->birth.dd = data.birth.dd;
+	this->birth.mm = data.birth.mm;
+	this->birth.yyyy = data.birth.yyyy;
+	this->startWork.dd = data.startWork.dd;
+	this->startWork.mm = data.startWork.mm;
+	this->startWork.yyyy = data.startWork.yyyy;
+	this->phoneNumber = data.phoneNumber;
+	this->setMonth();
+}
+
+Employee::Employee(const Employee& data){
+	this->name = data.name;
+	this->age = data.age;
+	this->gender = data.gender;
+	this->birth.dd = data.birth.dd;
+	this->birth.mm = data.birth.mm;
+	this->birth.yyyy = data.birth.yyyy;
+	this->startWork.dd = data.startWork.dd;
+	this->startWork.mm = data.startWork.mm;
+	this->startWork.yyyy = data.startWork.yyyy;
+	this->phoneNumber = data.phoneNumber;
+	this->password = data.password;
+	this->username = data.username;
+	this->wage = data.wage;
+	this->setMonth();
+}
+
+Node_1 *Manager::makeNode_1(const TempEmployee& data){
+	Node_1 *newNode = new Node_1;
+	newNode->data_1 = data;
+	newNode->next = NULL;
+	return newNode;
+}
+
+void Manager::insertLast_1(const TempEmployee& data){
+	Node_1 *newNode = makeNode_1(data);
+	if (isEmpty_1() == true) {
+		head_1 = tail_1 = newNode;
+		this->size_1++;
+	}else {
+		tail_1->next = newNode;
+		tail_1 = newNode;
+		this->size_1++;
+	}
+}
+
+void Manager::insertLast_2(const Employee& data){
+	Node_2 *newNode = makeNode_2(data);
+	if (isEmpty_2() == true) {
+		head_2 = tail_2 = newNode;
+		this->size_2++;
+	}else {
+		tail_2->next = newNode;
+		tail_2 = newNode;
+		this->size_2++;
+	}
+}
+
+Node_2 *Manager::makeNode_2(const Employee& data){
+	Node_2 *newNode = new Node_2;
+	newNode->data_2 = data;
+	newNode->next = NULL;
+	return newNode;
+}
+
 string TempEmployee::getName() {
 	return this->name;
 }
@@ -594,7 +1125,7 @@ void TempEmployee::input() {
 	setMonth();
 }
 void TempEmployee::output() {
-	cout<<"Ten nhan vien: "<<name<<endl;
+	cout<<"\nTen nhan vien: "<<name<<endl;
 	cout<<"Gioi tinh: "<<gender<<endl;
 	cout<<"So dien thoai: "<<phoneNumber<<endl;
 	cout<<"Ngay sinh: ";
@@ -602,6 +1133,7 @@ void TempEmployee::output() {
 	cout<<"\nNgay bat dau lam viec: ";
 	startWork.outputDate();
 	cout<<"\nSo thang lam viec: "<<month<<endl;
+	cout <<"So tuoi: "<< this->age << endl;
 }
 //class employee
 Employee::Employee() {
@@ -629,7 +1161,7 @@ void Employee::salary() {
 		cout<<"Hien tai chua co luong!"<<endl;
 	}else {
 		float temp = 9000000*wage;
-		cout<<"Luong thang: "<<(int)temp<<"VND"<<endl;
+		cout<<"Luong thang: "<<(int)temp<<" VND"<<endl;
 	}
 }
 void Employee::input() {
@@ -651,6 +1183,17 @@ void Employee::output() {
 	salary();
 }
 // class manager
+
+void TempEmployee::setStartWork(Date startWork){
+	this->startWork.dd = startWork.dd;
+	this->startWork.mm = startWork.mm;
+	this->startWork.yyyy = startWork.yyyy;
+}
+
+Date TempEmployee::getStartWork(){
+	return this->startWork;
+}
+
 Manager::Manager() {
 	this->head_1 = NULL;
 	this->tail_1 = NULL;
@@ -709,7 +1252,7 @@ void Manager::insertLast_2() {
 	}else {
 		tail_2->next = temp;
 		tail_2 = temp;
-		this->size_1++;
+		this->size_2++;
 	}
 
 }
@@ -718,7 +1261,155 @@ void Manager::output_2() {
 		i->data_2.output();
 	}
 }
+
+void Manager::output_1() {
+	for(Node_1 *i = head_1; i != NULL; i = i->next) {
+		i->data_1.output();
+	}
+}
 //chuc nang manager 
+
+Employee Manager::getEmployeeByUserName(string username){
+	for(Node_2* i = this->head_2;i!=NULL;i=i->next){
+		if(i->data_2.getUserName() == username){
+			return i->data_2;
+		}
+	}
+}
+void readManagerDataFromFile(Manager &list){
+	string name, gender, phoneNumber, username, password;
+	string ename, egender, ephoneNumber;
+	int age;
+	float wage;
+	Date birthDay;
+	Date workStart;
+	Date ebirthDay;
+	Date eworkStart;
+//	ifstream tempEmployeeIn();
+	ifstream employeeIn(EMPLOYEE_INFO_FILE_PATH);
+	if(!employeeIn.is_open()){
+		cout << "File khong ton tai!" << endl;
+		employeeIn.close();
+	}
+	Employee temp;
+	while(employeeIn >> wage){
+		employeeIn >> username;
+		employeeIn >> password;
+		employeeIn.ignore();
+		getline(employeeIn, name);
+		employeeIn >> birthDay.dd;
+		employeeIn >> birthDay.mm;
+		employeeIn >> birthDay.yyyy;
+		employeeIn >> workStart.dd;
+		employeeIn >> workStart.mm;
+		employeeIn >> workStart.yyyy;
+		employeeIn >> phoneNumber;
+		employeeIn.ignore();
+		employeeIn >> gender;
+			
+		temp.setName(name);
+		temp.setBirth(birthDay);
+		temp.setStartWork(workStart);
+		temp.setPhoneNumber(phoneNumber);
+		temp.setWage(wage);
+		temp.setPassword(password);
+		temp.setUserName(username);
+		temp.setGender(gender);
+		temp.setAge();
+		temp.setMonth();
+		
+		list.insertLast_2(temp);
+	}
+	employeeIn.close();
+		
+	ifstream tempEmplyoyeeIn(TEMP_EMPLOYEE_INFO_FILE_PATH);
+	if(!tempEmplyoyeeIn.is_open()){
+		cout << "File khong ton tai!" << endl;
+		tempEmplyoyeeIn.close();
+	}
+	TempEmployee eTemp;
+	while(tempEmplyoyeeIn >> ebirthDay.dd){
+		tempEmplyoyeeIn >> ebirthDay.mm;
+		tempEmplyoyeeIn >> ebirthDay.yyyy;
+		tempEmplyoyeeIn >> eworkStart.dd;
+		tempEmplyoyeeIn >> eworkStart.mm;
+		tempEmplyoyeeIn >> eworkStart.yyyy;
+		tempEmplyoyeeIn.ignore();
+		getline(tempEmplyoyeeIn, ename);
+		tempEmplyoyeeIn >> egender;
+		tempEmplyoyeeIn.ignore();
+		tempEmplyoyeeIn >> ephoneNumber;
+		
+		eTemp.setBirth(ebirthDay);
+		eTemp.setStartWork(eworkStart);
+		eTemp.setName(ename);
+		eTemp.setGender(egender);
+		eTemp.setPhoneNumber(ephoneNumber);
+		eTemp.setMonth();
+		eTemp.setAge();
+		list.insertLast_1(eTemp);
+	}
+	
+	tempEmplyoyeeIn.close();
+}
+
+void writeManagerDataToFile(Manager list){
+	ofstream employeeOut(EMPLOYEE_INFO_FILE_PATH);
+	if(!employeeOut.is_open()){
+		cout << "File khong ton tai!" << endl;
+		employeeOut.close();
+	}
+	
+	for(Node_2 *i = list.head_2; i!=NULL; i=i->next){
+		employeeOut << i->data_2.getWage() << endl;
+		employeeOut << i->data_2.getUserName() << endl;
+		employeeOut << i->data_2.getPassWord() << endl;
+		employeeOut << i->data_2.getName() << endl;
+		employeeOut << i->data_2.getBirth().dd << endl;
+		employeeOut << i->data_2.getBirth().mm << endl;
+		employeeOut << i->data_2.getBirth().yyyy << endl;
+		employeeOut << i->data_2.getStartWork().dd << endl;
+		employeeOut << i->data_2.getStartWork().mm << endl;
+		employeeOut << i->data_2.getStartWork().yyyy << endl;
+		employeeOut << i->data_2.getPhoneNumber() << endl;
+		employeeOut << i->data_2.getGender() << endl;
+	}
+	employeeOut.close();
+	
+	ofstream employeeAccountsOut(EMPLOYEE_ACCOUNTS_FILE_PATH);
+	if(!employeeAccountsOut.is_open()){
+		cout << "File khong ton tai!" << endl;
+		employeeAccountsOut.close();
+	}
+	
+	for(Node_2 *i = list.head_2; i!=NULL; i=i->next){
+		employeeAccountsOut << i->data_2.getUserName() << endl;
+		employeeAccountsOut << i->data_2.getPassWord() << endl;
+	}
+	
+	employeeAccountsOut.close();
+	
+	ofstream tempEmployeeOut(TEMP_EMPLOYEE_INFO_FILE_PATH);
+	if(!tempEmployeeOut.is_open()){
+		cout << "File khong ton tai!" << endl;
+		tempEmployeeOut.close();
+	}
+	
+	for(Node_1 *i = list.head_1; i!=NULL; i=i->next){
+		tempEmployeeOut << i->data_1.getBirth().dd << endl;
+		tempEmployeeOut << i->data_1.getBirth().mm << endl;
+		tempEmployeeOut << i->data_1.getBirth().yyyy << endl;
+		tempEmployeeOut << i->data_1.getStartWork().dd << endl;
+		tempEmployeeOut << i->data_1.getStartWork().mm << endl;
+		tempEmployeeOut << i->data_1.getStartWork().yyyy << endl;
+		tempEmployeeOut << i->data_1.getName() << endl; 
+		tempEmployeeOut << i->data_1.getGender() << endl; 
+		tempEmployeeOut << i->data_1.getPhoneNumber() << endl; 
+	}
+	
+	tempEmployeeOut.close();
+}
+
 void Manager::userList() {
 	if(isEmpty_2()) {
 		cout<<"Danh sach dang trong "<<endl;
@@ -1967,254 +2658,4 @@ void writeDataToFile(ListGoods list){
 	outputFile.close();
 }
 
-//Menu methods
-
-Menu::Menu(int x, int y, vector<string> _menuContent, string title){
-	this->x = x;
-	this->y = y;
-	this->title = title;
-	this->menuContent = _menuContent;
-	this->numberOfMenuItem = _menuContent.size();
-}
-
-int Menu::GetItemAmount(){
-	return this->numberOfMenuItem;
-}
-
-void Menu::setPadding(int padding) {
-	this->padding = padding;
-}
-
-void Menu::setTargetLength(int length) {
-	this->targetLength = length;
-}
-
-void Menu::printMenu(const string& title, const string& textAlign, int padding) {
-	int yPos = this->y;
-	int xPos = this->x;
-	vector<string> _menuContent = this->menuContent;
-	this->setPadding(padding);
-	int size = this->GetItemAmount();
-	short titleLength = title.length() + 10;
-	short contentMaxLength;
-	
-	//find the longest menu content string
-	contentMaxLength = _menuContent[0].length();
-	
-	for(short i = 0; i < size; i++){
-		if(_menuContent[i].length() > contentMaxLength){
-			contentMaxLength = _menuContent[i].length();
-		}
-	}
-	short contentXPos = (xPos + round(titleLength / 2)) - round(contentMaxLength / 2) - (padding * 1.0 / 2);
-	this->setTargetLength(contentMaxLength);
-	//draw the title of menu
-	drawBox(xPos, yPos, titleLength, 2, 9, 15, title, "center");
-	
-	//draw the menu item
-	for(short i = 0; i < size; i++){
-		drawBox(contentXPos, 
-				yPos+=3, 
-				contentMaxLength + padding,
-				2, 
-				260, 
-				15, 
-				_menuContent[i], 
-				textAlign);
-	}
-}
-
-void Menu::clearMenuScreen() {
-		cout << "\n\nNhan phim bat ki de tiep tuc..." << endl;
-		_getch();
-		system("cls");
-		ShowCur(0);
-}
-
-void Menu::start(ListGoods list) {
-	ShowCur(0);
-	int soLuong;
-	string title = this->title;
-	int contentYPos = this->y + 3;
-	int lastPosY = this->y + 3;
-	int currentIndex = 0;
-	bool isUp = false;
-
-	startPoint: ;
-	
-	this->printMenu(title, "center", 5);
-	bool isPressed = true;
-	while(true){
-		
-		if(isPressed){
-			if(currentIndex > 0 && !isUp){
-				// Set the target element position x
-				currentTarget((this->x + round((title.length() + 10) / 2))
-								 - round(this->targetLength / 2) 
-								 - round(this->padding * 1.0 / 2), // set the target X postion to fit with the content box
-							  lastPosY, 
-						  	  this->targetLength + this->padding, 
-						  	  2, 
-						  	  0, 
-						  	  15, 
-						  	  this->menuContent[currentIndex - 1], 
-						  	  "center");
-			}else if(isUp){
-				currentTarget((this->x + round((title.length() + 10) / 2))
-							    - round(this->targetLength / 2) 
-								- round(this->padding * 1.0 / 2), // set the target X postion to fit with the content box
-							  lastPosY, 
-						  	  this->targetLength + this->padding, 
-						  	  2, 
-						  	  0, 
-						  	  15, 
-						  	  this->menuContent[currentIndex + 1], 
-						  	  "center");
-			}
-	
-			lastPosY = contentYPos;
-			currentTarget((this->x + round((title.length() + 10) / 2))
-							 - round(this->targetLength / 2) 
-							 - round(this->padding * 1.0 / 2) // set the target X postion to fit with the content box
-							 , 
-						  contentYPos, 
-						  this->targetLength + this->padding, 
-						  2, 
-						  200, 
-						  15, 
-						  this->menuContent[currentIndex], 
-						  "center");
-			isPressed = false;
-			
-			textColor(0);
-			ShowCur(0);
-		}
-		
-		if(_kbhit()){
-			char c = _getch();
-			if(c == -32){ // check if arrow key is pressed
-				c = _getch();
-				 
-				if(c == 72){
-					if(contentYPos != this->y + 3){
-						lastPosY = contentYPos;
-						isUp = true;
-						currentIndex--;
-						contentYPos-=3;	
-					}
-					isPressed = true;
-				}else if(c == 80){
-					if(contentYPos != this->y + 3 + (3 * (this->GetItemAmount() - 1))){
-						lastPosY = contentYPos;
-						isUp = false;
-						currentIndex++;
-						contentYPos+=3;		
-					}
-					isPressed = true;
-				}
-			}
-			if(c == 13){
-				ShowCur(1);
-				int pointerX = 0;
-				int pointerY = this->y + 3 + 3 * this->GetItemAmount() + 2;
-				gotoXY(pointerX, pointerY);
-				textColor(0);
-				SetColor(DEFAULT_TEXT_COLOR);
-
-				switch(currentIndex){
-					case 0:
-						do {
-							string checkNumber;
-							stringstream ss;
-							bool tempCheck;
-							do {
-								cout<<"Nhap so luong mat hang: ";
-								tempCheck = validateNumber(checkNumber);
-								if(tempCheck == false) {
-									cout<<"Nhap sai dinh dang"<<endl;
-								}
-							}while(tempCheck == false);
-							ss.clear();
-							ss<<checkNumber;
-							ss>>soLuong;
-							if(soLuong < 0) {
-								cout<<"Nhap sai so luong. Vui long nhap lai!"<<endl;
-							}else if(soLuong == 0) {
-								cout<<"Da thoat khoi chuc nang!"<<endl;
-							}
-							}while(soLuong < 0);
-							for(int i = 0; i<soLuong; i++) {
-								Goods a;
-								do{
-									a.input();
-									id_List.push_back(a.getCode());
-									if(!list.checkCode(a.getCode()))
-									cout<<"\nMA ID "<<a.getCode()<<" DA TON TAI! VUI LONG NHAP LAI."<<endl;
-								}while(!list.checkCode(a.getCode()));
-								list.insertLast(a);
-							}
-						this->clearMenuScreen();
-						goto startPoint;
-						break;
-					case 1:
-						if(list.isEmpty()){
-							cout << "\nDanh sach trong..." << endl;
-						}else{
-							list.outputAsTable(0, pointerY, 21, 10, list.getSize(), 196, 1, "left");
-						}
-						this->clearMenuScreen();
-						goto startPoint;
-						break;
-					case 2:
-						if(list.isEmpty()){
-							cout << "\nDanh sach trong..." << endl;
-						}else{
-							list.Find_2();
-						}
-						this->clearMenuScreen();
-						goto startPoint;
-						break;
-					case 3:
-						if(list.isEmpty()){
-							cout << "\nDanh sach trong..." << endl;
-						}else{
-                        list.Change(id_List);
-						}
-						this->clearMenuScreen();
-						goto startPoint;
-						break;
-					case 4:
-						if(list.isEmpty()){
-							cout << "\nDanh sach trong..." << endl;
-						}else{
-							writeDataToFile(list);
-							loadingAnimation(68, pointerY+2, "Dang xuat du lieu ra file...", "->Xuat thanh cong");
-						}
-						this->clearMenuScreen();
-						goto startPoint;
-					case 5:
-						if(list.isEmpty()){
-							cout << "\nDanh sach trong..." << endl;
-						}else{
-							Manager manager;
-							manager.insertLast_2();
-							manager.userList();
-//							manager.calculation(list);
-							
-						}
-						this->clearMenuScreen();
-						goto startPoint;
-						break;
-					case 6:
-						cout << "Ban da chon thoat chuong trinh!!" << endl;
-						exit(0);
-						break;
-					default:
-						cout << "Khong co chuc nang nay, vui long them chuc nang vao case!!!" << endl;
-						break;
-				}
-			}
-		}
-	};
-}
 
