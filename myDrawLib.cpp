@@ -159,6 +159,9 @@ void loadingAnimation(int x, int y, string loadContent, string loadContentDone){
 	sleep(1);
 }
 
+void sleepFunc(short s){
+	sleep(s);
+}
 
 
 
