@@ -800,7 +800,7 @@ void ListMenu::start(ListGoods &list, string role, Manager &managerList, string 
 											managerList.ChangeEmployee();
 											break;
 									}
-									
+									writeManagerDataToFile(managerList);
 									break;
 								case 4:
 									short x;
