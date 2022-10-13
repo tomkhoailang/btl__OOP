@@ -458,7 +458,22 @@ bool LoginMenu::startLoginMenu(){
 		
 		gotoXY(xPos+2, yPos+ 9);
 		SetColor(textCol);
-		getline(cin, enteredPassword);
+		char ch;
+		ch = _getch();
+		while((ch >= 65 && ch <= 90) || (ch>= 97 && ch <= 122) || ch == 32 || ch >=48 && ch<= 57|| ch>=33 && ch<=47 || ch == '\b') {
+			if(ch == '\b' ) {
+				if(enteredPassword.length() > 0) {
+					enteredPassword.pop_back();
+					cout<<"\b \b";
+				}
+				ch = _getch();
+			}else {
+				enteredPassword.push_back(ch);
+				cout<<'*';
+				ch = _getch();
+			}
+		
+		}
 		
 		ifstream accInput(MANAGER_FILE_PATH);
 		while(accInput >> Musername){
@@ -497,6 +512,7 @@ bool LoginMenu::startLoginMenu(){
 		if(!isCorrect){
 			gotoXY(xPos - 8, yPos+ 13);
 			SetColor(260);
+			enteredPassword = "";
 			cout << "Sai ten dang nhap hoac mat khau!! (Nhan Enter de tiep tuc)" << endl;
 			_getch();
 			accInput.close();
