@@ -17,12 +17,12 @@ vector<string> id_List;
 	tempeployee
 	
 ***/
-#define MANAGER_FILE_PATH "C://fileTest//Manager.txt"
-#define EMPLOYEE_ACCOUNTS_FILE_PATH "C://fileTest//EmployeeAcounts.txt"
-#define EMPLOYEE_INFO_FILE_PATH "C://fileTest//EmployeeInfo.txt"
-#define TEMP_EMPLOYEE_INFO_FILE_PATH "C://fileTest//TempEmployeeInfo.txt"
+#define MANAGER_FILE_PATH "D://fileTest//Manager.txt"
+#define EMPLOYEE_ACCOUNTS_FILE_PATH "D://fileTest//EmployeeAcounts.txt"
+#define EMPLOYEE_INFO_FILE_PATH "D://fileTest//EmployeeInfo.txt"
+#define TEMP_EMPLOYEE_INFO_FILE_PATH "D://fileTest//TempEmployeeInfo.txt"
 #define DEFAULT_TEXT_COLOR 91
-#define FILE_PATH "C://fileTest//QuanLiCuaHang.txt"
+#define FILE_PATH "D://fileTest//QuanLiCuaHang.txt"
 // ngay thang nam
 typedef struct Date {
 //	private:
