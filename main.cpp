@@ -180,6 +180,7 @@ class TempEmployee {
 		void salary();
 		void input();
 		void output();
+		friend class Manager;
 };
 
 //clas employee
@@ -197,6 +198,7 @@ class Employee: public Person, public TempEmployee {
 		void input();
 		void output();
 		void salary();
+		friend class Manager;
 };
 int Employee::id = 0;
 //hamcheck
@@ -283,6 +285,16 @@ class Manager: public Person {
 		Employee getEmployeeByUserName(string username);
 		friend void writeManagerDataToFile(Manager list);
 		friend void readManagerDataFromFile(Manager &list);
+		void FindEmployee();
+		void FindTempEmployee();
+		Node_1* FindTelephone_1();
+		Node_2* FindTelephone_2();
+		void ChangeTempEmployee();
+		void ChangeEmployee();
+		void ReplaceTempEmployee();
+		void ReplaceEmployee();
+		void RemoveTempEmployee();
+		void RemoveEmployee();
 };
 
 //class menu
@@ -768,10 +780,49 @@ void ListMenu::start(ListGoods &list, string role, Manager &managerList, string 
 									}
 									break;
 								case 3:
-									////*******************************************
+									short n;
+									do{
+										cout<<"Chon 1 de thay doi thong tin nhan vien thu viec\n";
+										cout<<"Chon 2 de thay doi thong tin nhan vien\n ";
+										cout<<"Chon 0 de thoat\n";
+										cout<<"Nhap lua chon:";
+										cin>>n;
+										if(n<0||n>2)
+											cout<<"Khong co lua chon nay\n";
+									}while(n<0||n>2);
+									switch(n){
+										case 0:
+											break;
+										case 1:
+											managerList.ChangeTempEmployee();
+											break;
+										case 2:
+											managerList.ChangeEmployee();
+											break;
+									}
+									writeManagerDataToFile(managerList);
 									break;
 								case 4:
-									/////*********************************************
+									short x;
+									do{
+										cout<<"Nhap 1 de tim nhan vien thu viec\n";
+										cout<<"Nhap 2 de tim kiem nhan vien\n";
+										cout<<"Nhap 0 de thoat\n";
+										cout<<"Nhap lua chon:";
+										cin>>x;
+										if(x<0||x>2)
+											cout<<"Khong co lua chon nay\n";
+									}while(x<0||x>2);
+									switch(x){
+										case 0:
+											break;
+										case 1:
+											managerList.FindTempEmployee();
+											break;
+										case 2:
+											managerList.FindEmployee();
+											break;
+									}
 									break;
 								case 0:
 									break;
@@ -2570,6 +2621,443 @@ int Goods::Replace(vector<string> &id_List){
 				cout<<"Lua chon khong ton tai";
 				return 0;
 		}
+}
+
+void  Manager::FindEmployee(){
+	char temp_1[100], temp_2[100];
+	short dem=0;
+	cout<<"Nhap ten cua nhan vien:";
+	fflush(stdin);
+	gets(temp_1);
+	for(Node_2* i=head_2;i!=NULL;i=i->next){
+		if(strstr (strupr (strcpy(temp_2,i->data_2.getName().c_str()) ),strupr(temp_1)) ){
+		    dem++;
+			i->data_2.output();
+	    }
+	}
+	string result =dem==0?"Khong co thong tin trong danh sach":"";	
+}
+void  Manager::FindTempEmployee(){
+	char temp_1[100], temp_2[100];
+	short dem =0;
+	cout<<"Nhap ten cua nhan vien thu viec:";
+	fflush(stdin);
+	gets(temp_1);
+	for(Node_1* i=head_1;i!=NULL;i=i->next){
+		if(strstr (strupr (strcpy(temp_2,i->data_1.getName().c_str())) ,strupr(temp_1)) ){
+			i->data_1.output();
+			dem++;
+		}
+	}
+	string result =dem==0?"Khong co thong tin trong danh sach":"";
+}
+
+Node_1* Manager::FindTelephone_1(){
+	string temp;
+	short dem=0;
+	cout<<"Nhap so dien thoai:";
+	fflush(stdin);
+	getline(cin,temp);
+	for(Node_1* i=head_1;i!=NULL;i=i->next){
+		if(strcmp(i->data_1.getPhoneNumber().c_str(),temp.c_str())==0){
+			dem++;
+			return i;
+		}
+	}
+	if(dem==0){
+		cout<<"Khong tim thay trong danh sach\n";
+		return NULL;
+	}	
+}
+Node_2* Manager::FindTelephone_2(){
+	string temp;
+	short dem=0;
+	cout<<"Nhap so dien thoai:";
+	fflush(stdin);
+	getline(cin,temp);
+	for(Node_2* i=head_2;i!=NULL;i=i->next){
+		if(strcmp(i->data_2.getPhoneNumber().c_str(),temp.c_str())==0){
+			dem++;
+			return i;
+		}
+	}
+	if(dem==0){
+		cout<<"Khong tim thay trong danh sach\n";
+		return NULL;
+	}
+}
+
+void Manager::ChangeTempEmployee(){
+	short choice;
+	do{
+		cout<<"Chon 1 de sua thong tin cua nhan vien thu viec\n";
+		cout<<"Chon 2 de xoa thong tin nhan vien thu viec\n";
+		cout<<"Nhap 0 de thoat\n";
+		cout<<"Nhap lua chon:\n";
+		cin>>choice;
+	}while(choice<0&&choice>2);
+	switch(choice){
+		case 0:
+			break;
+		case 1:
+		{
+			ReplaceTempEmployee();
+			break;		
+		}
+		case 2:
+		{
+			RemoveTempEmployee();
+			break;
+		}
+	}
+}
+void Manager::ChangeEmployee(){
+	short choice;
+	do{
+		cout<<"Chon 1 de sua thong tin cua nhan vien\n";
+		cout<<"Chon 2 de xoa thong tin nhan vien\n";
+		cout<<"Nhap 0 de thoat\n";
+		cout<<"Nhap lua chon:\n";
+		cin>>choice;
+	}while(choice<0&&choice>2);
+	switch(choice){
+		case 0:
+			break;
+		case 1:
+		{
+			ReplaceEmployee();
+			break;		
+		}
+		case 2:
+		{
+			RemoveEmployee();
+			break;
+		}
+	}
+}
+
+void Manager::ReplaceTempEmployee(){
+	short choice;
+	Node_1* i=FindTelephone_1();
+	if(i==NULL){
+		cout<<"Khong tim thay\n";
+	}
+	else{
+		do{
+		cout<<"Chon 1 de sua thong tin ca nhan cua nhan vien thu viec\n";
+		cout<<"Chon 0 de thoat\n";
+		cout<<"Nhap lua chon:";
+		cin>>choice;
+		}while(choice<0&&choice>1);
+		switch(choice){
+			case 0:
+				break;
+			case 1:
+			{
+				short option;
+				cout<<"Chon 1 de sua ten\n";
+				cout<<"Chon 2 de sua gioi tinh\n";
+//				cout<<"Chon 3 de sua tuoi\n";
+				cout<<"Chon 3 de sua ngay sinh\n";
+				cout<<"Chon 4 de sua so dien thoai\n";
+				do{
+					cout<<"Nhap lua chon\n";
+					cin>>option;
+				}while(option<1&&option>5);
+				switch(option){
+					case 1:
+					{
+						string temp;
+						char temp_1;
+						cout<<"Nhap ten:";
+						fflush(stdin);
+						getline(cin, temp);
+						i->data_1.name=temp;
+						break;
+					}
+					case 2:
+					{
+					    string temp;
+						char temp_1;
+						cout<<"Nhap gioi tinh:";
+						fflush(stdin);
+						getline(cin, temp);
+						i->data_1.gender=temp;
+						break;
+					}
+//					case 3:
+//					{
+//					    int temp;
+//					    cout<<"Nhap tuoi";
+//					    cin>>temp;
+//					    i->data_1.age=temp;
+//						break;
+//					}
+					case 3:
+					{
+						Date temp;
+					    cout<<"Nhap lai ngay sinh\n";
+					    temp.inputPerson();
+					    i->data_1.setBirth(temp);
+					    i->data_1.setAge();
+						break;
+					}
+					case 4:
+					{
+					    string temp;
+					    bool isDuplicated;
+					    do{
+					    	isDuplicated = false;
+					    	cout<<"Nhap so dien thoai:";
+					    	fflush(stdin);
+					    	getline(cin, temp);
+//					    	checkNum = validateNumber(temp);
+					    	
+								if(temp.length()!=10){
+									cout<<"So dien thoai phai du 10 chu so! Vui long nhap lai."<<endl;
+									isDuplicated = true;
+								}else if(temp[0] != '0'){
+								cout<<"So dien thoai can bat dau bang so 0 (+84)! Vui long nhap lai."<<endl;
+								isDuplicated = true;
+								}else{
+								for(Node_1* i=head_1;i!=NULL;i=i->next){
+					    			if(i->data_1.getPhoneNumber().compare(temp)==0){
+					    				isDuplicated=true;
+					    				cout << "So dien thoai da ton tai, vui long nhap lai!" << endl;
+					    				break;
+									}		
+								}
+								for(Node_2* i=head_2;i!=NULL;i=i->next){
+					    			if(i->data_2.getPhoneNumber().compare(temp)==0){
+					    				isDuplicated=true;
+					    				cout << "So dien thoai da ton tai, vui long nhap lai!" << endl;
+					    				break;
+									}		
+								}
+							}
+					    
+						}while(isDuplicated);
+					    i->data_1.phoneNumber=temp;
+						break;
+					}
+				}
+				break;
+			}
+		}
+	}
+}
+void Manager::RemoveTempEmployee(){
+	short dem=0;
+	Node_1* i=FindTelephone_1();
+	if(i==NULL){
+		cout<<"Khong tim thay\n";
+	}
+	else{
+		if(i==head_1){
+	        head_1=head_1->next;
+	        delete i;
+	        dem++;
+	        this->size_1--;
+        }
+        else if(i==tail_1){
+	        Node_1* q=head_1;
+		    while(q->next->next!=NULL){
+			    q=q->next;
+		    }
+	        tail_1=q;
+		    q->next=NULL;
+		    delete i;
+		    dem++;
+		    this->size_1--;
+        }
+	    else{ 
+            Node_1* p=head_1;
+            while(p->next==i){
+            	p->next=p->next->next;
+                i->next=NULL;
+                delete i;
+                dem++;
+                this->size_1--;
+			}	
+	    }
+	}
+	string temp = dem!=0?"Da sua thanh cong\n":"";
+}
+void Manager::ReplaceEmployee(){
+	short choice;
+	Node_2* i=FindTelephone_2();
+	if(i==NULL){
+		cout<<"Khong tim thay\n";
+	}
+	else{
+		do{
+			cout<<"Chon 1 de sua thong tin ca nhan cua nhan vien\n";
+			cout<<"Chon 2 de sua thong tin tai khoan cua nhan vien\n";
+			cout<<"Chon 0 de thoat\n";
+			cout<<"Nhap lua chon:";
+			cin>>choice;
+		}while(choice<0&&choice>2);
+		switch(choice){
+			case 0:
+				break;
+			case 1:
+			{
+//				do{
+//					cout<<"Chon 1 de sua thong tin ca nhan cua nhan vien thu viec\n";
+//					cout<<"Chon 0 de thoat\n";
+//					cout<<"Nhap lua chon:";
+//					cin>>choice;
+//				}while(choice<0&&choice>1);
+//				switch(choice){
+//					case 0:
+//						break;
+//					case 1:
+//					{
+						short option;
+						cout<<"Chon 1 de sua ten\n";
+						cout<<"Chon 2 de sua gioi tinh\n";
+//						cout<<"Chon 3 de sua tuoi\n";
+						cout<<"Chon 3 de sua ngay sinh\n";
+						cout<<"Chon 4 de sua so dien thoai\n";
+						cout<<"Chon 5 de sua luong\n";
+						do{
+							cout<<"Nhap lua chon\n";
+							cin>>option;
+						}while(option<1&&option>6);
+						switch(option){
+							case 1:
+							{
+								string temp;
+								char temp_1;
+								cout<<"Nhap ten:";
+								fflush(stdin);
+								getline(cin, temp);
+								i->data_2.name=temp;
+								break;
+							}
+							case 2:
+							{
+					   			string temp;
+								char temp_1;
+								cout<<"Nhap gioi tinh:";
+								fflush(stdin);
+								getline(cin, temp);
+								i->data_2.gender=temp;
+								break;
+							}
+//							case 3:
+//							{
+//					    		int temp;
+//					    		cout<<"Nhap tuoi";
+//					    		cin>>temp;
+//					    		i->data_2.age=temp;
+//								break;
+//							}
+							case 3:
+							{
+					    		Date temp;
+					    		cout<<"Nhap lai ngay sinh\n";
+					    		temp.inputPerson();
+					    		i->data_2.setBirth(temp);
+					    		i->data_2.setAge();
+								break;
+							}
+							case 4:
+							{
+					    		string temp;
+					    		bool isDuplicated;
+					    		do{
+					    			isDuplicated = false;
+					    			cout<<"Nhap so dien thoai:";
+					    			fflush(stdin);
+					    			getline(cin, temp);
+									if(temp.length()!=10){
+										cout<<"So dien thoai phai du 10 chu so! Vui long nhap lai."<<endl;
+										isDuplicated = true;
+									}else if(temp[0] != '0'){
+										cout<<"So dien thoai can bat dau bang so 0 (+84)! Vui long nhap lai."<<endl;
+										isDuplicated = true;
+									}else{
+										for(Node_1* i=head_1;i!=NULL;i=i->next){
+					    				if(i->data_1.getPhoneNumber().compare(temp)==0){
+					    					isDuplicated=true;
+					    					cout << "So dien thoai da ton tai, vui long nhap lai!" << endl;
+					    					break;
+										}		
+									}
+									for(Node_2* i=head_2;i!=NULL;i=i->next){
+					    				if(i->data_2.getPhoneNumber().compare(temp)==0){
+					    					isDuplicated=true;
+					    					cout << "So dien thoai da ton tai, vui long nhap lai!" << endl;
+					    					break;
+										}		
+									}
+								}
+					    
+								}while(isDuplicated);
+					    			i->data_2.phoneNumber=temp;
+									break;
+						   	}
+							case 5:
+							{
+								float temp;
+								cout<<"Nhap he so luong:";
+								cin>>temp;
+								i->data_2.setWage(temp);
+								//wage
+								break;
+							}
+						}
+					}	break;
+				
+
+			break;
+			case 2:
+				string temp;
+				cout<<"Nhap mat khau:";
+				fflush(stdin);
+				getline(cin,temp);
+				i->data_2.password=temp;
+				break;
+		}
+	}
+}
+void Manager::RemoveEmployee(){
+	short dem=0;
+	Node_2* i=FindTelephone_2();
+	if(i==NULL){
+		cout<<"Khong tim thay\n";
+	}
+	else{
+		if(i==head_2){
+	        head_2=head_2->next;
+	        delete i;
+	        dem++;
+	        this->size_2--;
+        }
+        else if(i==tail_2){
+	        Node_2* q=head_2;
+		    while(q->next->next!=NULL){
+			    q=q->next;
+		    }
+	        tail_2=q;
+		    q->next=NULL;
+		    delete i;
+		    dem++;
+		    this->size_2--;
+        }
+	    else{ 
+            Node_2* p=head_2;
+            while(p->next==i){
+            	p->next=p->next->next;
+                i->next=NULL;
+                delete i;
+                dem++;
+                this->size_2--;
+			}	
+	    }
+	}
+	string temp = dem!=0?"Da sua thanh cong\n":"";
 }
 
 //Read and Write data to file
