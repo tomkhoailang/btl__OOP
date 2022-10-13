@@ -3214,14 +3214,17 @@ void Manager::ReplaceEmployee(){
 							}
 						}
 					}	break;
-				
-
 			break;
 			case 2:
 				string temp;
-				cout<<"Nhap mat khau: ";
-				fflush(stdin);
-				getline(cin,temp);
+				do {
+					cout<<"Nhap mat khau: ";
+					fflush(stdin);
+					getline(cin, temp);
+					if(validateString(temp) == false) {
+						cout<<"Vui long nhap dung dinh dang!"<<endl;
+					}
+				}while(validateString(temp) == false);
 				i->data_2.password=temp;
 				break;
 		}
