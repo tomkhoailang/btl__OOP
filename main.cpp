@@ -17,12 +17,12 @@ vector<string> id_List;
 	tempeployee
 	
 ***/
-#define MANAGER_FILE_PATH "D://fileTest//Manager.txt"
-#define EMPLOYEE_ACCOUNTS_FILE_PATH "D://fileTest//EmployeeAcounts.txt"
-#define EMPLOYEE_INFO_FILE_PATH "D://fileTest//EmployeeInfo.txt"
-#define TEMP_EMPLOYEE_INFO_FILE_PATH "D://fileTest//TempEmployeeInfo.txt"
+#define MANAGER_FILE_PATH "C://fileTest//Manager.txt"
+#define EMPLOYEE_ACCOUNTS_FILE_PATH "C://fileTest//EmployeeAcounts.txt"
+#define EMPLOYEE_INFO_FILE_PATH "C://fileTest//EmployeeInfo.txt"
+#define TEMP_EMPLOYEE_INFO_FILE_PATH "C://fileTest//TempEmployeeInfo.txt"
 #define DEFAULT_TEXT_COLOR 91
-#define FILE_PATH "D://fileTest//QuanLiCuaHang.txt"
+#define FILE_PATH "C://fileTest//QuanLiCuaHang.txt"
 // ngay thang nam
 typedef struct Date {
 //	private:
@@ -48,6 +48,8 @@ typedef struct Date {
 		friend class Goods;
 } Date;
 
+//Ham tra ve ngay hien tai
+Date nowDate();
 //Lop hang hoa
 class Goods {
 	private:
@@ -56,8 +58,8 @@ class Goods {
 		string category;	//danh muc
 		string status;		//tinh trang
 		float discount;		//chiet khau
-		float price;		//gia goc
-		float priceAfter;	//gia sau khi tru chiet khau
+		long price;		//gia goc
+		long priceAfter;	//gia sau khi tru chiet khau
 		int number;			//so luong
 		Date date;			//ngay san xuat
 		int valid;			//han su dung
@@ -78,10 +80,10 @@ class Goods {
 		void setCode(string code);
 		float getDiscount();
 		void setDiscount(float discount);
-		float getPrice();
-		void setPrice(float price);
-		float getPriceAfter();
-		void setPriceAfter(float priceAfter);
+		long getPrice();
+		void setPrice(long price);
+		long getPriceAfter();
+		void setPriceAfter(long priceAfter);
 		int getNumber();
 		void setNumber(int number);
 		int getvalid();
@@ -240,6 +242,16 @@ string upperCase(string a){
 		a[i]-=32;
 	}
 	return a;
+}
+//kiem tra username
+bool checkUser(string a){
+	if(a.length() < 5)
+	return false;
+	for(int i = 0; i < a.length(); ++i){
+		if(a[i] == ' ')
+		return false;
+	}
+	return true;
 }
 void changeString(char a[], string b){
 			for(int i=0;i<b.length();++i){
@@ -465,7 +477,7 @@ bool LoginMenu::startLoginMenu(){
 				if(enteredPassword.length() > 0) {
 					enteredPassword.pop_back();
 					cout<<"\b \b";
-				}
+				}   
 				ch = _getch();
 			}else {
 				enteredPassword.push_back(ch);
@@ -796,7 +808,8 @@ void ListMenu::start(ListGoods &list, string role, Manager &managerList, string 
 										for(short i = 0;i < amount;i++){
 											managerList.insertLast_2();
 										}
-									}else if(type == 2){
+									}
+									else if(type == 2){	
 										for(short i = 0;i < amount;i++){
 											managerList.insertLast_1();
 										}
@@ -965,7 +978,7 @@ void Person::calculation(ListGoods list) {
 	int totalPrice = 0;
 	vector<Goods> invoice;
 	vector<int> quantity;
-	vector<float> endPrice;
+	vector<long> endPrice;
 	string checkNumber;
 	stringstream ss;
 	bool tempCheck;
@@ -1031,7 +1044,11 @@ void Person::calculation(ListGoods list) {
 			}
 				
 			case 2:{
-				float endOfPrice = 0;
+				if(invoice.size()==0){
+					cout<<"Gio hang trong!."<<endl;
+				}
+				else{
+					long endOfPrice = 0;
 				cout <<endl<<setw(30)<<"Ten san pham"
 					 <<setw(4)<<right<<"SL"
 					 <<setw(9)<<right<<"Gia ban"
@@ -1054,9 +1071,15 @@ void Person::calculation(ListGoods list) {
 					endOfPrice += endPrice[i];
 				}
 				cout<<setw(48)<<left<<"\nTong hoa don: "<<setw(13)<<right<<endOfPrice<<endl<<endl;
+				}
+				
 				break;
 			}
 			case 3:
+				if(invoice.size()==0){
+					cout<<"Gio hang trong!."<<endl;
+				}
+				else{
 				int num;
 				bool check = false;
 				a = list.Find_1();
@@ -1072,7 +1095,12 @@ void Person::calculation(ListGoods list) {
 						ss.clear();
 						ss<<checkNumber;
 						ss>>num;
-						if(a->data.getNumber() + quantity[i] - num < 0){
+						if(num == 0){
+							a->data.setNumber(a->data.getNumber() + quantity[i]);
+							quantity.erase(quantity.begin() + i);
+							invoice.erase(invoice.begin() + i);
+						}
+						else if(a->data.getNumber() + quantity[i] - num < 0){
 							cout<<"So luong can thay doi qua lon! Khong the sua"<<endl;
 						}
 						else{
@@ -1087,6 +1115,7 @@ void Person::calculation(ListGoods list) {
 				}
 				if(!check)
 				cout<<"San pham nay hien khong co trong danh sach thanh toan."<<endl;
+			}
 				
 		}
 	}while(select != 4);
@@ -1269,15 +1298,28 @@ void TempEmployee::input() {
 		if(age<18)
 			cout<<"Nhan vien chua du tuoi lam viec! Vui long nhap lai."<<endl;
 	}while(age<18);
-	
+	cout<<"Ngay bat dau lam viec: "<<endl;
+	cout<<"1. Ngay hien tai"<<endl<<"2. Nhap ngay lam viec"<<endl;
 	do{
-		cout<<"Nhap ngay bat dau lam viec: "<<endl;
-		startWork.inputPerson();
-		if(startWork.getYear() - birth.getYear() < 18)
-			cout<<"Nhan vien chua du tuoi lam viec! Vui long nhap lai."<<endl;
-	}while(startWork.getYear() - birth.getYear() < 18);
+		cout<<"Nhap lua chon: ";
+		fflush(stdin);
+		getline(cin, choiceGender);
+		if(choiceGender=="1")
+			startWork.setDate(nowDate());
+		else if(choiceGender=="2"){
+			do{
+				cout<<"Nhap ngay bat dau lam viec: "<<endl;
+				startWork.inputPerson();
+				if(startWork.getYear() - birth.getYear() < 18)
+					cout<<"Nhan vien chua du tuoi lam viec! Vui long nhap lai."<<endl;
+			}while(startWork.getYear() - birth.getYear() < 18);
+		}
+		else cout<<"sai"<<endl;
+	}while(choiceGender!="1"&&choiceGender!="2");
+	
 	setMonth();
 }
+
 void TempEmployee::output() {
 	cout<<"\nTen nhan vien: "<<name<<endl;
 	cout<<"Gioi tinh: "<<gender<<endl;
@@ -1314,7 +1356,7 @@ void Employee::salary() {
 	if(month == 0) {
 		cout<<"Hien tai chua co luong!"<<endl;
 	}else {
-		float temp = 9000000*wage;
+		long temp = 9000000*wage;
 		cout<<"Luong thang: "<<(int)temp<<" VND"<<endl;
 	}
 }
@@ -1327,7 +1369,9 @@ void Employee::input() {
 		if(validateString(username) == false) {
 			cout<<"Vui long nhap dung dinh dang!"<<endl;
 		}
-	}while(validateString(username) == false);
+		else if(checkUser(username) == false)
+		cout<<"Ten tai khoan phai tu 5 ky tu tro len va khong chua dau cach!"<<endl;
+	}while(validateString(username) == false || checkUser(username) == false);
 	// nhap binh thuong
 	do {
 		cout<<"Nhap mat khau: ";
@@ -1336,7 +1380,9 @@ void Employee::input() {
 		if(validateString(password) == false) {
 			cout<<"Vui long nhap dung dinh dang!"<<endl;
 		}
-	}while(validateString(password) == false);
+		else if(checkUser(password) == false)
+		cout<<"Mat khau phai tu 5 ky tu tro len va khong chua dau cach!"<<endl;
+	}while(validateString(password) == false || checkUser(password) == false);
 	TempEmployee::input();
 	setWage();
 	output();
@@ -1851,10 +1897,10 @@ void Date::inputPerson() {
 			yyyy = yyyyTemp2;
 			temp = checkDate();
 			if(temp != true) {
-				cout<<"Ngay sinh phai dung dinh dang"<<endl;
+				cout<<"Ngay vua nhap phai dung dinh dang"<<endl;
 			}
 			else if(checkExpiryDate()){
-				cout<<"Ngay sinh khong duoc lon hon ngay hien tai!"<<endl;
+				cout<<"Ngay vua nhap khong duoc lon hon ngay hien tai!"<<endl;
 			}
 	}while(temp == false || checkExpiryDate());
 }
@@ -1912,6 +1958,16 @@ bool Date::checkExpiryDate(){
 	return true;
 }
 
+//Tra ve ngay hien tai
+Date nowDate(){
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+	int dayNow = tm.tm_mday;
+	int monNow = tm.tm_mon + 1;
+	int yearNow = tm.tm_year + 1900;
+	Date now(dayNow, monNow, yearNow);
+	return now;
+}
 //getter and setter
 string Goods::getName() {
 	return name;
@@ -1943,16 +1999,16 @@ float Goods::getDiscount(){
 void Goods::setDiscount(float discount){
 	this->discount = discount;
 }
-float Goods::getPrice(){
+long Goods::getPrice(){
 	return price;
 }
-void Goods::setPrice(float price){
+void Goods::setPrice(long price){
 	this->price = price;
 }
-float Goods::getPriceAfter(){
+long Goods::getPriceAfter(){
 	return priceAfter;
 }
-void Goods::setPriceAfter(float priceAfter){
+void Goods::setPriceAfter(long priceAfter){
 	this->priceAfter = priceAfter;
 }
 int Goods::getvalid() {
@@ -2040,7 +2096,8 @@ void Goods::input(){
 	stringstream ss;
 	string priceTemp, discountTemp, numberTemp, validTemp;
 	int numberTemp2,validTemp2;
-	float priceTemp2, discountTemp2;
+	long priceTemp2;
+	float discountTemp2;
 	cout<<"Nhap thong tin san pham"<<endl;
 	cout<<"Nhap ID: ";
 	do {
@@ -2672,7 +2729,7 @@ int Goods::Replace(vector<string> &id_List){
 			}
 			case 5:
 				{
-				float num;
+				long num;
 				string checkNumber;
 				stringstream ss;
 				bool tempCheck;
@@ -3289,7 +3346,8 @@ void Manager::RemoveEmployee(){
 void readDataFromFile(ListGoods &list){
 	ifstream inputFile(FILE_PATH);
 	string code, name, category, status;
-	float discount, price, priceAfter;
+	float discount;
+	long price, priceAfter;
 	int number, valid;
 	Date date, expiryDate;
 	Goods temp;
