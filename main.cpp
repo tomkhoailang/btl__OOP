@@ -1129,24 +1129,31 @@ void Person::calculation(ListGoods list) {
 				break;
 			case 5:
 				if(invoice.size()>0){
-					string choice;
+					int choice;
 					cout<<"Hoa don chua duoc xuat. Ban co muon xuat hoa don ?"<<endl;
 					cout<<"1.Co\n"<<"2.Khong"<<endl;
 					do{
-						cout<<"Nhap lua chon: ";
-						fflush(stdin);
-						getline(cin, choice);
-						if(choice=="1"){
+						do {
+							cout << "Nhap lua chon: ";
+							tempCheck = validateNumber(checkNumber);
+							if(tempCheck == false) {
+								cout<<"Nhap sai dinh dang"<<endl;
+							}
+						}while(tempCheck == false);
+						ss.clear();
+						ss<<checkNumber;
+						ss>>choice;	
+						if(choice==1){
 							while(invoice.size()>0)
 								invoice.pop_back();
 							cout<<"Da xuat hoa don!."<<endl;
 						}
-						else if(choice=="2"){
+						else if(choice==2){
 							for(int i=0; i < invoice.size(); ++i)
 								a->data.setNumber(a->data.getNumber() + quantity[i]);
 						}
-						else cout<<"sai"<<endl;
-					}while(choice!="1"&&choice!="2");
+						else cout<<"Lua chon khong ton tai"<<endl;
+					}while(choice!=1&&choice!=2);
 				}	
 				
 		}
