@@ -985,9 +985,10 @@ void Person::calculation(ListGoods list) {
 	int select;
 	do {
 		cout<<"1. Them san pham"<<endl;
-		cout<<"2. Xuat hoa don"<<endl;
+		cout<<"2. Xem hoa don"<<endl;
 		cout<<"3. Chinh hoa don"<<endl;
-		cout<<"4. Thoat"<<endl;
+		cout<<"4. Xuat hoa don"<<endl;
+		cout<<"5. Thoat"<<endl;
 		do {
 			cout << "Nhap lua chon: ";
 			tempCheck = validateNumber(checkNumber);
@@ -1116,9 +1117,40 @@ void Person::calculation(ListGoods list) {
 				if(!check)
 				cout<<"San pham nay hien khong co trong danh sach thanh toan."<<endl;
 			}
+			case 4:
+				if(invoice.size()==0){
+					cout<<"Gio hang trong!."<<endl;
+				}
+				else{
+					while(invoice.size()>0)
+						invoice.pop_back();
+					cout<<"Da xuat hoa don!."<<endl;	
+				}
+				break;
+			case 5:
+				if(invoice.size()>0){
+					string choice;
+					cout<<"Hoa don chua duoc xuat. Ban co muon xuat hoa don ?"<<endl;
+					cout<<"1.Co\n"<<"2.Khong"<<endl;
+					do{
+						cout<<"Nhap lua chon: ";
+						fflush(stdin);
+						getline(cin, choice);
+						if(choice=="1"){
+							while(invoice.size()>0)
+								invoice.pop_back();
+							cout<<"Da xuat hoa don!."<<endl;
+						}
+						else if(choice=="2"){
+							for(int i=0; i < invoice.size(); ++i)
+								a->data.setNumber(a->data.getNumber() + quantity[i]);
+						}
+						else cout<<"sai"<<endl;
+					}while(choice!="1"&&choice!="2");
+				}	
 				
 		}
-	}while(select != 4);
+	}while(select != 5);
 }
 //tempemployee
 TempEmployee::TempEmployee() {
