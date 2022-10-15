@@ -1506,16 +1506,27 @@ void Manager::insertLast_2() {
 
 }
 void Manager::output_2() {
-	for(Node_2 *i = head_2; i != NULL; i = i->next) {
-		i->data_2.output();
+	if(head_2==NULL){
+		cout<<"Khong co trong danh sach"<<endl;
 	}
+	else{
+		for(Node_2 *i = head_2; i != NULL; i = i->next) {
+			i->data_2.output();
+	}
+	}
+	
 }
 
 void Manager::output_1() {
-	for(Node_1 *i = head_1; i != NULL; i = i->next) {
-		i->data_1.output();
+	if(head_1==NULL){
+		cout<<"Khong co trong danh sach"<<endl;
+	}
+	else{
+		for(Node_1 *i = head_1; i != NULL; i = i->next) {
+			i->data_1.output();
 	}
 }
+	}
 //chuc nang manager 
 
 Employee Manager::getEmployeeByUserName(string username){
