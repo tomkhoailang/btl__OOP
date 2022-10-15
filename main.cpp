@@ -2665,7 +2665,6 @@ Node_1* Manager::FindTelephone_1(){
 		}
 	}
 	if(dem==0){
-		cout<<"Khong tim thay trong danh sach\n";
 		return NULL;
 	}	
 }
@@ -2682,7 +2681,6 @@ Node_2* Manager::FindTelephone_2(){
 		}
 	}
 	if(dem==0){
-		cout<<"Khong tim thay trong danh sach\n";
 		return NULL;
 	}
 }
@@ -2740,7 +2738,7 @@ void Manager::ReplaceTempEmployee(){
 	short choice;
 	Node_1* i=FindTelephone_1();
 	if(i==NULL){
-		cout<<"Khong tim thay\n";
+		cout<<"Khong tim thay trong danh sach\n";
 	}
 	else{
 		do{
@@ -2757,7 +2755,6 @@ void Manager::ReplaceTempEmployee(){
 				short option;
 				cout<<"Chon 1 de sua ten\n";
 				cout<<"Chon 2 de sua gioi tinh\n";
-//				cout<<"Chon 3 de sua tuoi\n";
 				cout<<"Chon 3 de sua ngay sinh\n";
 				cout<<"Chon 4 de sua so dien thoai\n";
 				do{
@@ -2785,14 +2782,6 @@ void Manager::ReplaceTempEmployee(){
 						i->data_1.gender=temp;
 						break;
 					}
-//					case 3:
-//					{
-//					    int temp;
-//					    cout<<"Nhap tuoi";
-//					    cin>>temp;
-//					    i->data_1.age=temp;
-//						break;
-//					}
 					case 3:
 					{
 						Date temp;
@@ -2810,9 +2799,7 @@ void Manager::ReplaceTempEmployee(){
 					    	isDuplicated = false;
 					    	cout<<"Nhap so dien thoai:";
 					    	fflush(stdin);
-					    	getline(cin, temp);
-//					    	checkNum = validateNumber(temp);
-					    	
+					    	getline(cin, temp);					    	
 								if(temp.length()!=10){
 									cout<<"So dien thoai phai du 10 chu so! Vui long nhap lai."<<endl;
 									isDuplicated = true;
@@ -2850,7 +2837,7 @@ void Manager::RemoveTempEmployee(){
 	short dem=0;
 	Node_1* i=FindTelephone_1();
 	if(i==NULL){
-		cout<<"Khong tim thay\n";
+		cout<<"Khong tim thay trong danh sach\n";
 	}
 	else{
 		if(i==head_1){
@@ -2887,7 +2874,7 @@ void Manager::ReplaceEmployee(){
 	short choice;
 	Node_2* i=FindTelephone_2();
 	if(i==NULL){
-		cout<<"Khong tim thay\n";
+		cout<<"Khong tim thay trong danh sach\n";
 	}
 	else{
 		do{
@@ -2902,21 +2889,9 @@ void Manager::ReplaceEmployee(){
 				break;
 			case 1:
 			{
-//				do{
-//					cout<<"Chon 1 de sua thong tin ca nhan cua nhan vien thu viec\n";
-//					cout<<"Chon 0 de thoat\n";
-//					cout<<"Nhap lua chon:";
-//					cin>>choice;
-//				}while(choice<0&&choice>1);
-//				switch(choice){
-//					case 0:
-//						break;
-//					case 1:
-//					{
 						short option;
 						cout<<"Chon 1 de sua ten\n";
 						cout<<"Chon 2 de sua gioi tinh\n";
-//						cout<<"Chon 3 de sua tuoi\n";
 						cout<<"Chon 3 de sua ngay sinh\n";
 						cout<<"Chon 4 de sua so dien thoai\n";
 						cout<<"Chon 5 de sua luong\n";
@@ -2945,14 +2920,6 @@ void Manager::ReplaceEmployee(){
 								i->data_2.gender=temp;
 								break;
 							}
-//							case 3:
-//							{
-//					    		int temp;
-//					    		cout<<"Nhap tuoi";
-//					    		cin>>temp;
-//					    		i->data_2.age=temp;
-//								break;
-//							}
 							case 3:
 							{
 					    		Date temp;
@@ -3004,7 +2971,6 @@ void Manager::ReplaceEmployee(){
 								cout<<"Nhap he so luong:";
 								cin>>temp;
 								i->data_2.setWage(temp);
-								//wage
 								break;
 							}
 						}
@@ -3014,9 +2980,13 @@ void Manager::ReplaceEmployee(){
 			break;
 			case 2:
 				string temp;
-				cout<<"Nhap mat khau:";
-				fflush(stdin);
-				getline(cin,temp);
+				do{
+					cout<<"Nhap mat khau:";
+					fflush(stdin);
+					cin>>temp;
+					if(temp.size()<5)
+						cout<<"Nhap lai mat khau\n";
+				}while(temp.size()<5);
 				i->data_2.password=temp;
 				break;
 		}
@@ -3026,7 +2996,7 @@ void Manager::RemoveEmployee(){
 	short dem=0;
 	Node_2* i=FindTelephone_2();
 	if(i==NULL){
-		cout<<"Khong tim thay\n";
+		cout<<"Khong tim thay trong danh sach\n";
 	}
 	else{
 		if(i==head_2){
