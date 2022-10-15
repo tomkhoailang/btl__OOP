@@ -3323,7 +3323,7 @@ void Manager::ReplaceEmployee(){
 							cout<<"Vui long nhap dung dinh dang!"<<endl;
 						if(temp.size()<5)
 							cout<<"Nhap lai:\n";
-						}
+					}
 					}while(temp.size()<5);
 				}while(validateString(temp) == false);
 				i->data_2.password=temp;
