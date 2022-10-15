@@ -2855,6 +2855,7 @@ void  Manager::FindEmployee(){
 	    }
 	}
 	string result =dem==0?"Khong co thong tin trong danh sach":"";	
+	cout<<result<<endl;
 }
 void  Manager::FindTempEmployee(){
 	char temp_1[100], temp_2[100];
@@ -2869,6 +2870,7 @@ void  Manager::FindTempEmployee(){
 		}
 	}
 	string result =dem==0?"Khong co thong tin trong danh sach":"";
+	cout<<result<<endl;
 }
 
 Node_1* Manager::FindTelephone_1(){
@@ -2891,7 +2893,6 @@ Node_1* Manager::FindTelephone_1(){
 		}
 	}
 	if(dem==0){
-		cout<<"Khong tim thay trong danh sach\n";
 		return NULL;
 	}	
 }
@@ -2913,7 +2914,6 @@ Node_2* Manager::FindTelephone_2(){
 		}
 	}
 	if(dem==0){
-		cout<<"Khong tim thay trong danh sach\n";
 		return NULL;
 	}
 }
@@ -2996,7 +2996,7 @@ void Manager::ReplaceTempEmployee(){
 	bool tempCheck;
 	Node_1* i=FindTelephone_1();
 	if(i==NULL){
-		cout<<"Khong tim thay\n";
+		cout<<"Khong tim thay trong danh sach\n";
 	}
 	else{
 		do{
@@ -3022,7 +3022,6 @@ void Manager::ReplaceTempEmployee(){
 				short option;
 				cout<<"1. Ten\n";
 				cout<<"2. Gioi tinh\n";
-//				cout<<"Chon 3 de sua tuoi\n";
 				cout<<"3. Ngay sinh\n";
 				cout<<"4. So dien thoai\n";
 				do{
@@ -3071,14 +3070,6 @@ void Manager::ReplaceTempEmployee(){
 						i->data_1.gender=temp;
 						break;
 					}
-//					case 3:
-//					{
-//					    int temp;
-//					    cout<<"Nhap tuoi";
-//					    cin>>temp;
-//					    i->data_1.age=temp;
-//						break;
-//					}
 					case 3:
 					{
 						Date temp;
@@ -3102,11 +3093,6 @@ void Manager::ReplaceTempEmployee(){
 									cout<<"Vui long nhap dung dinh dang!"<<endl;
 								}
 							}while(validateString(temp) == false);
-							
-					    	
-					    	
-//					    	checkNum = validateNumber(temp);
-					    	
 								if(temp.length()!=10){
 									cout<<"So dien thoai phai du 10 chu so! Vui long nhap lai."<<endl;
 									isDuplicated = true;
@@ -3144,7 +3130,7 @@ void Manager::RemoveTempEmployee(){
 	short dem=0;
 	Node_1* i=FindTelephone_1();
 	if(i==NULL){
-		cout<<"Khong tim thay\n";
+		cout<<"Khong tim thay trong danh sach\n";
 	}
 	else{
 		if(i==head_1){
@@ -3212,7 +3198,6 @@ void Manager::ReplaceEmployee(){
 						short option;
 						cout<<"1. Ten\n";
 						cout<<"2. Gioi tinh\n";
-//						cout<<"Chon 3 de sua tuoi\n";
 						cout<<"3. Ngay sinh\n";
 						cout<<"4. So dien thoai\n";
 						cout<<"5. Luong\n";
@@ -3330,12 +3315,16 @@ void Manager::ReplaceEmployee(){
 			case 2:
 				string temp;
 				do {
-					cout<<"Nhap mat khau: ";
-					fflush(stdin);
-					getline(cin, temp);
-					if(validateString(temp) == false) {
-						cout<<"Vui long nhap dung dinh dang!"<<endl;
+					do{
+						cout<<"Nhap mat khau: ";
+						fflush(stdin);
+						getline(cin, temp);
+						if(validateString(temp) == false) {
+							cout<<"Vui long nhap dung dinh dang!"<<endl;
+						if(temp.size()<5)
+							cout<<"Nhap lai:\n";
 					}
+					}while(temp.size()<5);
 				}while(validateString(temp) == false);
 				i->data_2.password=temp;
 				break;
