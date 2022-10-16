@@ -181,7 +181,7 @@ class TempEmployee {
 		void setBirth(Date birth);
 		void setStartWork(Date startWork);
 		void setMonth();
-		void salary();
+		long salary();
 		void input();
 		void output();
 		friend class Manager;
@@ -201,7 +201,8 @@ class Employee: public Person, public TempEmployee {
 		void setWage(float wage);
 		void input();
 		void output();
-		void salary();
+		void outputUser();
+		long salary();
 		friend class Manager;
 };
 int Employee::id = 0;
@@ -245,6 +246,8 @@ string upperCase(string a){
 	}
 	return a;
 }
+void output_title_2();
+void output_title_3();
 //kiem tra username
 bool checkUser(string &a){
 	short n = a.size();
@@ -290,6 +293,8 @@ class Manager: public Person {
 	public:
 		Manager();
 		~Manager();
+		int getSize_1();
+		int getSize_2();
 		Node_1 *makeNode_1();
 		Node_2 *makeNode_2();
 		bool isEmpty_1();
@@ -298,6 +303,7 @@ class Manager: public Person {
 		void insertLast_2();
 		void output_1();
 		void output_2();
+		void output_User();
 		void userList();
 		Node_1 *makeNode_1(const TempEmployee& data);
 		Node_2 *makeNode_2(const Employee& data);
@@ -774,6 +780,7 @@ void ListMenu::start(ListGoods &list, string role, Manager &managerList, string 
 							cout << "2. Xuat nhan vien" << endl;
 							cout << "3. Cap nhat thong tin nhan vien" << endl;
 							cout << "4. Tim kiem" << endl;
+							cout << "5. Xu ly hoa don" << endl;
 							cout << "0. Thoat" << endl;
 						
 							do {
@@ -837,9 +844,8 @@ void ListMenu::start(ListGoods &list, string role, Manager &managerList, string 
 								case 2:
 									short outType;
 									startOutChossing: ;
-									cout << "Chon loai nhan vien: " << endl;
-									cout << "1. Nhan vien chinh thuc" << endl;
-									cout << "2. Thu viec" << endl;
+									cout << "1. Xuat danh sach nhan vien" << endl;
+									cout << "2. Xuat danh sach tai khoan" << endl;
 									do {
 										cout << "Nhap lua chon: ";
 										tempCheck = validateNumber(checkNumber);
@@ -851,9 +857,22 @@ void ListMenu::start(ListGoods &list, string role, Manager &managerList, string 
 									ss<<checkNumber;
 									ss>>outType;
 									if(outType == 1){
-										managerList.output_2();
+										if(managerList.isEmpty_1() && managerList.isEmpty_2()){
+											cout<<"Danh sach trong!"<<endl;
+										}
+										else{
+											output_title_2();
+											managerList.output_2();
+											managerList.output_1();
+										}
 									}else if(outType == 2){
-										managerList.output_1();
+										if(managerList.isEmpty_2()){
+											cout<<"Danh sach trong!"<<endl;
+										}
+										else{
+											output_title_3();
+											managerList.output_User();
+										}
 									}else{
 										cout << "Khong co lua chon nay!" << endl;
 										goto startOutChossing;
@@ -920,6 +939,9 @@ void ListMenu::start(ListGoods &list, string role, Manager &managerList, string 
 											break;
 									}
 									break;
+								case 5:
+									managerList.calculation(list);
+									break;	
 								case 0:
 									break;
 								default:
@@ -943,6 +965,7 @@ void ListMenu::start(ListGoods &list, string role, Manager &managerList, string 
 							ss>>choice;
 							switch(choice){
 								case 1:
+									output_title_2();
 									a.output();
 									break;
 								case 2:
@@ -1263,6 +1286,9 @@ int TempEmployee::getAge(){
 Date TempEmployee::getBirth() {
 	return this->birth;
 }
+int TempEmployee::getMonth(){
+	return this->month;
+}
 void TempEmployee::setName(string name) {
 	this->name = name;
 }
@@ -1281,6 +1307,7 @@ void TempEmployee::setAge(){
 void TempEmployee::setPhoneNumber(string phoneNumber){
 	this->phoneNumber = phoneNumber;
 }
+
 void TempEmployee::setMonth() {
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
@@ -1294,12 +1321,8 @@ void TempEmployee::setMonth() {
 		month -= 1;
 	this->month = month;	
 }
-void TempEmployee::salary() {
-	if(month == 0) {
-		cout<<"Nhan vien nay chua co luong"<<endl;
-	}else {
-		cout<<"Luong "<<month<<" thang: "<<3000000*month;
-	}
+long TempEmployee::salary() {
+	return 3000000;
 }
 void TempEmployee::input() {
 	bool checkPhone;
@@ -1380,17 +1403,36 @@ void TempEmployee::input() {
 	
 	setMonth();
 }
-
+void output_title_2(){
+	cout <<			setw(16) << left << "|Ten nhan vien" 		<< "|";
+	cout << 		setw(9) << left << "Gioi tinh" 		<< "|";
+	cout << 		setw(13) << left << "So dien thoai" 	<< "|";
+	cout << 		setw(10) << left << "Ngay sinh" 	<< "|";
+	cout << 		setw(10) << left << "Ngay vao lam" 	<< "|";
+	cout << 		setw(17) << left << "So thang lam viec" 	<< "|";
+	cout << 		setw(11) << left << "He so luong" 	<< "|";
+	cout << 		setw(12) << left << "Luong co ban" 	<< "|";
+	cout << 		setw(12) << left << "Luong thang" 	<< "|";
+	cout << 		setw(11) << left << "Ghi chu" 	<< "|";
+	cout<<endl;
+}
+void output_title_3(){
+	cout <<			setw(21) << left << "|Tai khoan" 		<< "|";
+	cout << 		setw(20) << left << "Mat khau" 		<< "|" << endl;
+}
 void TempEmployee::output() {
-	cout<<"\nTen nhan vien: "<<name<<endl;
-	cout<<"Gioi tinh: "<<gender<<endl;
-	cout<<"So dien thoai: "<<phoneNumber<<endl;
-	cout<<"Ngay sinh: ";
+	cout <<"|"<<			setw(15) << left << getName() 		<< "|";
+	cout << 		setw(9) << left << getGender() 		<< "|";
+	cout << 		setw(13) << left << getPhoneNumber() 	<< "|";
 	birth.outputDate();
-	cout<<"\nNgay bat dau lam viec: ";
+	cout<<"|  ";
 	startWork.outputDate();
-	cout<<"\nSo thang lam viec: "<<month<<endl;
-	cout <<"So tuoi: "<< this->age << endl;
+	cout<<"|";
+	cout << 		setw(17) << right << getMonth() 	<< "|";
+	cout << 		setw(12) << right 	<< "|";
+	cout << 		setw(12) << right << salary() 	<< "|";
+	cout << 		setw(12) << right << salary() 	<< "|";
+	cout << 		setw(11) << right << "THU VIEC" 	<< "|" << endl;
 }
 //class employee
 Employee::Employee() {
@@ -1412,14 +1454,8 @@ void Employee::setWage(){
 void Employee::setWage(float wage){
 	this->wage = wage;
 }
-void Employee::salary() {
-	cout<<"Luong co ban: 9000000VND"<<endl;
-	if(month == 0) {
-		cout<<"Hien tai chua co luong!"<<endl;
-	}else {
-		long temp = 9000000*wage;
-		cout<<"Luong thang: "<<(int)temp<<" VND"<<endl;
-	}
+long Employee::salary() {
+	return 9000000 * wage;
 }
 void Employee::input() {
 	//chinh thanh viet lien khong cho phep cach ra
@@ -1461,9 +1497,23 @@ void Employee::input() {
 	output();
 }
 void Employee::output() {
-	TempEmployee::output();
-	cout<<"He so luong: "<<wage<<endl;
-	salary();
+	
+	cout <<"|"<<			setw(15) << left << getName() 		<< "|";
+	cout << 		setw(9) << left << getGender() 		<< "|";
+	cout << 		setw(13) << left << getPhoneNumber() 	<< "|";
+	birth.outputDate();
+	cout<<"|  ";
+	startWork.outputDate();
+	cout<<"|";
+	cout << 		setw(17) << right << getMonth() 	<< "|";
+	cout << 		setw(11) << right << getWage()	<< "|";
+	cout << 		setw(12) << right << "9000000" 	<< "|";
+	cout << 		setw(12) << right << (int)salary() 	<< "|";
+	cout << 		setw(11) << right << "CHINH THUC" 	<< "|"<<endl;
+}
+void Employee::outputUser() {
+	cout <<"|"<<			setw(20) << left << getUserName() 		<< "|";
+	cout << 		setw(20) << left << getPassWord() 		<< "|" << endl;
 }
 // class manager
 
@@ -1486,6 +1536,12 @@ Manager::Manager() {
 	this->size_2 = 0;
 }
 Manager::~Manager() {
+}
+int Manager::getSize_1(){
+	return this->size_1;
+}
+int Manager::getSize_2(){
+	return this->size_2;
 }
 // nhap xuat tempemployee
 bool Manager::isEmpty_1() {
@@ -1541,7 +1597,7 @@ void Manager::insertLast_2() {
 }
 void Manager::output_2() {
 	if(head_2==NULL){
-		cout<<"Khong co trong danh sach"<<endl;
+		
 	}
 	else{
 		for(Node_2 *i = head_2; i != NULL; i = i->next) {
@@ -1551,9 +1607,21 @@ void Manager::output_2() {
 	
 }
 
+void Manager::output_User() {
+	if(head_2==NULL){
+		
+	}
+	else{
+		for(Node_2 *i = head_2; i != NULL; i = i->next) {
+			i->data_2.outputUser();
+	}
+	}
+	
+}
+
 void Manager::output_1() {
 	if(head_1==NULL){
-		cout<<"Khong co trong danh sach"<<endl;
+		
 	}
 	else{
 		for(Node_1 *i = head_1; i != NULL; i = i->next) {
@@ -2283,7 +2351,7 @@ void Goods::output(int series){
 	cout<<"|";
 	expiryDate.outputDate();
 	cout<<"|";
-	cout << 		setw(7) << left << getStatus() 	<< "|"<<endl;;
+	cout << 		setw(7) << left << getStatus() 	<< "|"<<endl;
 }
 void outputTitle(){
 	cout << "|" << 	setw(3) << left << "STT" 		<< "|";
@@ -2896,6 +2964,7 @@ void  Manager::FindEmployee(){
 	cout<<"Nhap ten cua nhan vien: ";
 	fflush(stdin);
 	gets(temp_1);
+	output_title_2();
 	for(Node_2* i=head_2;i!=NULL;i=i->next){
 		if(strstr (strupr (strcpy(temp_2,i->data_2.getName().c_str()) ),strupr(temp_1)) ){
 		    dem++;
@@ -2911,6 +2980,7 @@ void  Manager::FindTempEmployee(){
 	cout<<"Nhap ten cua nhan vien thu viec: ";
 	fflush(stdin);
 	gets(temp_1);
+	output_title_2();
 	for(Node_1* i=head_1;i!=NULL;i=i->next){
 		if(strstr (strupr (strcpy(temp_2,i->data_1.getName().c_str())) ,strupr(temp_1)) ){
 			i->data_1.output();
@@ -3047,6 +3117,8 @@ void Manager::ReplaceTempEmployee(){
 		cout<<"Khong tim thay trong danh sach\n";
 	}
 	else{
+		output_title_2();
+		i->data_1.output();
 		do{
 			do{
 				cout<<"1. Sua thong tin\n";
@@ -3094,11 +3166,12 @@ void Manager::ReplaceTempEmployee(){
 								cout<<"Nhap ten: ";
 								fflush(stdin);
 								getline(cin, temp);
+								
 								if(validateString(temp) == false) {
 									cout<<"Vui long nhap dung dinh dang!"<<endl;
 								}
 							}while(validateString(temp) == false);
-							i->data_1.name=temp;
+							i->data_1.name = upperCase(temp);
 							break;
 						}
 						case 2:
@@ -3113,8 +3186,8 @@ void Manager::ReplaceTempEmployee(){
 							}while(temp != 1||temp != 2);
 							
 							if(temp == 1)
-								i->data_1.gender = "Nam";
-							i->data_1.gender = "Nu";
+								i->data_1.gender = "NAM";
+							i->data_1.gender = "NU";
 							break;
 						}
 						case 3:
@@ -3221,6 +3294,8 @@ void Manager::ReplaceEmployee(){
 		cout<<"Khong tim thay\n";
 	}
 	else{
+		output_title_2();
+		i->data_2.output();
 		do{
 			cout<<"1. Sua thong tin ca nhan \n";
 			cout<<"2. Sua tai khoan\n";
@@ -3274,7 +3349,7 @@ void Manager::ReplaceEmployee(){
 									cout<<"Vui long nhap dung dinh dang!"<<endl;
 								}
 							}while(validateString(temp) == false);
-							i->data_2.name=temp;
+							i->data_2.name = upperCase(temp);
 							break;
 						}
 						case 2:
