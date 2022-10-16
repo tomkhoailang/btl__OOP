@@ -322,7 +322,17 @@ class Manager: public Person {
 		void ReplaceEmployee();
 		void RemoveTempEmployee();
 		void RemoveEmployee();
+		void addPhone_Number(vector<string> &phone_Number);
 };
+void Manager::addPhone_Number(vector<string> &phone_Number){
+	phone_Number.clear();
+	for(Node_1* i = head_1; i != NULL; i = i->next){
+		phone_Number.push_back(i->data_1.getPhoneNumber());
+	}
+	for(Node_2* j = head_2; j != NULL; j = j->next){
+		phone_Number.push_back(j->data_2.getPhoneNumber());
+	}
+}
 
 //class menu
 class Menu {
@@ -801,7 +811,7 @@ void ListMenu::start(ListGoods &list, string role, Manager &managerList, string 
 									cout << "Chon loai nhan vien: " << endl;
 									cout << "1. Nhan vien chinh thuc" << endl;
 									cout << "2. Thu viec" << endl;
-										do {
+									do {
 										cout << "Nhap lua chon: ";
 										tempCheck = validateNumber(checkNumber);
 										if(tempCheck == false) {
@@ -3226,6 +3236,7 @@ void Manager::ReplaceTempEmployee(){
 					    
 							}while(isDuplicated);
 					    	i->data_1.phoneNumber=temp;
+					    	addPhone_Number(phone_Number);
 							break;
 						}
 					}
@@ -3272,6 +3283,9 @@ void Manager::RemoveTempEmployee(){
 
 	}
 	string temp = dem!=0?"Da sua thanh cong\n":"";
+	cout<<temp<<endl;
+	addPhone_Number(phone_Number);
+	
 }
 void Manager::ReplaceEmployee(){
 	short choice;
@@ -3386,10 +3400,10 @@ void Manager::ReplaceEmployee(){
 								}
 							}
 					    
-							}while(isDuplicated);
-								
-					    		i->data_2.phoneNumber=temp;
-								break;
+							}while(isDuplicated);	
+					    	i->data_2.phoneNumber=temp;
+					    	addPhone_Number(phone_Number);
+							break;
 						}
 						case 4:
 						{
@@ -3466,6 +3480,8 @@ void Manager::RemoveEmployee(){
 	    }
 	}
 	string temp = dem!=0?"Da sua thanh cong\n":"";
+	cout<<temp<<endl;
+	addPhone_Number(phone_Number);
 }
 
 //Read and Write data to file
