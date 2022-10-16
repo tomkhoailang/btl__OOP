@@ -1374,6 +1374,7 @@ void TempEmployee::input() {
 			}
 		}
 	}while(!checkPhone||checkP == false);
+	phone_Number.push_back(phoneNumber);
 	
 	do{
 		cout<<"Nhap ngay sinh: "<<endl;
@@ -1481,6 +1482,7 @@ void Employee::input() {
 		if(check == false)
 			cout<<"Ten tai khoan da ton tai"<<endl;
 	}while(validateString(username) == false || checkUser(username) == false || check == false);
+	user_Name.push_back(username);
 	// nhap binh thuong
 	do {
 		cout<<"Nhap mat khau: ";
@@ -3320,10 +3322,9 @@ void Manager::ReplaceEmployee(){
 				do{
 					short option;
 					cout<<"1. Ten\n";
-					cout<<"2. Gioi tinh\n";
-					cout<<"3. Ngay sinh\n";
-					cout<<"4. So dien thoai\n";
-					cout<<"5. Luong\n";
+					cout<<"2. Ngay sinh\n";
+					cout<<"3. So dien thoai\n";
+					cout<<"4. Luong\n";
 					do{
 						do {
 							cout<<"Nhap lua chon: ";
@@ -3354,35 +3355,6 @@ void Manager::ReplaceEmployee(){
 						}
 						case 2:
 						{
-//					   		string temp;
-//							char temp_1;
-//							do {
-//								cout<<"Nhap gioi tinh: ";
-//								tempCheck = validateNumber(checkNumber);
-//								if(tempCheck == false) {
-//									cout<<"Nhap sai dinh dang"<<endl;
-//								}
-//							}while(tempCheck == false);
-//							ss.clear();
-//							ss<<checkNumber;
-//							ss>>choice;
-//							i->data_2.gender=temp;
-							short temp;
-							do{
-								cout<<"Chon 1 neu ban la nam"<<endl;
-								cout<<"Chon 2 neu ban la nu"<<endl;
-								cin>>temp;
-								if(temp !=1||temp != 2)
-									cout<<"chon lai"<<endl;
-							}while(temp != 1||temp != 2);
-							
-							if(temp == 1)
-								i->data_2.gender = "Nam";
-							i->data_2.gender = "Nu";
-							break;
-						}
-						case 3:
-						{
 					    	Date temp;
 					    	cout<<"Nhap lai ngay sinh\n";
 					    	temp.inputPerson();
@@ -3390,7 +3362,7 @@ void Manager::ReplaceEmployee(){
 					    	i->data_2.setAge();
 							break;
 						}
-						case 4:
+						case 3:
 						{
 					    	string temp;
 					    	bool isDuplicated;
@@ -3431,7 +3403,7 @@ void Manager::ReplaceEmployee(){
 					    		i->data_2.phoneNumber=temp;
 								break;
 						}
-						case 5:
+						case 4:
 						{
 							float temp;
 							cout<<"Nhap he so luong: ";
