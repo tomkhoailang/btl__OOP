@@ -811,6 +811,7 @@ void ListMenu::start(ListGoods &list, string role, Manager &managerList, string 
 									cout << "Chon loai nhan vien: " << endl;
 									cout << "1. Nhan vien chinh thuc" << endl;
 									cout << "2. Thu viec" << endl;
+									cout << "0. Thoat "<<endl;
 									do {
 										cout << "Nhap lua chon: ";
 										tempCheck = validateNumber(checkNumber);
@@ -821,36 +822,44 @@ void ListMenu::start(ListGoods &list, string role, Manager &managerList, string 
 									ss.clear();
 									ss<<checkNumber;
 									ss>>type;
-									do {
-										cout << "\nNhap so luong nhan vien muon them: ";
-										tempCheck = validateNumber(checkNumber);
-										if(tempCheck == false) {
-											cout<<"Nhap sai dinh dang"<<endl;
+									if(type == 0) {
+										cout<<"Da thoat khoi chuc nang"<<endl;
+										break;
+									}else if(type < 1 || type > 2) {
+										cout<<"Lua chon khong ton tai!"<<endl;
+										break;
+									}else {
+										do {
+											cout << "\nNhap so luong nhan vien muon them: ";
+											tempCheck = validateNumber(checkNumber);
+											if(tempCheck == false) {
+												cout<<"Nhap sai dinh dang"<<endl;
+											}
+										}while(tempCheck == false);
+										ss.clear();
+										ss<<checkNumber;
+										ss>>amount;
+										if(amount == 0){
+											cout<<"Loi chuc nang"<<endl;
+											break;
 										}
-									}while(tempCheck == false);
-									ss.clear();
-									ss<<checkNumber;
-									ss>>amount;
-									if(amount == 0){
-										cout<<"Loi chuc nang"<<endl;
+										if(type == 1){
+											for(short i = 0;i < amount;i++){
+												managerList.insertLast_2();
+											}
+										}
+										else if(type == 2){	
+											for(short i = 0;i < amount;i++){
+												managerList.insertLast_1();
+											}
+										}else{
+											cout << "Khong co lua chon nay!" << endl;
+											goto startChossing;
+										}
+										writeManagerDataToFile(managerList);
+										cout << "Da them thanh cong" << endl;
 										break;
 									}
-									if(type == 1){
-										for(short i = 0;i < amount;i++){
-											managerList.insertLast_2();
-										}
-									}
-									else if(type == 2){	
-										for(short i = 0;i < amount;i++){
-											managerList.insertLast_1();
-										}
-									}else{
-										cout << "Khong co lua chon nay!" << endl;
-										goto startChossing;
-									}
-									writeManagerDataToFile(managerList);
-									cout << "Da them thanh cong" << endl;
-									break;
 								case 2:
 									short outType;
 									startOutChossing: ;
@@ -3061,7 +3070,7 @@ void Manager::ChangeTempEmployee(){
 		cout<<"2. Xoa thong tin\n";
 		cout<<"0. Thoat\n";
 		do {
-			cout<<"Nhap lua chon: \n";
+			cout<<"Nhap lua chon: ";
 			tempCheck = validateNumber(checkNumber);
 			if(tempCheck == false) {
 				cout<<"Nhap sai dinh dang"<<endl;
@@ -3070,21 +3079,29 @@ void Manager::ChangeTempEmployee(){
 		ss.clear();
 		ss<<checkNumber;
 		ss>>choice;
-	}while(choice<0&&choice>2);
-	switch(choice){
-		case 0:
-			break;
-		case 1:
-		{
-			ReplaceTempEmployee();
-			break;		
+		switch(choice){
+			case 0:
+				break;
+			case 1:
+			{
+				ReplaceTempEmployee();
+				choice = 0;
+				break;		
+			}
+			case 2:
+			{
+				RemoveTempEmployee();
+				choice = 0;
+				break;
+			}
+			default: {
+				cout<<"Lua chon khong ton tai!"<<endl;
+				break;
+			}
+				
 		}
-		case 2:
-		{
-			RemoveTempEmployee();
-			break;
-		}
-	}
+	}while(choice != 0);
+	
 }
 void Manager::ChangeEmployee(){
 	short choice;
@@ -3096,7 +3113,7 @@ void Manager::ChangeEmployee(){
 		cout<<"2. Xoa thong tin\n";
 		cout<<"0. Thoat\n";
 		do {
-			cout<<"Nhap lua chon:\n";
+			cout<<"Nhap lua chon: ";
 			tempCheck = validateNumber(checkNumber);
 			if(tempCheck == false) {
 				cout<<"Nhap sai dinh dang"<<endl;
@@ -3105,21 +3122,29 @@ void Manager::ChangeEmployee(){
 		ss.clear();
 		ss<<checkNumber;
 		ss>>choice;
-	}while(choice<0&&choice>2);
-	switch(choice){
-		case 0:
-			break;
-		case 1:
-		{
-			ReplaceEmployee();
-			break;		
+		switch(choice){
+			case 0:
+				choice = 0;
+				break;
+			case 1:
+			{
+				ReplaceEmployee();
+				choice = 0;
+				break;		
+			}
+			case 2:
+			{
+				RemoveEmployee();
+				choice = 0;
+				break;
+			}
+			default: {
+				cout<<"Lua chon khong ton tai!"<<endl;
+				break;
+			}
 		}
-		case 2:
-		{
-			RemoveEmployee();
-			break;
-		}
-	}
+	}while(choice != 0);
+	
 }
 
 void Manager::ReplaceTempEmployee(){
@@ -3151,15 +3176,16 @@ void Manager::ReplaceTempEmployee(){
 			}while(choice<0&&choice>1);
 			switch(choice){
 				case 0:
+					cout<<"Thoat khoi chuc nang!"<<endl;
 					break;
 				case 1:
 				{
 					short option;
-					cout<<"1. Ten\n";
-					cout<<"2. Ngay sinh\n";
-					cout<<"3. So dien thoai\n";
 					do{
-			
+						cout<<"1. Ten\n";
+						cout<<"2. Ngay sinh\n";
+						cout<<"3. So dien thoai\n";
+						cout<<"0. Thoat"<<endl;
 						do {
 					 		cout<<"Nhap lua chon: ";
 							tempCheck = validateNumber(checkNumber);
@@ -3170,78 +3196,89 @@ void Manager::ReplaceTempEmployee(){
 						ss.clear();
 						ss<<checkNumber;
 						ss>>option;
-					}while(option<1&&option>3);
-					switch(option){
-						case 1:
-						{
-							string temp;
-							char temp_1;
-							do {
-								cout<<"Nhap ten: ";
-								fflush(stdin);
-								getline(cin, temp);
-								
-								if(validateString(temp) == false) {
-									cout<<"Vui long nhap dung dinh dang!"<<endl;
-								}
-							}while(validateString(temp) == false);
-							i->data_1.name = upperCase(temp);
-							break;
-						}
-						case 2:
-						{
-							Date temp;
-					    	cout<<"Nhap lai ngay sinh\n";
-					    	temp.inputPerson();
-					    	i->data_1.setBirth(temp);
-					    	i->data_1.setAge();
-							break;
-						}
-						case 3:
-						{
-					    	string temp;
-					    	bool isDuplicated;
-					    	do{
-					    		isDuplicated = false;
-					    		do {
-					    			cout<<"Nhap so dien thoai: ";
+						switch(option){
+							case 0:
+								cout<<"Thoat khoi chuc nang!"<<endl;
+								choice = 0;
+								break;
+							case 1:
+							{
+								string temp;
+								char temp_1;
+								do {
+									cout<<"Nhap ten: ";
 									fflush(stdin);
 									getline(cin, temp);
+									
 									if(validateString(temp) == false) {
 										cout<<"Vui long nhap dung dinh dang!"<<endl;
 									}
 								}while(validateString(temp) == false);
-									if(temp.length()!=10){
-										cout<<"So dien thoai phai du 10 chu so! Vui long nhap lai."<<endl;
+								i->data_1.name = upperCase(temp);
+								break;
+							}
+							case 2:
+							{
+								Date temp;
+						    	cout<<"Nhap lai ngay sinh\n";
+						    	temp.inputPerson();
+						    	i->data_1.setBirth(temp);
+						    	i->data_1.setAge();
+								break;
+							}
+							case 3:
+							{
+						    	string temp;
+						    	bool isDuplicated;
+						    	do{
+						    		isDuplicated = false;
+						    		do {
+						    			cout<<"Nhap so dien thoai: ";
+										fflush(stdin);
+										getline(cin, temp);
+										if(validateString(temp) == false) {
+											cout<<"Vui long nhap dung dinh dang!"<<endl;
+										}
+									}while(validateString(temp) == false);
+										if(temp.length()!=10){
+											cout<<"So dien thoai phai du 10 chu so! Vui long nhap lai."<<endl;
+											isDuplicated = true;
+										}else if(temp[0] != '0'){
+										cout<<"So dien thoai can bat dau bang so 0 (+84)! Vui long nhap lai."<<endl;
 										isDuplicated = true;
-									}else if(temp[0] != '0'){
-									cout<<"So dien thoai can bat dau bang so 0 (+84)! Vui long nhap lai."<<endl;
-									isDuplicated = true;
-									}else{
-									for(Node_1* i=head_1;i!=NULL;i=i->next){
-					    				if(i->data_1.getPhoneNumber().compare(temp)==0){
-					    					isDuplicated=true;
-					    					cout << "So dien thoai da ton tai, vui long nhap lai!" << endl;
-					    					break;
-										}		
+										}else{
+										for(Node_1* i=head_1;i!=NULL;i=i->next){
+						    				if(i->data_1.getPhoneNumber().compare(temp)==0){
+						    					isDuplicated=true;
+						    					cout << "So dien thoai da ton tai, vui long nhap lai!" << endl;
+						    					break;
+											}		
+										}
+										for(Node_2* i=head_2;i!=NULL;i=i->next){
+						    				if(i->data_2.getPhoneNumber().compare(temp)==0){
+						    					isDuplicated=true;
+						    					cout << "So dien thoai da ton tai, vui long nhap lai!" << endl;
+						    					break;
+											}		
+										}
 									}
-									for(Node_2* i=head_2;i!=NULL;i=i->next){
-					    				if(i->data_2.getPhoneNumber().compare(temp)==0){
-					    					isDuplicated=true;
-					    					cout << "So dien thoai da ton tai, vui long nhap lai!" << endl;
-					    					break;
-										}		
-									}
-								}
-					    
-							}while(isDuplicated);
-					    	i->data_1.phoneNumber=temp;
-					    	addPhone_Number(phone_Number);
-							break;
+						    
+								}while(isDuplicated);
+						    	i->data_1.phoneNumber=temp;
+						    	addPhone_Number(phone_Number);
+								break;
+							}
+							
+							default:
+								cout<<"Lua chon khong ton tai!"<<endl;
+								break;
 						}
-					}
+					}while(option != 0);
 					break;
 				}
+				default:
+					cout<<"Lua chon khong ton tai!"<<endl;
+					break;
 			}
 		}while(choice !=0);
 	}
@@ -3314,134 +3351,148 @@ void Manager::ReplaceEmployee(){
 			ss.clear();
 			ss<<checkNumber;
 			ss>>choice;
-		}while(choice<0&&choice>2);
-		switch(choice){
-			case 0:
-				break;
-			case 1:
-			{
-				do{
-					short option;
-					cout<<"1. Ten\n";
-					cout<<"2. Ngay sinh\n";
-					cout<<"3. So dien thoai\n";
-					cout<<"4. Luong\n";
-					do{
-						do {
-							cout<<"Nhap lua chon: ";
-							tempCheck = validateNumber(checkNumber);
-							if(tempCheck == false) {
-								cout<<"Nhap sai dinh dang"<<endl;
-							}
-						}while(tempCheck == false);
-						ss.clear();
-						ss<<checkNumber;
-						ss>>option;
-					}while(option<1&&option>4);
-					switch(option){
-						case 1:
-						{
-							string temp;
-							char temp_1;
+			switch(choice){
+				case 0:
+					choice = 0;
+					break;
+				case 1:
+				{
+						short option;
+						do{
+							cout<<"1. Ten\n";
+							cout<<"2. Ngay sinh\n";
+							cout<<"3. So dien thoai\n";
+							cout<<"4. Luong\n";
+							cout<<"0. Thoat"<<endl;
 							do {
-								cout<<"Nhap ten: ";
+								cout<<"Nhap lua chon: ";
+								tempCheck = validateNumber(checkNumber);
+								if(tempCheck == false) {
+									cout<<"Nhap sai dinh dang"<<endl;
+								}
+							}while(tempCheck == false);
+							ss.clear();
+							ss<<checkNumber;
+							ss>>option;
+							switch(option){
+								case 0:
+									cout<<"Thoat khoi chuc nang!"<<endl;
+									break;
+								case 1:
+								{
+									string temp;
+									char temp_1;
+									do {
+										cout<<"Nhap ten: ";
+										fflush(stdin);
+										getline(cin, temp);
+										if(validateString(temp) == false) {
+											cout<<"Vui long nhap dung dinh dang!"<<endl;
+										}
+									}while(validateString(temp) == false);
+									i->data_2.name = upperCase(temp);
+									break;
+								}
+								case 2:
+								{
+							    	Date temp;
+							    	cout<<"Nhap lai ngay sinh\n";
+							    	temp.inputPerson();
+							    	i->data_2.setBirth(temp);
+							    	i->data_2.setAge();
+									break;
+								}
+								case 3:
+								{
+							    	string temp;
+							    	bool isDuplicated;
+							    	do{
+							    		isDuplicated = false;
+							    		do {
+											cout<<"Nhap so dien thoai: ";
+											fflush(stdin);
+											getline(cin, temp);
+											if(validateString(temp) == false) {
+												cout<<"Vui long nhap dung dinh dang!"<<endl;
+											}
+										}while(validateString(temp) == false);
+										if(temp.length()!=10){
+											cout<<"So dien thoai phai du 10 chu so! Vui long nhap lai."<<endl;
+											isDuplicated = true;
+										}else if(temp[0] != '0'){
+											cout<<"So dien thoai can bat dau bang so 0 (+84)! Vui long nhap lai."<<endl;
+											isDuplicated = true;
+										}else{
+											for(Node_1* i=head_1;i!=NULL;i=i->next){
+							    			if(i->data_1.getPhoneNumber().compare(temp)==0){
+							    				isDuplicated=true;
+							    				cout << "So dien thoai da ton tai, vui long nhap lai!" << endl;
+							    				break;
+											}		
+										}
+										for(Node_2* i=head_2;i!=NULL;i=i->next){
+							    			if(i->data_2.getPhoneNumber().compare(temp)==0){
+							    				isDuplicated=true;
+							    				cout << "So dien thoai da ton tai, vui long nhap lai!" << endl;
+							    				break;
+											}		
+										}
+									}
+							    
+									}while(isDuplicated);	
+							    	i->data_2.phoneNumber=temp;
+							    	addPhone_Number(phone_Number);
+									break;
+								}
+								case 4:
+								{
+									float temp;
+									cout<<"Nhap he so luong: ";
+									cin>>temp;
+									i->data_2.setWage(temp);
+									break;
+								}
+								default: {
+									cout<<"Lua chon khong ton tai!"<<endl;
+									break;
+								}
+							}
+						}while(option != 0);
+						choice = 0;
+						break;
+				}
+				case 2: {
+					string temp;
+					short check;
+					do {
+						do{
+							do{
+								cout<<"Nhap mat khau: ";
 								fflush(stdin);
 								getline(cin, temp);
 								if(validateString(temp) == false) {
 									cout<<"Vui long nhap dung dinh dang!"<<endl;
 								}
-							}while(validateString(temp) == false);
-							i->data_2.name = upperCase(temp);
-							break;
-						}
-						case 2:
-						{
-					    	Date temp;
-					    	cout<<"Nhap lai ngay sinh\n";
-					    	temp.inputPerson();
-					    	i->data_2.setBirth(temp);
-					    	i->data_2.setAge();
-							break;
-						}
-						case 3:
-						{
-					    	string temp;
-					    	bool isDuplicated;
-					    	do{
-					    		isDuplicated = false;
-					    		do {
-									cout<<"Nhap so dien thoai: ";
-									fflush(stdin);
-									getline(cin, temp);
-									if(validateString(temp) == false) {
-										cout<<"Vui long nhap dung dinh dang!"<<endl;
-									}
-								}while(validateString(temp) == false);
-								if(temp.length()!=10){
-									cout<<"So dien thoai phai du 10 chu so! Vui long nhap lai."<<endl;
-									isDuplicated = true;
-								}else if(temp[0] != '0'){
-									cout<<"So dien thoai can bat dau bang so 0 (+84)! Vui long nhap lai."<<endl;
-									isDuplicated = true;
-								}else{
-									for(Node_1* i=head_1;i!=NULL;i=i->next){
-					    			if(i->data_1.getPhoneNumber().compare(temp)==0){
-					    				isDuplicated=true;
-					    				cout << "So dien thoai da ton tai, vui long nhap lai!" << endl;
-					    				break;
-									}		
+								if(temp.size()<5)
+									cout<<"Nhap lai:\n";
+								check = 0;
+								for(int i = 0;i<temp.size();i++){
+									if(isspace(temp[i]))
+										check++;
 								}
-								for(Node_2* i=head_2;i!=NULL;i=i->next){
-					    			if(i->data_2.getPhoneNumber().compare(temp)==0){
-					    				isDuplicated=true;
-					    				cout << "So dien thoai da ton tai, vui long nhap lai!" << endl;
-					    				break;
-									}		
-								}
-							}
-					    
-							}while(isDuplicated);	
-					    	i->data_2.phoneNumber=temp;
-					    	addPhone_Number(phone_Number);
-							break;
-						}
-						case 4:
-						{
-							float temp;
-							cout<<"Nhap he so luong: ";
-							cin>>temp;
-							i->data_2.setWage(temp);
-							break;
-						}
-					}
-				}while(choice == 0);	
-			break;
-		}
-			case 2:
-				string temp;
-				short check;
-				do {
-					do{
-						do{
-							cout<<"Nhap mat khau: ";
-							fflush(stdin);
-							getline(cin, temp);
-							if(validateString(temp) == false) {
-								cout<<"Vui long nhap dung dinh dang!"<<endl;
-							}
-							if(temp.size()<5)
-								cout<<"Nhap lai:\n";
-							check = 0;
-							for(int i = 0;i<temp.size();i++){
-								if(isspace(temp[i]))
-									check++;
-							}
-						}while(check != 0);
-					}while(temp.size()<5);
-				}while(validateString(temp) == false);
-				i->data_2.password = temp;
-				break;
-		}
+							}while(check != 0);
+						}while(temp.size()<5);
+					}while(validateString(temp) == false);
+					i->data_2.password = temp;
+					choice = 0;
+					break;
+				}
+				default:{
+					cout<<"Lua chon khong ton tai!"<<endl;
+					break;
+				}
+			}
+		}while(choice != 0);
 	}
 }
 void Manager::RemoveEmployee(){
