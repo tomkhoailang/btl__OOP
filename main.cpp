@@ -1329,7 +1329,7 @@ void TempEmployee::input() {
 	bool checkP;
 	string choiceGender;
 	do{
-		cout<<"Ten nhan vien: ";
+		cout<<"\nTen nhan vien: ";
 		fflush(stdin);
 		getline(cin, name);
 		name = upperCase(name);
@@ -1401,8 +1401,8 @@ void TempEmployee::input() {
 		}
 		else cout<<"sai"<<endl;
 	}while(choiceGender!="1"&&choiceGender!="2");
-	
 	setMonth();
+	
 }
 void output_title_2(){
 	cout <<			setw(16) << left << "|Ten nhan vien" 		<< "|";
@@ -1496,7 +1496,6 @@ void Employee::input() {
 	}while(validateString(password) == false || checkUser(password) == false);
 	TempEmployee::input();
 	setWage();
-	output();
 }
 void Employee::output() {
 	
@@ -1556,6 +1555,8 @@ bool Manager::isEmpty_1() {
 Node_1 *Manager::makeNode_1() {
 	Node_1 *temp = new Node_1();
 	temp->data_1.input();
+	output_title_2();
+	temp->data_1.output();
 	temp->next = NULL;
 	return temp;
 }
@@ -1582,6 +1583,8 @@ bool Manager::isEmpty_2() {
 Node_2 *Manager::makeNode_2() {
 	Node_2 *temp = new Node_2();
 	temp->data_2.input();
+	output_title_2();
+	temp->data_2.output();
 	temp->next = NULL;
 	return temp;
 }
