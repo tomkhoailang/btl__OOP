@@ -3143,9 +3143,8 @@ void Manager::ReplaceTempEmployee(){
 				{
 					short option;
 					cout<<"1. Ten\n";
-					cout<<"2. Gioi tinh\n";
-					cout<<"3. Ngay sinh\n";
-					cout<<"4. So dien thoai\n";
+					cout<<"2. Ngay sinh\n";
+					cout<<"3. So dien thoai\n";
 					do{
 			
 						do {
@@ -3158,7 +3157,7 @@ void Manager::ReplaceTempEmployee(){
 						ss.clear();
 						ss<<checkNumber;
 						ss>>option;
-					}while(option<1&&option>4);
+					}while(option<1&&option>3);
 					switch(option){
 						case 1:
 						{
@@ -3178,22 +3177,6 @@ void Manager::ReplaceTempEmployee(){
 						}
 						case 2:
 						{
-					    	short temp;
-							do{
-								cout<<"Chon 1 neu ban la nam"<<endl;
-								cout<<"Chon 2 neu ban la nu"<<endl;
-								cin>>temp;
-								if(temp !=1||temp != 2)
-									cout<<"chon lai"<<endl;
-							}while(temp != 1||temp != 2);
-							
-							if(temp == 1)
-								i->data_1.gender = "NAM";
-							i->data_1.gender = "NU";
-							break;
-						}
-						case 3:
-						{
 							Date temp;
 					    	cout<<"Nhap lai ngay sinh\n";
 					    	temp.inputPerson();
@@ -3201,7 +3184,7 @@ void Manager::ReplaceTempEmployee(){
 					    	i->data_1.setAge();
 							break;
 						}
-						case 4:
+						case 3:
 						{
 					    	string temp;
 					    	bool isDuplicated;
@@ -3283,6 +3266,7 @@ void Manager::RemoveTempEmployee(){
                 this->size_1--;
 			}	
 	    }
+
 	}
 	string temp = dem!=0?"Da sua thanh cong\n":"";
 }
@@ -3336,7 +3320,7 @@ void Manager::ReplaceEmployee(){
 						ss.clear();
 						ss<<checkNumber;
 						ss>>option;
-					}while(option<1&&option>6);
+					}while(option<1&&option>4);
 					switch(option){
 						case 1:
 						{
@@ -3400,6 +3384,7 @@ void Manager::ReplaceEmployee(){
 							}
 					    
 							}while(isDuplicated);
+								
 					    		i->data_2.phoneNumber=temp;
 								break;
 						}
