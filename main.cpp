@@ -965,6 +965,7 @@ void ListMenu::start(ListGoods &list, string role, Manager &managerList, string 
 							ss>>choice;
 							switch(choice){
 								case 1:
+									output_title_2();
 									a.output();
 									break;
 								case 2:
@@ -1507,7 +1508,7 @@ void Employee::output() {
 	cout << 		setw(17) << right << getMonth() 	<< "|";
 	cout << 		setw(11) << right << getWage()	<< "|";
 	cout << 		setw(12) << right << "9000000" 	<< "|";
-	cout << 		setw(12) << right << salary() 	<< "|";
+	cout << 		setw(12) << right << (int)salary() 	<< "|";
 	cout << 		setw(11) << right << "CHINH THUC" 	<< "|"<<endl;
 }
 void Employee::outputUser() {
