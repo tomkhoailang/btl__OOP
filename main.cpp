@@ -1400,8 +1400,9 @@ void TempEmployee::input() {
 		}
 		else cout<<"sai"<<endl;
 	}while(choiceGender!="1"&&choiceGender!="2");
-	
 	setMonth();
+	output_title_2();
+	output();
 }
 void output_title_2(){
 	cout <<			setw(16) << left << "|Ten nhan vien" 		<< "|";
@@ -1494,6 +1495,7 @@ void Employee::input() {
 	}while(validateString(password) == false || checkUser(password) == false);
 	TempEmployee::input();
 	setWage();
+	output_title_2();
 	output();
 }
 void Employee::output() {
