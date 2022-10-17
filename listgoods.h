@@ -2,8 +2,10 @@
 #include"date.h"
 #include<conio.h>
 #include<fstream>
+#include<vector>
+using namespace std;
 #define FILE_PATH "D://fileTest//QuanLiCuaHang.txt"
-
+extern std::vector<string> id_List;
 // Danh sach hang hoa
 class ListGoods {
 	private: 

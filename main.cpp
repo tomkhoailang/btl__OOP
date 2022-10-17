@@ -19,11 +19,11 @@ int main() {
 		
 		if(loginMenu.getRole() == "manager"){
 			vector<string> menuContent{
-								"Nhap hang hoa",
+								"Nhap hang hoa",   
 								"Xuat hang hoa",
 								"Tim kiem",
 								"Cap nhat hang hoa",
-								"Xuat thong tin vao file",
+								"Xuat thong tin vien file",  
 								"Quan ly",
 								"Thoat"
 								};

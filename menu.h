@@ -1,5 +1,4 @@
 #include"manager.h"
-extern vector<string> id_List;
 //class menu
 class Menu {
 	protected:

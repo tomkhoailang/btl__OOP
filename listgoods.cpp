@@ -1,4 +1,5 @@
 #include"listgoods.h"
+vector<string> id_List;
 int ListGoods::getSize(){
 	return size;
 }
