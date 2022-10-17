@@ -81,7 +81,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=date.cpp
+FileName=date_goods.cpp
 CompileCpp=1
 Folder=
 Compile=1
@@ -111,7 +111,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=date.h
+FileName=date_goods.h
 CompileCpp=1
 Folder=
 Compile=1

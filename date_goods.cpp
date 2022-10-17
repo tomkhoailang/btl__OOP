@@ -1,4 +1,4 @@
-#include"date.h"
+#include"date_goods.h"
 using namespace std;
 //Constructor va huy cua Date
 Date::Date() {

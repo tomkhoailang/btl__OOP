@@ -1,5 +1,5 @@
 #pragma once
-#include"date.h"
+#include"date_goods.h"
 #include<conio.h>
 #include<fstream>
 #include<vector>

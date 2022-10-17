@@ -1,4 +1,4 @@
-#include"date.h"
+#include"date_goods.h"
 #include<string>
 using namespace std;
 bool validateNumber(string &toCheck);

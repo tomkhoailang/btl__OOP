@@ -4,8 +4,8 @@
 CPP      = g++.exe
 CC       = gcc.exe
 WINDRES  = windres.exe
-OBJ      = main.o myDrawLib.o date.o other.o listgoods.o person.o temp_employee.o employee.o manager.o menu.o
-LINKOBJ  = main.o myDrawLib.o date.o other.o listgoods.o person.o temp_employee.o employee.o manager.o menu.o
+OBJ      = main.o myDrawLib.o date_goods.o other.o listgoods.o person.o temp_employee.o employee.o manager.o menu.o
+LINKOBJ  = main.o myDrawLib.o date_goods.o other.o listgoods.o person.o temp_employee.o employee.o manager.o menu.o
 LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc
 INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
 CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
@@ -30,8 +30,8 @@ main.o: main.cpp
 myDrawLib.o: myDrawLib.cpp
 	$(CPP) -c myDrawLib.cpp -o myDrawLib.o $(CXXFLAGS)
 
-date.o: date.cpp
-	$(CPP) -c date.cpp -o date.o $(CXXFLAGS)
+date_goods.o: date_goods.cpp
+	$(CPP) -c date_goods.cpp -o date_goods.o $(CXXFLAGS)
 
 other.o: other.cpp
 	$(CPP) -c other.cpp -o other.o $(CXXFLAGS)
