@@ -1,5 +1,7 @@
 #include"listgoods.h"
-vector<string> id_List;
+extern std::vector<string> id_List;
+extern std::vector<int> amount;
+extern std::vector<string> check_id;
 int ListGoods::getSize(){
 	return size;
 }
@@ -167,6 +169,15 @@ bool ListGoods::checkCode(string code){
 		return false;
 	} 
 	return true;
+}
+void ListGoods::Add(){
+	for(Node* i = head; i != NULL; i = i->next){
+		for(int j = 0;j < check_id.size();j++){
+			if( strcmp(i->data.getCode().c_str(), check_id[j].c_str()) == 0){
+				i->data.number += amount[j];
+			} 
+		}
+	}
 }	
 // Chuc nang tim kiem
 void ListGoods::Find_2(){
@@ -374,7 +385,7 @@ void ListGoods::addCode(vector<string> &id_List){
 		id_List.push_back(i->data.getCode());
 	}
 }
-void ListGoods:: Change(vector<string> id_List){
+void ListGoods::Change(){
 	int option,check,dem;
 	Node* i=new Node;
 	string checkNumber;

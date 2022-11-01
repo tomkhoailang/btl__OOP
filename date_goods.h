@@ -7,6 +7,9 @@
 #include<iomanip>
 #include<string.h>
 #include<sstream>
+//extern std::vector<string> id_List;
+//extern std::vector<int> amount;
+//extern std::vector<string> check_id;
 // ngay thang nam
 typedef struct Date {
 //	private:

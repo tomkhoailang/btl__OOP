@@ -1,5 +1,4 @@
 #include"menu.h"
-
 //menu
 Menu::Menu(int x, int y, string title){
 	this->x = x;
@@ -316,12 +315,13 @@ void ListMenu::start(ListGoods &list, string role, Manager &managerList, string 
 							}while(soLuong < 0);
 							for(int i = 0; i<soLuong; i++) {
 								Goods a;
-								do{
+//								do{
 									a.input();
-									id_List.push_back(a.getCode());
-									if(!list.checkCode(a.getCode()))
-									cout<<"\nMA ID "<<a.getCode()<<" DA TON TAI! VUI LONG NHAP LAI."<<endl;
-								}while(!list.checkCode(a.getCode()));
+									list.Add();
+//									id_List.push_back(a.getCode());
+//									if(!list.checkCode(a.getCode()))
+//									cout<<"\nMA ID "<<a.getCode()<<" DA TON TAI! VUI LONG NHAP LAI."<<endl;
+//								}while(!list.checkCode(a.getCode()));
 								list.insertLast(a);
 							}
 						this->clearMenuScreen();
@@ -349,7 +349,7 @@ void ListMenu::start(ListGoods &list, string role, Manager &managerList, string 
 						if(list.isEmpty()){
 							cout << "\nDanh sach trong..." << endl;
 						}else{
-                        	list.Change(id_List);
+                        	list.Change();
 						}
 						this->clearMenuScreen();
 						goto startPoint;

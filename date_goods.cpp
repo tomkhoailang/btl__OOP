@@ -1,5 +1,8 @@
 #include"date_goods.h"
 using namespace std;
+vector<string> id_List;
+vector<int> amount;
+vector<string> check_id;
 //Constructor va huy cua Date
 Date::Date() {
 	this->dd = 1;
@@ -381,11 +384,11 @@ Date Goods::updateExpiryDate(){
 
 //Nhap thong tin hang hoa
 void Goods::input(){
-	bool tempCheck;
+	bool tempCheck, check;
 	string nameTemp, codeTemp, categoryTemp;
 	stringstream ss;
 	string priceTemp, discountTemp, numberTemp, validTemp;
-	int numberTemp2,validTemp2;
+	int numberTemp2,validTemp2, temp;
 	long priceTemp2;
 	float discountTemp2;
 	cout<<"Nhap thong tin san pham"<<endl;
@@ -398,6 +401,18 @@ void Goods::input(){
 			cout<<"Vui long nhap dung dinh dang!"<<endl;
 		}
 	}while(validateString(codeTemp) == false);
+	for(int i = 0;i < id_List.size();i++){
+		if(strcmp(codeTemp.c_str(),id_List[i].c_str()) == 0){
+			//Trung id thi chi cho nhap vao so luong
+			cout<<"Nhap vao so luong hang hoa muon them:";
+			cin>>temp;
+			//Lay dia chi id va so luong de sua vao danh sach
+			amount.push_back(temp);
+			check_id.push_back(codeTemp);
+			check = false;
+		}
+	}
+	if(check == true){
 	codeTemp = upperCase(codeTemp);
 	setCode(codeTemp);
 	cout<<"Nhap ten: ";
@@ -471,6 +486,7 @@ void Goods::input(){
 	valid = validTemp2;
 	expiryDate.setDate(updateExpiryDate());
 	setStatus();
+}
 }
 //xuat thong tin hang hoa
 void Goods::output(int series){

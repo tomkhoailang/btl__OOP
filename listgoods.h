@@ -5,7 +5,9 @@
 #include<vector>
 using namespace std;
 #define FILE_PATH "D://fileTest//QuanLiCuaHang.txt"
-extern std::vector<string> id_List;
+//extern std::vector<string> id_List;
+//extern std::vector<int> amount;
+//extern std::vector<string> check_id;
 // Danh sach hang hoa
 class ListGoods {
 	private: 
@@ -24,11 +26,12 @@ class ListGoods {
 		void insertLast(Goods data);
 		bool checkCode(string code);
 		~ListGoods();
+		void Add();
 		void Find_2();
 		Node* Find_1();
 		friend void writeDataToFile(ListGoods list);
 		friend void readDataFromFile(ListGoods &list);
-		void Change(vector<string> id_List);
+		void Change();
 		void addCode(vector<string> &id_List);
 };
 

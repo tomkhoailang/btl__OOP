@@ -1,6 +1,6 @@
 #pragma once
 #include"person.h"
-extern vector<string> phone_Number;
+extern std::vector<string> phone_Number;
 //class tempemployee
 class TempEmployee {
 	protected:
