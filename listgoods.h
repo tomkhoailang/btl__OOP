@@ -12,6 +12,7 @@ class ListGoods {
 		int size;
 		Node *head;
 		Node *tail;
+		Node *sorted; // list luu ket qua sau khi xap xep chen
 	public:
 		ListGoods();
 		int getSize();
@@ -30,5 +31,7 @@ class ListGoods {
 		friend void readDataFromFile(ListGoods &list);
 		void Change(vector<string> id_List);
 		void addCode(vector<string> &id_List);
+		void insertionSort(); // Ham sap xep chen
+		void sortedInsert(Node *node); // Ham bo tro cho viec sap xep chen
 };
 
