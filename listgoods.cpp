@@ -10,6 +10,7 @@ void ListGoods::setSize(int size) {
 
 void ListGoods::outputAsTable(int x, int y, int w, int columns, int rows, int color, int titleColor, string contentAlign) {
 	if(columns == 0 || rows == 0 || w == 0) return;
+	this->insertionSort();
 	int xStep = x;
 	int _x = x;
 	int _y = y;
@@ -823,3 +824,48 @@ void readPastFromFile(vector<ListGoods> &pastInvoice) {
 	system("cls");
 }
 
+//Ham insertion sort
+//Y tuong la ta se tao mot list moi de luu ket qua sau khi xap xep cua list cu
+//Ta se dung mot con tro sorted dong vai tro nhu la head cua list moi
+void ListGoods::insertionSort() {
+	this->sorted = NULL; // khoi tao sorted list ban dau la NULL (giong viec khoi tao con tro head)
+	Node* current = this->head; // Tao mot con tro current de luu head hien tai
+	
+	//vong while se duyet qua tung phan tu ben trong linked list can xap xep
+	while(current != NULL){ 
+		Node *next = current->next; //tao mot node next mang gia tri cua phan tu tiep theo cua current luc chua thuc hien xap xep
+		
+		this->sortedInsert(current); // thuc hien xap xep trong ham sortInsert
+		
+		current = next; // gan lai current bang phan tu tiep theo cua no va tiep tuc chay vong while
+	}
+	
+	this->head = this->sorted;
+}
+
+//Day la ham se thuc hien viec xap xep du lieu
+void ListGoods::sortedInsert(Node *node){
+	// bat truong hop ban dau khi sorted list chua co gi khi sort list = NULL 
+	//hoac truong hop node moi co gia tri lon be hon hoac bang node ban dau thi se chen node moi vao dau danh sach
+	if(this->sorted == NULL || sorted->data.getPrice() >= node->data.getPrice()){ 
+		node->next = sorted;
+		this->sorted = node;
+	}else{
+		// Khoi tao mot node current se mang dia chi cua sorted 
+		// day la con tro tam thoi de thuc hien viec xap xep ma khong lam mat du lieu hien tai cua sorted
+		Node *current = this->sorted;
+		
+		// Duyet tu dau den cuoi sorted list
+		//Kiem tra xem gia tri cua phan tu trong sorted list co be hon node moi hay khong
+		//Neu co se dich current len mot don vi cho den khi gap phan tu co gia tri cua phan tu tiep theo lon hon thi se dung lai
+		//Hoac se duyet den cuoi
+		//Vi tri ma current dung lai se la vi tri ma ta can chen node moi vao
+		while(current->next != NULL && current->next->data.getPrice() < node->data.getPrice()){ 
+			current = current->next;
+		}
+		
+		//chen node moi vao sau current
+		node->next = current->next;
+		current->next = node;
+	}
+}
