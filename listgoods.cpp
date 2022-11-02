@@ -1,11 +1,7 @@
 #include"listgoods.h"
-
 vector<string> id_List;
 int ListGoods::getSize(){
 	return size;
-}
-void ListGoods::setSize(int size) {
-	this->size = size;
 }
 
 void ListGoods::outputAsTable(int x, int y, int w, int columns, int rows, int color, int titleColor, string contentAlign) {
@@ -101,9 +97,6 @@ Node *ListGoods::makeNode() {
 	temp->data.input();
 	temp->next = NULL;
 	return temp;
-}
-Node *ListGoods::getHead() {
-	return this->head;
 }
 // Tao ra Node moi nhung co san gia tri
 Node *ListGoods::makeNode(Goods data) {
@@ -376,23 +369,6 @@ Node* ListGoods:: Find_1(){
 	    return NULL;
 	}
 }
-Node* ListGoods:: Find_3(string code){
-	code = upperCase(code);
-	int dem_1 =0,dem_2=0;
-	for(Node* i=head;i!=NULL;i=i->next){
-			dem_1++;
-            if(strcmp(code.c_str(),i->data.code.c_str())==0){
-			    dem_2++;
-//			    outputTitle();
-//			    i->data.output(dem_1);
-			    return i;
-			}	
-		}
-	if(dem_2==0){
-		cout<<"Ma san pham khong co trong danh sach\n";
-	    return NULL;
-	}
-}
 void ListGoods::addCode(vector<string> &id_List){
 	for(Node* i=head;i!=NULL;i=i->next){
 		id_List.push_back(i->data.getCode());
@@ -407,7 +383,7 @@ void ListGoods:: Change(vector<string> id_List){
 	cout<<"\n\nVui long chon phuong thuc ma ban muon thay doi\n";
 	cout<<"1. Sua thong tin san pham\n";
 	cout<<"2. Xoa san pham\n";
-	cout<<"3. Sap xep danh sach san pham\n";
+	cout<<"3. Sap xep san pham\n";
 	cout<<"0.Thoat\n";
 	do{
 		bool tempCheck;
@@ -573,7 +549,7 @@ void readDataFromFile(ListGoods &list){
 				
 		list.insertLast(temp);
 	}
-//	loadingAnimation(68, 2, "Dang doc file...", "Doc file thanh cong!!");
+	loadingAnimation(68, 2, "Dang doc file...", "Doc file thanh cong!!");
 	endPoint:
 	inputFile.close();
 	system("cls");
@@ -608,231 +584,5 @@ void writeDataToFile(ListGoods list){
 	}
 	endPoint:
 	outputFile.close();
-	
-}
-void readInvoiceFromFile(ListGoods &list){
-	ifstream inputFile(FILE_PATH_2);
-	string code, name, category, status, customer_name;
-	float discount;
-	long price, priceAfter;
-	int number, valid;
-	Date date, expiryDate;
-	Goods temp;
-		
-	if(!inputFile.is_open()){
-		cerr << "Khong the mo File - '" << FILE_PATH_2 << "'" << endl;
-		cout << "Nhan phim bat ki de tiep tuc" << endl;
-		_getch();
-		goto endPoint;
-	}
-	while(inputFile >> code){
-		temp.setCode(code);
-		inputFile.ignore();
-		getline(inputFile, name);
-		temp.setName(name);	
-		getline(inputFile, category);
-		temp.setCategory(category);		
-		inputFile.ignore();
-		getline(inputFile, status);
-		temp.setStatusWithData(status);	
-		inputFile >> discount;
-		temp.setDiscount(discount);	
-		inputFile >> price;
-		temp.setPrice(price);	
-		inputFile >> priceAfter;
-		temp.setPriceAfter(priceAfter);		
-		inputFile >> number;
-		temp.setNumber(number);		
-		inputFile >> valid;
-		temp.setvalid(valid);		
-		inputFile >> date.dd;
-		inputFile >> date.mm;
-		inputFile >> date.yyyy;
-		temp.setDate(date);		
-		inputFile >> expiryDate.dd;
-		inputFile >> expiryDate.mm;
-		inputFile >> expiryDate.yyyy;
-		temp.setExpiryDate(expiryDate);
-				
-		list.insertLast(temp);
-	}
-	endPoint:
-	inputFile.close();
-	system("cls");
-}
-
-void writeInvoiceToFile(ListGoods list) {
-	ofstream outputFile(FILE_PATH_2);
-	
-	int quantity = 0;
-	if(!outputFile.is_open()){
-		_getch();
-		goto endPoint;
-	}
-	for(Node *i = list.head; i != NULL;i=i->next){
-		outputFile << i->data.getCode() << "\n";
-		outputFile << i->data.getName() << "\n";
-		outputFile << i->data.getCategory() << "\n";
-		outputFile << i->data.getStatus() << "\n";
-		outputFile << i->data.getDiscount() << "\n";
-		outputFile << i->data.getPrice() << "\n";
-		outputFile << i->data.getPriceAfter() << "\n";
-		outputFile << i->data.getNumber() << "\n";
-		outputFile << i->data.getvalid() << "\n";		
-		outputFile << i->data.getDate().getDay()<< "\n";
-		outputFile << i->data.getDate().getMonth()<< "\n";
-		outputFile << i->data.getDate().getYear()<< "\n";		
-		outputFile << i->data.getExpiryDate().getDay()<< "\n";
-		outputFile << i->data.getExpiryDate().getMonth()<< "\n";
-		outputFile << i->data.getExpiryDate().getYear()<< "\n";
-		quantity++;
-	}
-	endPoint:
-	outputFile.close();	
-}
-void writeInvoiceToFile_2(ListGoods list) {
-	ofstream outputFile(FILE_PATH_2, ios::app);
-	
-	if(!outputFile.is_open()){
-		_getch();
-		goto endPoint;
-	}
-	for(Node *i = list.head; i != NULL;i=i->next){
-		outputFile << i->data.getCode() << "\n";
-		outputFile << i->data.getName() << "\n";
-		outputFile << i->data.getCategory() << "\n";
-		outputFile << i->data.getStatus() << "\n";
-		outputFile << i->data.getDiscount() << "\n";
-		outputFile << i->data.getPrice() << "\n";
-		outputFile << i->data.getPriceAfter() << "\n";
-		outputFile << i->data.getNumber() << "\n";
-		outputFile << i->data.getvalid() << "\n";		
-		outputFile << i->data.getDate().getDay()<< "\n";
-		outputFile << i->data.getDate().getMonth()<< "\n";
-		outputFile << i->data.getDate().getYear()<< "\n";		
-		outputFile << i->data.getExpiryDate().getDay()<< "\n";
-		outputFile << i->data.getExpiryDate().getMonth()<< "\n";
-		outputFile << i->data.getExpiryDate().getYear()<< "\n";
-	}
-	endPoint:
-	outputFile.close();	
-}
-void writePastToFile(vector<ListGoods> pastInvoice) {
-	ofstream outputFile(FILE_PATH_3, ios::app);
-	if(!outputFile.is_open()){
-		_getch();
-		goto endPoint;
-	}
-	for(int i = 0; i<pastInvoice.size(); i++) {
-		for(Node *j = pastInvoice[i].getHead(); j!= NULL; j=j->next) {
-			if(j == pastInvoice[i].getHead()) {
-				outputFile << pastInvoice[i].getSize() << "\n";
-			}
-			outputFile << j->data.getCode() << "\n";
-			outputFile << j->data.getName() << "\n";
-			outputFile << j->data.getCategory() << "\n";
-			outputFile << j->data.getStatus() << "\n";
-			outputFile << j->data.getDiscount() << "\n";
-			outputFile << j->data.getPrice() << "\n";
-			outputFile << j->data.getPriceAfter() << "\n";
-			outputFile << j->data.getNumber() << "\n";
-			outputFile << j->data.getvalid() << "\n";		
-			outputFile << j->data.getDate().getDay()<< "\n";
-			outputFile << j->data.getDate().getMonth()<< "\n";
-			outputFile << j->data.getDate().getYear()<< "\n";		
-			outputFile << j->data.getExpiryDate().getDay()<< "\n";
-			outputFile << j->data.getExpiryDate().getMonth()<< "\n";
-			outputFile << j->data.getExpiryDate().getYear()<< "\n";
-		}
-	}
-	endPoint:
-	outputFile.close();	
-}
-void writePastToFile_2(vector<ListGoods> pastInvoice) {
-	ofstream outputFile(FILE_PATH_3);
-	if(!outputFile.is_open()){
-		_getch();
-		goto endPoint;
-	}
-	for(int i = 0; i<pastInvoice.size(); i++) {
-		outputFile << pastInvoice[i].getSize() << "\n";
-		for(Node *j = pastInvoice[i].getHead(); j!= NULL; j=j->next) {
-			outputFile << j->data.getCode() << "\n";
-			outputFile << j->data.getName() << "\n";
-			outputFile << j->data.getCategory() << "\n";
-			outputFile << j->data.getStatus() << "\n";
-			outputFile << j->data.getDiscount() << "\n";
-			outputFile << j->data.getPrice() << "\n";
-			outputFile << j->data.getPriceAfter() << "\n";
-			outputFile << j->data.getNumber() << "\n";
-			outputFile << j->data.getvalid() << "\n";		
-			outputFile << j->data.getDate().getDay()<< "\n";
-			outputFile << j->data.getDate().getMonth()<< "\n";
-			outputFile << j->data.getDate().getYear()<< "\n";		
-			outputFile << j->data.getExpiryDate().getDay()<< "\n";
-			outputFile << j->data.getExpiryDate().getMonth()<< "\n";
-			outputFile << j->data.getExpiryDate().getYear()<< "\n";
-		}
-	}
-	endPoint:
-	outputFile.close();	
-}
-void readPastFromFile(vector<ListGoods> &pastInvoice) {
-	ifstream inputFile(FILE_PATH_3);
-	ListGoods invoice_list;
-	ListGoods toDelete;
-	string code, name, category, status, customer_name;
-	float discount;
-	long price, priceAfter;
-	int number, valid,  numberPast;
-	Date date, expiryDate;
-	Goods temp;
-		
-	if(!inputFile.is_open()){
-		cerr << "Khong the mo File - '" << FILE_PATH_3 << "'" << endl;
-		cout << "Nhan phim bat ki de tiep tuc" << endl;
-		_getch();
-		goto endPoint;
-	}
-	while(inputFile >> numberPast) {
-		invoice_list.setSize(numberPast);
-		inputFile.ignore();
-		for(int i = 0; i < numberPast; i++) {
-			inputFile >> code;
-			temp.setCode(code);
-			inputFile.ignore();
-			getline(inputFile, name);
-			temp.setName(name);	
-			getline(inputFile, category);
-			temp.setCategory(category);		
-			inputFile.ignore();
-			getline(inputFile, status);
-			temp.setStatusWithData(status);	
-			inputFile >> discount;
-			temp.setDiscount(discount);	
-			inputFile >> price;
-			temp.setPrice(price);	
-			inputFile >> priceAfter;
-			temp.setPriceAfter(priceAfter);		
-			inputFile >> number;
-			temp.setNumber(number);		
-			inputFile >> valid;
-			temp.setvalid(valid);		
-			inputFile >> date.dd;
-			inputFile >> date.mm;
-			inputFile >> date.yyyy;
-			temp.setDate(date);		
-			inputFile >> expiryDate.dd;
-			inputFile >> expiryDate.mm;
-			inputFile >> expiryDate.yyyy;
-			temp.setExpiryDate(expiryDate);	
-			invoice_list.insertLast(temp);
-		}
-		pastInvoice.push_back(invoice_list);
-		invoice_list = toDelete;
-	}
-	endPoint:
-	inputFile.close();
-	system("cls");
 }
 
