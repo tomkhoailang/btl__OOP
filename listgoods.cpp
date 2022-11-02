@@ -407,6 +407,7 @@ void ListGoods:: Change(vector<string> id_List){
 	cout<<"\n\nVui long chon phuong thuc ma ban muon thay doi\n";
 	cout<<"1. Sua thong tin san pham\n";
 	cout<<"2. Xoa san pham\n";
+	cout<<"3. Sap xep danh sach san pham\n";
 	cout<<"0.Thoat\n";
 	do{
 		bool tempCheck;
@@ -420,9 +421,9 @@ void ListGoods:: Change(vector<string> id_List){
 		ss.clear();
 		ss<<checkNumber;
 		ss>>option;
-		if(option<0||option>2)
+		if(option<0||option>3)
 		    cout<<"Nhap lai!\n";
-	}while(option<0||option>2);
+	}while(option<0||option>3);
 	switch(option){
 		case 0:
 			break;
@@ -506,6 +507,18 @@ void ListGoods:: Change(vector<string> id_List){
 		} 
 	    break;
    	}
+   	case 3:{
+   		//selection sort theo category (danh muc)
+   		for(Node* i=head; i->next !=NULL; i=i->next){
+			Node* pMin = i;
+			for(Node* j=i->next; j!=NULL; j=j->next){
+				if(strcmp(j->data.getCategory().c_str(),pMin->data.getCategory().c_str())<0)
+					pMin = j;
+			}
+			swap(pMin->data, i->data);
+		}
+		break;
+	   }
 	default:
 		cout<<"Lua chon khong ton tai!"<<endl;  
    }
