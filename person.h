@@ -1,5 +1,6 @@
 #include<string>
 #include"listgoods.h"
+extern std::vector<ListGoods> pastInvoice;
 using namespace std;
 class Person {
 	protected:

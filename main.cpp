@@ -23,7 +23,7 @@ int main() {
 								"Xuat hang hoa",
 								"Tim kiem",
 								"Cap nhat hang hoa",
-								"Xuat thong tin vien file",  
+								"Xuat thong tin vao file",  
 								"Quan ly",
 								"Thoat"
 								};
