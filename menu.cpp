@@ -350,6 +350,7 @@ void ListMenu::start(ListGoods &list, string role, Manager &managerList, string 
 							cout << "\nDanh sach trong..." << endl;
 						}else{
                         	list.Change(id_List);
+                        	list.selectionSort();
 						}
 						this->clearMenuScreen();
 						goto startPoint;

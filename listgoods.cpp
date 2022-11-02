@@ -408,6 +408,7 @@ void ListGoods:: Change(vector<string> id_List){
 	cout<<"\n\nVui long chon phuong thuc ma ban muon thay doi\n";
 	cout<<"1. Sua thong tin san pham\n";
 	cout<<"2. Xoa san pham\n";
+	cout<<"3. Sap xep danh sach san pham\n";
 	cout<<"0.Thoat\n";
 	do{
 		bool tempCheck;
@@ -421,9 +422,9 @@ void ListGoods:: Change(vector<string> id_List){
 		ss.clear();
 		ss<<checkNumber;
 		ss>>option;
-		if(option<0||option>2)
+		if(option<0||option>3)
 		    cout<<"Nhap lai!\n";
-	}while(option<0||option>2);
+	}while(option<0||option>3);
 	switch(option){
 		case 0:
 			break;
@@ -507,6 +508,11 @@ void ListGoods:: Change(vector<string> id_List){
 		} 
 	    break;
    	}
+   	case 3:{
+   		selectionSort();
+   		output();
+		break;
+	   }
 	default:
 		cout<<"Lua chon khong ton tai!"<<endl;  
    }
@@ -823,6 +829,23 @@ void readPastFromFile(vector<ListGoods> &pastInvoice) {
 	inputFile.close();
 	system("cls");
 }
+
+//Ham selection sort
+void ListGoods::selectionSort() {
+	//y tuong la tai 1 vi tri cho truoc, ta tao mot bien pMin de luu vi tri do va tien thanh duyet phan con lai cua danh sach
+	//de tim gia tri nho nhat va nho hon gia tri cua vi tri hien tai, gan vi tri cua gia tri nho nhat do vao pMin
+	//sau do doi gia tri cua vi tri pMin voi gia tri cua vi tri cho truoc
+	for(Node* i= this->head; i->next !=NULL; i=i->next){ // tao vong lap ban dau
+			Node* pMin = i; // tao Node pMin de luu vi tri hien tai
+			for(Node* j=i->next; j!=NULL; j=j->next){ // tao vong lap moi de duyet phan con lai cua danh sach
+				if(strcmp(j->data.getCategory().c_str(),pMin->data.getCategory().c_str())<0) // xet dieu kien 
+					pMin = j; //gan vi tri cua gia tri nho hon vao pMin
+			}
+			//sau khi ket thuc vong lap con, pMin se giu vi tri co gia tri nho nhat
+			swap(pMin->data, i->data); // doi gia tri cua vi tri pMin voi vi tri hien tai
+		}
+}
+
 
 //Ham insertion sort
 //Y tuong la ta se tao mot list moi de luu ket qua sau khi xap xep cua list cu

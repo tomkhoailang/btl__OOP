@@ -42,6 +42,7 @@ class ListGoods {
 		friend void readInvoiceFromFile(ListGoods &list);
 		void Change(vector<string> id_List);
 		void addCode(vector<string> &id_List);
+		void selectionSort(); // Ham sap xep chon
 		void insertionSort(); // Ham sap xep chen
 		void sortedInsert(Node *node); // Ham bo tro cho viec sap xep chen
 };
