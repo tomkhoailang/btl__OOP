@@ -401,6 +401,8 @@ void Goods::input(){
 			cout<<"Vui long nhap dung dinh dang!"<<endl;
 		}
 	}while(validateString(codeTemp) == false);
+	//Em bat dau sua o day
+	//Ben tren em co khai bao 2 vector la bien toan cuc do khong sua truc tiep duoc
 	for(int i = 0;i < id_List.size();i++){
 		if(strcmp(codeTemp.c_str(),id_List[i].c_str()) == 0){
 			//Trung id thi chi cho nhap vao so luong
@@ -412,6 +414,7 @@ void Goods::input(){
 			check = false;
 		}
 	}
+	//Neu khong trung em cho nhap binh thuong
 	if(check == true){
 	codeTemp = upperCase(codeTemp);
 	setCode(codeTemp);

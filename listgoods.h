@@ -26,6 +26,7 @@ class ListGoods {
 		void insertLast(Goods data);
 		bool checkCode(string code);
 		~ListGoods();
+		//Khai bao them ham 
 		void Add();
 		void Find_2();
 		Node* Find_1();

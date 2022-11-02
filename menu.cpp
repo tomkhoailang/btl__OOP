@@ -315,8 +315,10 @@ void ListMenu::start(ListGoods &list, string role, Manager &managerList, string 
 							}while(soLuong < 0);
 							for(int i = 0; i<soLuong; i++) {
 								Goods a;
+								//Xoa bo check id trung khi nhap de tranh viec them vao bi bao loi
 //								do{
 									a.input();
+									//Them ham chinh sua so luong de cap nhat lai so luong moi them
 									list.Add();
 //									id_List.push_back(a.getCode());
 //									if(!list.checkCode(a.getCode()))

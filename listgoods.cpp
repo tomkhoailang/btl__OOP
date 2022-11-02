@@ -170,6 +170,7 @@ bool ListGoods::checkCode(string code){
 	} 
 	return true;
 }
+//ham chinh sua so luong sau khi nhap trung id va nhap so luong sau do
 void ListGoods::Add(){
 	for(Node* i = head; i != NULL; i = i->next){
 		for(int j = 0;j < check_id.size();j++){
