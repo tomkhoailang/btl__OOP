@@ -21,6 +21,7 @@ void Person::calculation(ListGoods list) {
 	ListGoods invoice_list;
 	ListGoods toDelete;
 //	readInvoiceFromFile(invoice_list);
+	readPastFromFile(pastInvoice);
 	Node *a = new Node;
 	Node *b = new Node;
 	Node *c = new Node;

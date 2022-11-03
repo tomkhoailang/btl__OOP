@@ -783,7 +783,7 @@ void readPastFromFile(vector<ListGoods> &pastInvoice) {
 	Goods temp;
 		
 	if(!inputFile.is_open()){
-		cerr << "Khong the mo File - '" << FILE_PATH_3 << "'" << endl;
+//		cerr << "Khong the mo File - '" << FILE_PATH_3 << "'" << endl;
 		cout << "Nhan phim bat ki de tiep tuc" << endl;
 		_getch();
 		goto endPoint;
