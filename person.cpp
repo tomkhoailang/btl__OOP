@@ -59,10 +59,11 @@ void Person::calculation(ListGoods list) {
 					cout<<"Hien tai chua co lich su nao!"<<endl;
 				}else {
 					for(int i = 0; i < pastInvoice.size() ; i++) {
-					int xxx = pastInvoice[i].getSize()/2;
-					pastInvoice[i].setSize(xxx);
-					cout<<"Hoa don "<<i+1<<": "<<endl;
-					pastInvoice[i].output();
+						int xxx = pastInvoice[i].getSize()/2;
+						pastInvoice[i].setSize(xxx);
+						cout<<"Hoa don "<<i+1<<": "<<endl;
+						pastInvoice[i].output();
+					}
 					int select_2;
 					cout<<"1. Chinh hoa don cu"<<endl;
 					cout<<"2. Huy hoa don"<<endl;
@@ -148,7 +149,7 @@ void Person::calculation(ListGoods list) {
 						}
 					}
 					
-				}
+	
 				}
 				break;
 				
@@ -289,7 +290,6 @@ void Person::calculation(ListGoods list) {
 				else{
 					pastInvoice.clear();
 					pastInvoice.push_back(invoice_list);
-//					cout<<invoice_list.getSize();
 					writePastToFile(pastInvoice);
 					invoice_list = toDelete;
 					while(invoice.size()>0)
