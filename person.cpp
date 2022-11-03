@@ -55,13 +55,15 @@ void Person::calculation(ListGoods list) {
 			case 0: {
 				pastInvoice.clear();
 				readPastFromFile(pastInvoice);
-				for(int i = 0; i < pastInvoice.size() ; i++) {
+				if(pastInvoice.size() == 0) {
+					cout<<"Hien tai chua co lich su nao!"<<endl;
+				}else {
+					for(int i = 0; i < pastInvoice.size() ; i++) {
 					int xxx = pastInvoice[i].getSize()/2;
 					pastInvoice[i].setSize(xxx);
 					cout<<"Hoa don "<<i+1<<": "<<endl;
 					pastInvoice[i].output();
-				}
-				int select_2;
+					int select_2;
 					cout<<"1. Chinh hoa don cu"<<endl;
 					cout<<"2. Huy hoa don"<<endl;
 					cout<<"0. Thoat"<<endl;
@@ -116,7 +118,6 @@ void Person::calculation(ListGoods list) {
 									cout<<"Hoa don "<<toModify<<": "<<endl;
 									pastInvoice[toModify - 1].output();
 									writePastToFile_2(pastInvoice);
-									
 								}
 								
 							}else {
@@ -147,7 +148,11 @@ void Person::calculation(ListGoods list) {
 						}
 					}
 					
+				}
+				}
 				break;
+				
+				
 			}
 			case 1: {
 				a = list.Find_1();
